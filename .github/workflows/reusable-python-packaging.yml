@@ -30,13 +30,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # check out the repository (including submodules and all history)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
           fetch-depth: 0
       # set up uv for faster Python package management
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@22695119d769bdb6f7032ad67b9bca0ef8c4a174 # v5
       # build the source distribution
       - name: Build SDist
         run: uv build --sdist
@@ -44,7 +44,7 @@ jobs:
       - name: Check metadata
         run: uvx twine check dist/*
       # upload the source distribution as an artifact (adds a `dev-` prefix for PRs)
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-sdist
           path: dist/*.tar.gz
@@ -55,13 +55,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # check out the repository (including submodules and all history)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
           fetch-depth: 0
       # set up uv for faster Python package management
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@22695119d769bdb6f7032ad67b9bca0ef8c4a174 # v5
       # build the wheel
       - name: Build Wheel
         run: uv build --wheel
@@ -69,7 +69,7 @@ jobs:
       - name: Check metadata
         run: uvx twine check dist/*
       # upload the wheel as an artifact (adds a `dev-` prefix for PRs)
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheel
           path: dist/*.whl
@@ -86,39 +86,39 @@ jobs:
           [ubuntu-24.04, ubuntu-24.04-arm, macos-13, macos-14, windows-latest]
     steps:
       # check out the repository (including submodules and all history)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
           fetch-depth: 0
       # set up MSVC development environment (Windows only)
-      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
       # optionally set up Z3 (non-Ubuntu only)
       - if: ${{ inputs.setup-z3 && matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' }}
         name: Setup Z3
-        uses: cda-tum/setup-z3@v1
+        uses: cda-tum/setup-z3@34d1e04d31a168fa330626fad1275cf23de02591 # v1
         with:
           version: ${{ inputs.z3-version }}
       # set up ccache for faster C++ builds
       - if: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' }}
         name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@v1
+        uses: Chocobo1/setup-ccache-action@f84f86840109403e0fe0ded8b0766c9633affa16 # v1
         with:
           prepend_symlinks_to_path: false
           windows_compile_environment: msvc
           override_cache_key: wheels-${{ matrix.runs-on }}
       # set up uv for faster Python package management
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@22695119d769bdb6f7032ad67b9bca0ef8c4a174 # v5
         with:
           enable-cache: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' }}
       # run cibuildwheel to build wheels for the specified Python version
-      - uses: pypa/cibuildwheel@v2.23
+      - uses: pypa/cibuildwheel@d04cacbc9866d432033b1d09142936e6a0e2121a # v2.23
       - name: Verify clean directory
         run: git diff --exit-code
         shell: bash
       # upload the wheels as an artifact (adds a `dev-` prefix for PRs)
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ matrix.runs-on }}-${{ strategy.job-index }}
           path: wheelhouse/*.whl

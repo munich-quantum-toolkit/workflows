@@ -59,16 +59,16 @@ jobs:
       FORCE_COLOR: 3
     steps:
       # check out the repository (including submodules and all history)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
           fetch-depth: 0
       # set up MSVC development environment
-      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
       # optionally set up Z3
       - if: ${{ inputs.setup-z3 }}
         name: Setup Z3
-        uses: cda-tum/setup-z3@v1
+        uses: cda-tum/setup-z3@34d1e04d31a168fa330626fad1275cf23de02591 # v1
         with:
           version: ${{ inputs.z3-version }}
       # configure CMake in the specified mode, optionally with additional arguments
@@ -83,7 +83,7 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} $cmake_args
       # build the project in the specified mode with retries
       - name: Build
-        uses: nick-fields/retry@v3 # Windows builds with MSVC are flaky and frequently run out of heap space
+        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3 # Windows builds with MSVC are flaky and frequently run out of heap space
         with:
           timeout_minutes: 15
           max_attempts: 5
