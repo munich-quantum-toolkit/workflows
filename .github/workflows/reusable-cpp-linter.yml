@@ -47,13 +47,13 @@ jobs:
       clang-version: ${{ inputs.clang-version }}
     steps:
       # check out the repository (including submodules)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
       # optionally set up Z3
       - if: ${{ inputs.setup-z3 }}
         name: Setup Z3
-        uses: cda-tum/setup-z3@v1
+        uses: cda-tum/setup-z3@34d1e04d31a168fa330626fad1275cf23de02591 # v1
         with:
           version: ${{ inputs.z3-version }}
       # install a specific version of the LLVM toolchain
@@ -80,14 +80,14 @@ jobs:
       # set up ccache for faster C++ builds if building the project
       - if: ${{ inputs.build-project }}
         name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@v1
+        uses: Chocobo1/setup-ccache-action@f84f86840109403e0fe0ded8b0766c9633affa16 # v1
         with:
           prepend_symlinks_to_path: false
           override_cache_key: c++-lint
       # set up mold as linker for faster C++ builds
       - if: ${{ inputs.build-project }}
         name: Set up mold as linker
-        uses: rui314/setup-mold@v1
+        uses: rui314/setup-mold@f80524ca6eeaa76759b57fb78ddce5d87a20c720 # v1
       # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
         run: |
@@ -104,7 +104,7 @@ jobs:
         run: cmake --build build --config Debug
       # runs the cpp-linter action using the generated compilation database and the specified clang version
       - name: Run cpp-linter
-        uses: cpp-linter/cpp-linter-action@v2
+        uses: cpp-linter/cpp-linter-action@8ae6cfaea8cc035c6155b5fe79d7991a9bf638af # v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ github.token }}

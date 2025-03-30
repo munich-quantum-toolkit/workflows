@@ -19,13 +19,13 @@ jobs:
     steps:
       # check out the repository (including submodules and all history)
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
           fetch-depth: 0
       # initialize CodeQL with the extended security-and-quality queries
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@1b549b9259bda1cb5ddde3b41741a82a2d15a841 # v3
         with:
           languages: python
           config: |
@@ -33,4 +33,4 @@ jobs:
             - uses: security-and-quality
       # perform the CodeQL analysis
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@1b549b9259bda1cb5ddde3b41741a82a2d15a841 # v3

@@ -136,15 +136,15 @@ jobs:
       id-token: write # Required for the `codecov/codecov-action` action
     steps:
       # check out the repository (mostly for the codecov config)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       # download coverage reports from all jobs
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4
         with:
           pattern: coverage-*
           path: coverage-reports
           merge-multiple: true
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5
         with:
           fail_ci_if_error: true
           flags: python

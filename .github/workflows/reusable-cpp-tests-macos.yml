@@ -55,19 +55,19 @@ jobs:
       FORCE_COLOR: 3
     steps:
       # check out the repository (including submodules and all history)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
           fetch-depth: 0
       # optionally set up Z3
       - if: ${{ inputs.setup-z3 }}
         name: Setup Z3
-        uses: cda-tum/setup-z3@v1
+        uses: cda-tum/setup-z3@34d1e04d31a168fa330626fad1275cf23de02591 # v1
         with:
           version: ${{ inputs.z3-version }}
       # set up ccache for faster C++ builds
       - name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@v1
+        uses: Chocobo1/setup-ccache-action@f84f86840109403e0fe0ded8b0766c9633affa16 # v1
         with:
           prepend_symlinks_to_path: false
           override_cache_key: c++-tests-${{ inputs.runs-on }}-${{ inputs.config }}-${{ inputs.compiler }}
