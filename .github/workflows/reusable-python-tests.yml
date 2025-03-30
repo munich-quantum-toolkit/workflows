@@ -48,7 +48,7 @@ jobs:
         uses: rui314/setup-mold@v1
       # set up uv for faster Python package management
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
       # explicitly set CC and CXX for Ubuntu ARM runners to work around an issue
       # where CXX would wrongfully be set to an x86_64 compiler.
       - name: Set CC and CXX for ARM
