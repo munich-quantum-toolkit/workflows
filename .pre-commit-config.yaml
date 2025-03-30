@@ -1,3 +1,11 @@
+# Copyright (c) 2023 - 2025 Chair for Design Automation, TUM
+# Copyright (c) 2025 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
 # To run all pre-commit checks, use:
 #
 #     pre-commit run -a
@@ -10,6 +18,7 @@
 ci:
   autoupdate_commit_msg: "⬆️🪝 update pre-commit hooks"
   autofix_commit_msg: "🎨 pre-commit fixes"
+  autoupdate_schedule: quarterly
 
 repos:
   # Standard hooks
@@ -45,11 +54,16 @@ repos:
       - id: rst-inline-touching-normal
 
   # Check for spelling
-  - repo: https://github.com/codespell-project/codespell
-    rev: "v2.4.1"
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.31.0
     hooks:
-      - id: codespell
-        args: ["-L", "wille,linz", "--skip", "*.ipynb,*.bib"]
+      - id: typos
+
+  # Check for license headers
+  - repo: https://github.com/emzeat/mz-lictools
+    rev: v2.7.0
+    hooks:
+      - id: license-tools
 
   # Format configuration files with prettier
   - repo: https://github.com/rbubley/mirrors-prettier
@@ -62,5 +76,4 @@ repos:
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: "0.31.3"
     hooks:
-      - id: check-dependabot
       - id: check-github-workflows
