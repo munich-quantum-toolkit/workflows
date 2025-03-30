@@ -1,6 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended", ":gitSignOff"],
+  extends: ["config:recommended", ":gitSignOff", "helpers:pinGitHubActionDigests"],
   prHourlyLimit: 10,
   enabledManagers: ["github-actions", "pre-commit"],
   "pre-commit": {
