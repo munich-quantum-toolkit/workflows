@@ -36,7 +36,7 @@ jobs:
           fetch-depth: 0
       # set up uv for faster Python package management
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@22695119d769bdb6f7032ad67b9bca0ef8c4a174 # v5
+        uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5
       # build the source distribution
       - name: Build SDist
         run: uv build --sdist
@@ -61,7 +61,7 @@ jobs:
           fetch-depth: 0
       # set up uv for faster Python package management
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@22695119d769bdb6f7032ad67b9bca0ef8c4a174 # v5
+        uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5
       # build the wheel
       - name: Build Wheel
         run: uv build --wheel
@@ -108,7 +108,7 @@ jobs:
           override_cache_key: wheels-${{ matrix.runs-on }}
       # set up uv for faster Python package management
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@22695119d769bdb6f7032ad67b9bca0ef8c4a174 # v5
+        uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5
         with:
           enable-cache: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' }}
       # run cibuildwheel to build wheels for the specified Python version
