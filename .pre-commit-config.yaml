@@ -1,3 +1,11 @@
+# Copyright (c) 2023 - 2025 Chair for Design Automation, TUM
+# Copyright (c) 2025 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
 # To run all pre-commit checks, use:
 #
 #     pre-commit run -a
@@ -50,6 +58,12 @@ repos:
     rev: v1.31.0
     hooks:
       - id: typos
+
+  # Check for license headers
+  - repo: https://github.com/emzeat/mz-lictools
+    rev: v2.7.0
+    hooks:
+      - id: license-tools
 
   # Format configuration files with prettier
   - repo: https://github.com/rbubley/mirrors-prettier
