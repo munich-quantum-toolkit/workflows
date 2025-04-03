@@ -52,7 +52,7 @@ jobs:
         id: get-latest-release
         run: |
           echo "Querying the latest release of MQT Core..."
-          latest_release=$(curl -s -H "Authorization: token ${{ github.token }}" https://api.github.com/repos/cda-tum/mqt-core/releases/latest)
+          latest_release=$(curl -s -H "Authorization: token ${{ github.token }}" https://api.github.com/repos/munich-quantum-toolkit/core/releases/latest)
           tag=$(echo $latest_release | jq -r '.tag_name')
           latest_version=${tag#v}
           echo "latest_release=$latest_release"
@@ -64,7 +64,7 @@ jobs:
         id: get-latest-tag-sha
         run: |
           echo "Querying the tags of MQT Core..."
-          tags=$(curl -s -H "Authorization: token ${{ github.token }}" https://api.github.com/repos/cda-tum/mqt-core/tags)
+          tags=$(curl -s -H "Authorization: token ${{ github.token }}" https://api.github.com/repos/munich-quantum-toolkit/core/tags)
           echo "tags=$tags"
           latest_tag_sha=$(echo $tags | jq -r '.[0].commit.sha')
           echo "latest_tag_sha=$latest_tag_sha"
@@ -74,7 +74,7 @@ jobs:
         id: get-latest-commit
         run: |
           echo "Querying the latest commit of the main branch of MQT Core..."
-          latest_commit=$(curl -s -H "Authorization: token ${{ github.token }}" https://api.github.com/repos/cda-tum/mqt-core/commits/main)
+          latest_commit=$(curl -s -H "Authorization: token ${{ github.token }}" https://api.github.com/repos/munich-quantum-toolkit/core/commits/main)
           latest_commit_sha=$(echo $latest_commit | jq -r '.sha')
           echo "latest_commit_sha=$latest_commit_sha"
           echo "latest_commit_sha=$latest_commit_sha" >> $GITHUB_OUTPUT
@@ -148,12 +148,12 @@ jobs:
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
         with:
           token: ${{ github.token }}
-          commit-message: "⬆️ Update `cda-tum/mqt-core`"
-          title: "⬆️ Update `cda-tum/mqt-core`"
+          commit-message: "⬆️ Update `munich-quantum-toolkit/core`"
+          title: "⬆️ Update `munich-quantum-toolkit/core`"
           body: |
-            This pull request updates the [cda-tum/mqt-core](https://github.com/cda-tum/mqt-core) dependency from cda-tum/mqt-core@${{ steps.get-used-version.outputs.revision }} (version v${{ steps.get-used-version.outputs.version }}) to cda-tum/mqt-core@${{ steps.determine-new-version-and-revision.outputs.new_revision }} (version v${{ steps.determine-new-version-and-revision.outputs.new_version }}).
+            This pull request updates the [munich-quantum-toolkit/core](https://github.com/munich-quantum-toolkit/core) dependency from munich-quantum-toolkit/core@${{ steps.get-used-version.outputs.revision }} (version v${{ steps.get-used-version.outputs.version }}) to munich-quantum-toolkit/core@${{ steps.determine-new-version-and-revision.outputs.new_revision }} (version v${{ steps.determine-new-version-and-revision.outputs.new_version }}).
 
-            **Full Changelog**: https://github.com/cda-tum/mqt-core/compare/${{ steps.get-used-version.outputs.revision }}...${{ steps.determine-new-version-and-revision.outputs.new_revision }}
+            **Full Changelog**: https://github.com/munich-quantum-toolkit/core/compare/${{ steps.get-used-version.outputs.revision }}...${{ steps.determine-new-version-and-revision.outputs.new_revision }}
 
             > [!NOTE]
             > This pull request was automatically created by a GitHub Actions workflow, which does not have permissions to trigger other workflows.
