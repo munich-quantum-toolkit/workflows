@@ -53,7 +53,7 @@ jobs:
           override_cache_key: python-tests-${{ inputs.runs-on }}
       # set up mold as linker for faster C++ builds (Linux only)
       - name: Set up mold as linker (Linux only)
-        uses: rui314/setup-mold@f80524ca6eeaa76759b57fb78ddce5d87a20c720 # v1
+        uses: rui314/setup-mold@e16410e7f8d9e167b74ad5697a9089a35126eb50 # v1
       # set up uv for faster Python package management
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5
