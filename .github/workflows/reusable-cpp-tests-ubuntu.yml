@@ -73,7 +73,7 @@ jobs:
           override_cache_key: c++-tests-${{ inputs.runs-on }}-${{ inputs.config }}-${{ inputs.compiler }}
       # set up mold as linker for faster C++ builds
       - name: Set up mold as linker
-        uses: rui314/setup-mold@f80524ca6eeaa76759b57fb78ddce5d87a20c720 # v1
+        uses: rui314/setup-mold@e16410e7f8d9e167b74ad5697a9089a35126eb50 # v1
       # make sure ninja is installed
       - name: Install Ninja
         run: pipx install ninja
