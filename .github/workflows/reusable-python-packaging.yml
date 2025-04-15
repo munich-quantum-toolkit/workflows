@@ -11,6 +11,7 @@ name: 🐍 • Packaging
 on:
   workflow_call:
     inputs:
+      ###---- General inputs ----------------------------------------------------------------------------------------###
       pure-python:
         description: "Whether this is a pure Python package (or contains compiled extensions)"
         default: false
@@ -23,9 +24,66 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      ###---- Ubuntu-specific inputs --------------------------------------------------------------------------------###
+      ### Runs (ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm)
+      ### Defaults are
+      ### - ubuntu-24.04
+      ### - ubuntu-24.04-arm
+      ###------------------------------------------------------------------------------------------------------------###
+      enable-ubuntu2404:
+        description: "Whether to enable the Ubuntu 24.04 runner"
+        default: true
+        type: boolean
+      enable-ubuntu2204:
+        description: "Whether to enable the Ubuntu 22.04 runner"
+        default: false
+        type: boolean
+      enable-ubuntu2404-arm:
+        description: "Whether to enable the Ubuntu 24.04 ARM runner"
+        default: true
+        type: boolean
+      enable-ubuntu2204-arm:
+        description: "Whether to enable the Ubuntu 22.04 ARM runner"
+        default: false
+        type: boolean
+      ###---- macOS-specific inputs ---------------------------------------------------------------------------------###
+      ### Runs (macos-13, macos-14, macos-15)
+      ### Defaults are
+      ### - macos-13
+      ### - macos-14
+      ###------------------------------------------------------------------------------------------------------------###
+      enable-macos13:
+        description: "Whether to enable the macOS 13 runner"
+        default: true
+        type: boolean
+      enable-macos14:
+        description: "Whether to enable the macOS 14 runner"
+        default: true
+        type: boolean
+      enable-macos15:
+        description: "Whether to enable the macOS 15 runner"
+        default: false
+        type: boolean
+      ###---- Windows-specific inputs -------------------------------------------------------------------------------###
+      ### Runs (windows-2022, windows-2025, windows-11-arm)
+      ### Defaults are
+      ### - windows-2022
+      ###------------------------------------------------------------------------------------------------------------###
+      enable-windows2022:
+        description: "Whether to enable the Windows 2022 runner"
+        default: true
+        type: boolean
+      enable-windows2025:
+        description: "Whether to enable the Windows 2025 runner"
+        default: false
+        type: boolean
+      enable-windows11-arm:
+        description: "Whether to enable the Windows 11 ARM runner"
+        default: false
+        type: boolean
 
 jobs:
-  build_sdist:
+  build-sdist:
     name: 📦 SDist
     runs-on: ubuntu-latest
     steps:
@@ -49,7 +107,7 @@ jobs:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-sdist
           path: dist/*.tar.gz
 
-  build_wheel:
+  build-wheel:
     if: ${{ inputs.pure-python }}
     name: 🛞 Wheel
     runs-on: ubuntu-latest
@@ -74,23 +132,58 @@ jobs:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheel
           path: dist/*.whl
 
-  build_wheels:
+  build-matrix:
     if: ${{ !inputs.pure-python }}
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build-matrix.outputs.matrix }}
+    steps:
+      - id: build-matrix
+        name: Build runner matrix
+        run: |
+          matrix='[]'
+          if [ "${{ inputs.enable-ubuntu2404 }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "ubuntu-24.04"}]')
+          fi
+          if [ "${{ inputs.enable-ubuntu2204 }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "ubuntu-22.04"}]')
+          fi
+          if [ "${{ inputs.enable-ubuntu2404-arm }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "ubuntu-24.04-arm"}]')
+          fi
+          if [ "${{ inputs.enable-ubuntu2204-arm }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "ubuntu-22.04-arm"}]')
+          fi
+          if [ "${{ inputs.enable-macos13 }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "macos-13"}]')
+          fi
+          if [ "${{ inputs.enable-macos14 }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "macos-14"}]')
+          fi
+          if [ "${{ inputs.enable-macos15 }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "macos-15"}]')
+          fi
+          if [ "${{ inputs.enable-windows2022 }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "windows-2022"}]')
+          fi
+          if [ "${{ inputs.enable-windows2025 }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "windows-2025"}]')
+          fi
+          if [ "${{ inputs.enable-windows11-arm }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "windows-11-arm"}]')
+          fi
+          echo "matrix=$(echo $matrix | jq -rc .)" >> $GITHUB_OUTPUT
+          echo $(echo $matrix | jq -rc .)
+
+  build-wheels:
+    if: ${{ !inputs.pure-python }}
+    needs: [build-matrix]
     name: 🎡 ${{ matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
     strategy:
       fail-fast: false
       matrix:
-        # build wheels for all supported Python versions on all platforms
-        runs-on:
-          [
-            ubuntu-24.04,
-            ubuntu-24.04-arm,
-            macos-13,
-            macos-14,
-            windows-latest,
-            windows-11-arm,
-          ]
+        include: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     steps:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -100,13 +193,13 @@ jobs:
       # set up MSVC development environment (Windows only)
       - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
       # optionally set up Z3 (non-Ubuntu only)
-      - if: ${{ inputs.setup-z3 && matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' }}
+      - if: ${{ inputs.setup-z3 && matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
         name: Setup Z3
         uses: cda-tum/setup-z3@34d1e04d31a168fa330626fad1275cf23de02591 # v1
         with:
           version: ${{ inputs.z3-version }}
       # set up ccache for faster C++ builds
-      - if: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' }}
+      - if: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
         name: Setup ccache
         uses: Chocobo1/setup-ccache-action@f84f86840109403e0fe0ded8b0766c9633affa16 # v1
         with:
@@ -117,7 +210,7 @@ jobs:
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5
         with:
-          enable-cache: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' }}
+          enable-cache: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@d04cacbc9866d432033b1d09142936e6a0e2121a # v2.23
       - name: Verify clean directory
