@@ -83,7 +83,14 @@ jobs:
       matrix:
         # build wheels for all supported Python versions on all platforms
         runs-on:
-          [ubuntu-24.04, ubuntu-24.04-arm, macos-13, macos-14, windows-latest]
+          [
+            ubuntu-24.04,
+            ubuntu-24.04-arm,
+            macos-13,
+            macos-14,
+            windows-latest,
+            windows-11-arm,
+          ]
     steps:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4

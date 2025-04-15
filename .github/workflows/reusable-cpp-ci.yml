@@ -168,7 +168,7 @@ on:
         default: ""
         type: string
       ###---- Windows-specific inputs -------------------------------------------------------------------------------###
-      ### Runs (windows-2022, windows-2025) x (msvc, clang) x (Release, Debug)
+      ### Runs (windows-2022, windows-2025, windows-11-arm) x (msvc, clang) x (Release, Debug)
       ### Defaults are
       ### - windows-2022, msvc, Release,
       ###------------------------------------------------------------------------------------------------------------###
@@ -206,6 +206,22 @@ on:
         type: boolean
       enable-windows2025-clang-debug:
         description: "Whether to enable C++ testing on Windows 2025 with Clang in Debug mode"
+        default: false
+        type: boolean
+      enable-windows11-arm-msvc-release:
+        description: "Whether to enable C++ testing on Windows 11 ARM with MSVC in Release mode"
+        default: false
+        type: boolean
+      enable-windows11-arm-msvc-debug:
+        description: "Whether to enable C++ testing on Windows 11 ARM with MSVC in Debug mode"
+        default: false
+        type: boolean
+      enable-windows11-arm-clang-release:
+        description: "Whether to enable C++ testing on Windows 11 ARM with Clang in Release mode"
+        default: false
+        type: boolean
+      enable-windows11-arm-clang-debug:
+        description: "Whether to enable C++ testing on Windows 11 ARM with Clang in Debug mode"
         default: false
         type: boolean
       cmake-args-windows:
@@ -344,6 +360,18 @@ jobs:
           fi
           if [ "${{ inputs.enable-windows2025-clang-debug }}" == "true" ]; then
             windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2025", "config": "Debug", "compiler": "clang"}]')
+          fi
+          if [ "${{ inputs.enable-windows11-arm-msvc-release }}" == "true" ]; then
+            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-11-arm", "config": "Release", "compiler": "msvc"}]')
+          fi
+          if [ "${{ inputs.enable-windows11-arm-msvc-debug }}" == "true" ]; then
+            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-11-arm", "config": "Debug", "compiler": "msvc"}]')
+          fi
+          if [ "${{ inputs.enable-windows11-arm-clang-release }}" == "true" ]; then
+            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-11-arm", "config": "Release", "compiler": "clang"}]')
+          fi
+          if [ "${{ inputs.enable-windows11-arm-clang-debug }}" == "true" ]; then
+            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-11-arm", "config": "Debug", "compiler": "clang"}]')
           fi
           echo "windows-matrix=$(echo $windows_matrix | jq -rc .)" >> $GITHUB_OUTPUT
           echo $(echo $windows_matrix | jq -rc .)

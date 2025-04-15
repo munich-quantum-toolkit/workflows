@@ -61,7 +61,7 @@ on:
         default: false
         type: boolean
       ###---- Windows-specific inputs -------------------------------------------------------------------------------###
-      ### Runs (windows-2022, windows-2025)
+      ### Runs (windows-2022, windows-2025, windows-11-arm)
       ### Defaults are
       ### - windows-2022
       ###------------------------------------------------------------------------------------------------------------###
@@ -71,6 +71,10 @@ on:
         type: boolean
       enable-windows2025:
         description: "Whether to enable the Windows 2025 runner"
+        default: false
+        type: boolean
+      enable-windows11-arm:
+        description: "Whether to enable the Windows 11 ARM runner"
         default: false
         type: boolean
 
@@ -110,6 +114,9 @@ jobs:
           fi
           if [ "${{ inputs.enable-windows2025 }}" = "true" ]; then
             matrix=$(echo $matrix | jq '. + [{"runs-on": "windows-2025"}]')
+          fi
+          if [ "${{ inputs.enable-windows11-arm }}" = "true" ]; then
+            matrix=$(echo $matrix | jq '. + [{"runs-on": "windows-11-arm"}]')
           fi
           echo "matrix=$(echo $matrix | jq -rc .)" >> $GITHUB_OUTPUT
           echo $(echo $matrix | jq -rc .)
