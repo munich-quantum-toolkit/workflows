@@ -75,9 +75,7 @@ jobs:
       - name: Configure CMake
         run: |
           cmake_args="${{ inputs.cmake-args }}"
-          if [ "${{ inputs.compiler }}" == "msvc" ]; then
-            cmake_args="$cmake_args -G Ninja"
-          elif [ "${{ inputs.compiler }}" == "clang" ]; then
+          if [ "${{ inputs.compiler }}" == "clang" ]; then
             cmake_args="$cmake_args -T ClangCL"
           fi
           cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} $cmake_args
