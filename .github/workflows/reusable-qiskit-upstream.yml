@@ -37,9 +37,6 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      # Set up MSVC development environment (Windows only)
-      - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
-
       # Optionally set up Z3
       - if: ${{ inputs.setup-z3 }}
         name: Setup Z3
