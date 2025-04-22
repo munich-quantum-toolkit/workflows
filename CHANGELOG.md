@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 ### Changed
 
 - 🚸 Allow configuring the runners enabled for Python packaging ([#96]) ([**@burgholzer**])
+- 🔧 Use MSVC generator for Windows builds over Ninja ([#102]) ([**@burgholzer**])
 
 ### Removed
 
@@ -33,9 +34,10 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#102]: https://github.com/munich-quantum-toolkit/workflows/pull/102
+[#100]: https://github.com/munich-quantum-toolkit/workflows/pull/100
 [#96]: https://github.com/munich-quantum-toolkit/workflows/pull/96
 [#95]: https://github.com/munich-quantum-toolkit/workflows/pull/95
-[#100]: https://github.com/munich-quantum-toolkit/workflows/pull/100
 
 <!-- Contributor -->
 

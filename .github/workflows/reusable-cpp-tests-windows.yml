@@ -26,7 +26,6 @@ on:
         description: >
           The compiler to use. Defaults to 'msvc'.
           This can be 'msvc' or 'clang'.
-          If 'msvc' is selected, '-G Ninja' is automatically added to the CMake arguments.
           If 'clang' is selected, '-T ClangCL' is automatically added to the CMake arguments.
         default: "msvc"
         type: string
@@ -73,9 +72,7 @@ jobs:
       - name: Configure CMake
         run: |
           cmake_args="${{ inputs.cmake-args }}"
-          if [ "${{ inputs.compiler }}" == "msvc" ]; then
-            cmake_args="$cmake_args -G Ninja"
-          elif [ "${{ inputs.compiler }}" == "clang" ]; then
+          if [ "${{ inputs.compiler }}" == "clang" ]; then
             cmake_args="$cmake_args -T ClangCL"
           fi
           cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} $cmake_args
