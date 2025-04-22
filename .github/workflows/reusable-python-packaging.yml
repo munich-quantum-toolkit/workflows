@@ -190,8 +190,6 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-      # set up MSVC development environment (Windows only)
-      - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
       # optionally set up Z3 (non-Ubuntu only)
       - if: ${{ inputs.setup-z3 && matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
         name: Setup Z3
