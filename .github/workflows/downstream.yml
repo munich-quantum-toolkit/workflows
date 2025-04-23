@@ -1,0 +1,71 @@
+# Copyright (c) 2023 - 2025 Chair for Design Automation, TUM
+# Copyright (c) 2025 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: Downstream Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  cpp-downstream-test:
+    strategy:
+      matrix:
+        package:
+          - { user: munich-quantum-toolkit, repo: core, setup-z3: false }
+          - { user: cda-tum, repo: mqt-qcec, setup-z3: false }
+          - { user: cda-tum, repo: mqt-qmap, setup-z3: true }
+          - { user: cda-tum, repo: mqt-ddsim, setup-z3: false }
+    uses: .github/workflows/reusable-cpp-ci.yml
+    with:
+      repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
+      setup-z3: ${{ matrix.package.setup-z3 }}
+      # enable running on all supported combinations
+      enable-ubuntu2404-gcc-release: true
+      enable-ubuntu2404-arm-gcc-release: true
+      enable-macos13-clang-release: true
+      enable-macos14-clang-release: true
+      enable-windows2022-msvc-release: true
+      enable-ubuntu2404-gcc-debug: true
+      enable-ubuntu2404-clang-release: true
+      enable-ubuntu2404-clang-debug: true
+      enable-ubuntu2204-gcc-release: true
+      enable-ubuntu2204-gcc-debug: true
+      enable-ubuntu2204-clang-release: true
+      enable-ubuntu2204-clang-debug: true
+      enable-ubuntu2404-arm-gcc-debug: true
+      enable-ubuntu2404-arm-clang-release: true
+      enable-ubuntu2404-arm-clang-debug: true
+      enable-ubuntu2204-arm-gcc-release: true
+      enable-ubuntu2204-arm-gcc-debug: true
+      enable-ubuntu2204-arm-clang-release: true
+      enable-ubuntu2204-arm-clang-debug: true
+      enable-macos13-clang-debug: true
+      enable-macos13-gcc-release: true
+      enable-macos13-gcc-debug: true
+      enable-macos14-clang-debug: true
+      enable-macos14-gcc-release: true
+      enable-macos14-gcc-debug: true
+      enable-macos15-clang-release: true
+      enable-macos15-clang-debug: true
+      enable-macos15-gcc-release: true
+      enable-macos15-gcc-debug: true
+      enable-windows2022-msvc-debug: true
+      enable-windows2022-clang-release: true
+      enable-windows2022-clang-debug: true
+      enable-windows2025-msvc-release: true
+      enable-windows2025-msvc-debug: true
+      enable-windows2025-clang-release: true
+      enable-windows2025-clang-debug: true
