@@ -29,6 +29,8 @@ jobs:
           - { user: cda-tum, repo: mqt-qmap, setup-z3: true }
           - { user: cda-tum, repo: mqt-ddsim, setup-z3: false }
     name: 🇨‌ • CI • ${{ matrix.package.user }}/${{ matrix.package.repo }}
+    permissions:
+      contents: read
     uses: ./.github/workflows/reusable-cpp-ci.yml
     with:
       repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
