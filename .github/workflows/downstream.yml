@@ -28,7 +28,7 @@ jobs:
           - { user: cda-tum, repo: mqt-qcec, setup-z3: false }
           - { user: cda-tum, repo: mqt-qmap, setup-z3: true }
           - { user: cda-tum, repo: mqt-ddsim, setup-z3: false }
-    uses: .github/workflows/reusable-cpp-ci.yml
+    uses: ./.github/workflows/reusable-cpp-ci.yml
     with:
       repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
       setup-z3: ${{ matrix.package.setup-z3 }}
