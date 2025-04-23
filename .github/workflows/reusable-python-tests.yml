@@ -16,6 +16,10 @@ on:
           Defaults to the repository this workflow is running in (`github.repository`).
         default: ${{ github.repository }}
         type: string
+      upload-coverage:
+        description: "Whether to upload the generated coverage reports"
+        default: true
+        type: boolean
       runs-on:
         description: "The platform to run the tests on"
         required: true
@@ -77,6 +81,7 @@ jobs:
         run: uvx nox -s tests --verbose -- --cov --cov-report=xml:coverage-${{ inputs.runs-on }}.xml --cov-append
       # upload the report as an artifact to GitHub so that it can later be uploaded to Codecov
       - name: Upload 🐍 coverage report for ${{ inputs.runs-on }}
+        if: ${{ inputs.upload-coverage }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: coverage-${{ inputs.runs-on }}
