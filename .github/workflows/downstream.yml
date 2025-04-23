@@ -161,6 +161,7 @@ jobs:
     uses: ./.github/workflows/reusable-python-packaging.yml
     with:
       repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
+      upload-artifacts: false
       setup-z3: ${{ matrix.package.setup-z3 }}
       pure-python: true
       # enable running on all supported combinations
