@@ -163,7 +163,7 @@ jobs:
       repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
       upload-artifacts: false
       setup-z3: ${{ matrix.package.setup-z3 }}
-      pure-python: true
+      pure-python: ${{ matrix.package.pure-python }}
       # enable running on all supported combinations
       enable-ubuntu2404: true
       enable-ubuntu2404-arm: true
