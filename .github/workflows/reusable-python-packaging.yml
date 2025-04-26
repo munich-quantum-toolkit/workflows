@@ -210,7 +210,7 @@ jobs:
         with:
           enable-cache: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
       # run cibuildwheel to build wheels for the specified Python version
-      - uses: pypa/cibuildwheel@d04cacbc9866d432033b1d09142936e6a0e2121a # v2.23
+      - uses: pypa/cibuildwheel@faf86a6ed7efa889faf6996aa23820831055001a # v2.23
       - name: Verify clean directory
         run: git diff --exit-code
         shell: bash
