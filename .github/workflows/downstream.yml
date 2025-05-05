@@ -1,0 +1,179 @@
+# Copyright (c) 2023 - 2025 Chair for Design Automation, TUM
+# Copyright (c) 2025 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: Downstream Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  downstream-cpp-test:
+    strategy:
+      matrix:
+        package:
+          - { user: munich-quantum-toolkit, repo: core, setup-z3: false }
+          - { user: cda-tum, repo: mqt-qcec, setup-z3: false }
+          - { user: cda-tum, repo: mqt-qmap, setup-z3: true }
+          - { user: cda-tum, repo: mqt-ddsim, setup-z3: false }
+    name: ${{ matrix.package.user }}/${{ matrix.package.repo }} • 🇨‌ • CI
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-cpp-ci.yml
+    with:
+      repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
+      setup-z3: ${{ matrix.package.setup-z3 }}
+      # enable running on all supported combinations
+      enable-ubuntu2404-gcc-release: true
+      enable-ubuntu2404-arm-gcc-release: true
+      enable-macos13-clang-release: true
+      enable-macos14-clang-release: true
+      enable-windows2022-msvc-release: true
+      enable-ubuntu2404-gcc-debug: true
+      enable-ubuntu2404-clang-release: true
+      enable-ubuntu2404-clang-debug: true
+      enable-ubuntu2204-gcc-release: true
+      enable-ubuntu2204-gcc-debug: true
+      enable-ubuntu2204-clang-release: true
+      enable-ubuntu2204-clang-debug: true
+      enable-ubuntu2404-arm-gcc-debug: true
+      enable-ubuntu2404-arm-clang-release: true
+      enable-ubuntu2404-arm-clang-debug: true
+      enable-ubuntu2204-arm-gcc-release: true
+      enable-ubuntu2204-arm-gcc-debug: true
+      enable-ubuntu2204-arm-clang-release: true
+      enable-ubuntu2204-arm-clang-debug: true
+      enable-macos13-clang-debug: true
+      enable-macos13-gcc-release: true
+      enable-macos13-gcc-debug: true
+      enable-macos14-clang-debug: true
+      enable-macos14-gcc-release: true
+      enable-macos14-gcc-debug: true
+      enable-macos15-clang-release: true
+      enable-macos15-clang-debug: true
+      enable-macos15-gcc-release: true
+      enable-macos15-gcc-debug: true
+      enable-windows2022-msvc-debug: true
+      enable-windows2022-clang-release: true
+      enable-windows2022-clang-debug: true
+      enable-windows2025-msvc-release: true
+      enable-windows2025-msvc-debug: true
+      enable-windows2025-clang-release: true
+      enable-windows2025-clang-debug: true
+
+  downstream-python-test:
+    strategy:
+      matrix:
+        package:
+          - { user: munich-quantum-toolkit, repo: core, setup-z3: false }
+          - { user: cda-tum, repo: mqt-qcec, setup-z3: false }
+          - { user: cda-tum, repo: mqt-qmap, setup-z3: true }
+          - { user: cda-tum, repo: mqt-ddsim, setup-z3: false }
+          - { user: cda-tum, repo: mqt-bench, setup-z3: false }
+    name: ${{ matrix.package.user }}/${{ matrix.package.repo }} • 🐍‌ • CI
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/reusable-python-ci.yml
+    with:
+      repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
+      setup-z3: ${{ matrix.package.setup-z3 }}
+      upload-coverage: false
+      # enable running on all supported combinations
+      enable-ubuntu2404: true
+      enable-ubuntu2204: true
+      enable-ubuntu2404-arm: true
+      enable-ubuntu2204-arm: true
+      enable-macos13: true
+      enable-macos14: true
+      enable-macos15: true
+      enable-windows2022: true
+      enable-windows2025: true
+      # testing Python on Windows 11 ARM is not supported by the ecosystem at the moment
+      enable-windows11-arm: false
+
+  downstream-python-linter:
+    strategy:
+      matrix:
+        package:
+          - { user: munich-quantum-toolkit, repo: core, setup-z3: false }
+          - { user: cda-tum, repo: mqt-qcec, setup-z3: false }
+          - { user: cda-tum, repo: mqt-qmap, setup-z3: true }
+          - { user: cda-tum, repo: mqt-ddsim, setup-z3: false }
+          - { user: cda-tum, repo: mqt-bench, setup-z3: false }
+    name: ${{ matrix.package.user }}/${{ matrix.package.repo }} • 🐍‌ • Lint
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-python-linter.yml
+    with:
+      repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
+      setup-z3: ${{ matrix.package.setup-z3 }}
+
+  downstream-python-packaging:
+    strategy:
+      matrix:
+        package:
+          - {
+              user: munich-quantum-toolkit,
+              repo: core,
+              setup-z3: false,
+              pure-python: false,
+            }
+          - {
+              user: cda-tum,
+              repo: mqt-qcec,
+              setup-z3: false,
+              pure-python: false,
+            }
+          - {
+              user: cda-tum,
+              repo: mqt-qmap,
+              setup-z3: true,
+              pure-python: false,
+            }
+          - {
+              user: cda-tum,
+              repo: mqt-ddsim,
+              setup-z3: false,
+              pure-python: false,
+            }
+          - {
+              user: cda-tum,
+              repo: mqt-bench,
+              setup-z3: false,
+              pure-python: true,
+            }
+    name: ${{ matrix.package.user }}/${{ matrix.package.repo }} • 🐍‌ • Packaging
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-python-packaging.yml
+    with:
+      repository: ${{ matrix.package.user }}/${{ matrix.package.repo }}
+      upload-artifacts: false
+      setup-z3: ${{ matrix.package.setup-z3 }}
+      pure-python: ${{ matrix.package.pure-python }}
+      # enable running on all supported combinations
+      enable-ubuntu2404: true
+      enable-ubuntu2404-arm: true
+      enable-macos13: true
+      enable-macos14: true
+      enable-windows2022: true
+      # disable commonly unused runners for packaging
+      enable-ubuntu2204: true
+      enable-ubuntu2204-arm: true
+      enable-macos15: false
+      enable-windows2025: false
+      # Only select MQT packages currently support packaging on Windows 11 ARM
+      enable-windows11-arm: false
