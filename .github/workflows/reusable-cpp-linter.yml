@@ -44,7 +44,7 @@ on:
         type: boolean
       install-pkgs:
         description: "Packages to install in the Python virtual environment as a comma-separated list"
-        default: "pybind11"
+        default: ""
         type: string
 
 jobs:
