@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.10.0]
+
 This release adds support for linting Python bindings. To this end, the `reusable-cpp-linter.yml` workflow adds the option
 `setup-pybind11` to set up a Python environment and install the `pybind11` package. By default, this option is disabled.
 When enabled, the Python environment is activated automatically such that CMake will find the `pybind11` package.
@@ -40,5 +42,6 @@ While initial testing has shown minimal impact, this is still a breaking change.
 For example, it seems like using Ninja as a generator will lead to the wrong compiler being used.
 Consider removing any `-G Ninja` flags from your CMake invocations under Windows.
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.9.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.8.1...v1.9.0
