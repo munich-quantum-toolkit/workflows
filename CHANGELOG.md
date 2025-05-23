@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.10.0] - 2025-05-23
+
 ### Changed
 
 - 🚨 Add support for linting Python bindings with clang-tidy ([#114]) ([**@ystade**])
@@ -32,7 +34,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.9.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.9.0
 [1.8.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.8.1
 
