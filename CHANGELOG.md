@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- 🚨 Add support for linting python bindings ([#114]) ([**@ystade**])
+
 ## [1.9.0] - 2025-04-26
 
 ### Added
@@ -34,6 +38,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#114]: https://github.com/munich-quantum-toolkit/workflows/pull/114
 [#102]: https://github.com/munich-quantum-toolkit/workflows/pull/102
 [#100]: https://github.com/munich-quantum-toolkit/workflows/pull/100
 [#96]: https://github.com/munich-quantum-toolkit/workflows/pull/96
@@ -42,6 +47,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 <!-- Contributor -->
 
 [**@burgholzer**]: https://github.com/burgholzer
+[**@ystade**]: https://github.com/ystade
 
 <!-- General links -->
 
