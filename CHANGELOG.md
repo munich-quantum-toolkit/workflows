@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Changed
 
-- 🚨 Add support for linting python bindings ([#114]) ([**@ystade**])
+- 🚨 Add support for linting Python bindings with clang-tidy ([#114]) ([**@ystade**])
 
 ## [1.9.0] - 2025-04-26
 
