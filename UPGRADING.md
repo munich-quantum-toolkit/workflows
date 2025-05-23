@@ -4,6 +4,16 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+This release adds support for linting Python bindings. To this end, the `reusable-cpp-linter.yml` workflow adds the option
+`setup-pybind11` to set up a Python environment and install the `pybind11` package. By default, this option is disabled.
+When enabled, the Python environment is activated automatically such that CMake will find the `pybind11` package.
+
+This change includes that all `python` subdirectories are not ignored by the linter anymore. This may result in new warnings
+when the bindings are changed. To fix this, enable the option `setup-pybind11` of the `reusable-cpp-linter.yml` workflow
+and add the additional workflow argument `cmake-args: -DBUILD_MQT_[project]_BINDINGS=ON` to the `reusable-cpp-linter.yml` workflow step where
+`[project]` is the name of the project you want to build. This will ensure that the bindings are built and the warnings are
+resolved.
+
 ## [1.9.0]
 
 This release adds support for the new Windows 11 ARM runners.

@@ -38,6 +38,14 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      setup-python:
+        description: "Whether to setup and activate a Python virtual environment"
+        default: false
+        type: boolean
+      install-pkgs:
+        description: "Packages to install in the Python virtual environment as a comma-separated list"
+        default: ""
+        type: string
 
 jobs:
   lint:
@@ -88,6 +96,25 @@ jobs:
       - if: ${{ inputs.build-project }}
         name: Set up mold as linker
         uses: rui314/setup-mold@e16410e7f8d9e167b74ad5697a9089a35126eb50 # v1
+      # set up uv for faster Python package management
+      - if: ${{ inputs.setup-python }}
+        name: Install the latest version of uv
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6.1.0
+        with:
+          python-version: 3.13
+          activate-environment: true
+      # install the given packages in the Python virtual environment
+      - if: ${{ inputs.setup-python }}
+        name: Validate package list and install given packages
+        run: |
+          pkgs="${{ inputs.install-pkgs }}"
+          if [[ ! "$pkgs" =~ ^[a-zA-Z0-9=._-]+(,[a-zA-Z0-9=._-]+)*$ ]]; then
+            echo "Invalid package list"
+            exit 1
+          fi
+          pkgs_array=()
+          IFS=',' read -ra pkgs_array <<< "$pkgs"
+          uv pip install "${pkgs_array[@]}"
       # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
         run: |
@@ -112,7 +139,7 @@ jobs:
           style: ""
           tidy-checks: ""
           version: ${{ env.clang-version }}
-          ignore: "build|!build/mlir/**|**/python|**/include|include"
+          ignore: "build|!build/mlir/**|**/include|include"
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
           step-summary: true
           database: "build"
