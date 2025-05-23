@@ -43,7 +43,7 @@ on:
         default: false
         type: boolean
       install-pkgs:
-        description: "Packages to install in the Python virtual environment as a space-separated list"
+        description: "Packages to install in the Python virtual environment as a comma-separated list"
         default: "pybind11"
         type: string
 
@@ -106,7 +106,15 @@ jobs:
       # install the given packages in the Python virtual environment
       - if: ${{ inputs.setup-python }}
         name: Install given packages
-        run: uv pip install ${{ inputs.install-pkgs }}
+        run: |
+          pkgs="${{ inputs.install-pkgs }}"
+          if [[ ! "$pkgs" =~ ^[a-zA-Z0-9._\-, ]+$ ]]; then
+            echo "Invalid package list"
+            exit 1
+          fi
+          pkgs_array=()
+          IFS=',' read -ra pkgs_array <<< "$pkgs"
+          uv pip install "${pkgs_array[@]}"
       # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
         run: |
