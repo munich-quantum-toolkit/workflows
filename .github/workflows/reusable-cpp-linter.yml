@@ -39,7 +39,7 @@ on:
         default: "4.13.4"
         type: string
       setup-pybind11:
-        description: "Whether to setup a python venv with pybind11"
+        description: "Whether to setup and activate a Python virtual environment with pybind11 installed"
         default: false
         type: boolean
 
