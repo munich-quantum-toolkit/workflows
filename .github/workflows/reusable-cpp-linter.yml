@@ -38,10 +38,14 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
-      setup-pybind11:
-        description: "Whether to setup and activate a Python virtual environment with pybind11 installed"
+      setup-python:
+        description: "Whether to setup and activate a Python virtual environment"
         default: false
         type: boolean
+      install-pkgs:
+        description: "Packages to install in the Python virtual environment as a space-separated list"
+        default: "pybind11"
+        type: string
 
 jobs:
   lint:
@@ -93,16 +97,16 @@ jobs:
         name: Set up mold as linker
         uses: rui314/setup-mold@e16410e7f8d9e167b74ad5697a9089a35126eb50 # v1
       # set up uv for faster Python package management
-      - if: ${{ inputs.setup-pybind11 }}
+      - if: ${{ inputs.setup-python }}
         name: Install the latest version of uv
         uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6.1.0
         with:
           python-version: 3.13
           activate-environment: true
-      # install pybind11 for the cmake build to find its headers
-      - if: ${{ inputs.setup-pybind11 }}
-        name: Install pybind11
-        run: uv pip install pybind11
+      # install the given packages in the Python virtual environment
+      - if: ${{ inputs.setup-python }}
+        name: Install given packages
+        run: uv pip install ${{ inputs.install-pkgs }}
       # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
         run: |
