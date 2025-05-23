@@ -105,10 +105,10 @@ jobs:
           activate-environment: true
       # install the given packages in the Python virtual environment
       - if: ${{ inputs.setup-python }}
-        name: Install given packages
+        name: Validate package list and install given packages
         run: |
           pkgs="${{ inputs.install-pkgs }}"
-          if [[ ! "$pkgs" =~ ^[a-zA-Z0-9._\-, ]+$ ]]; then
+          if [[ ! "$pkgs" =~ ^[a-zA-Z0-9=._-]+(,[a-zA-Z0-9=._-]+)*$ ]]; then
             echo "Invalid package list"
             exit 1
           fi
