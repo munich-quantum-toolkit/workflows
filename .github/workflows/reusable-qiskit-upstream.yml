@@ -54,7 +54,7 @@ jobs:
 
       # Set up mold as linker for faster C++ builds (Linux only)
       - name: Set up mold as linker
-        uses: rui314/setup-mold@e16410e7f8d9e167b74ad5697a9089a35126eb50 # v1
+        uses: rui314/setup-mold@67424c1b3680e35255d95971cbd5de0047bf31c3 # v1
 
       # Set up uv for faster Python package management
       - name: Install uv
