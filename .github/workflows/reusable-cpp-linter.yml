@@ -131,7 +131,7 @@ jobs:
         run: cmake --build build --config Debug
       # runs the cpp-linter action using the generated compilation database and the specified clang version
       - name: Run cpp-linter
-        uses: cpp-linter/cpp-linter-action@8ae6cfaea8cc035c6155b5fe79d7991a9bf638af # v2
+        uses: cpp-linter/cpp-linter-action@f91c446a32ae3eb9f98fef8c9ed4c7cb613a4f8a # v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ github.token }}
