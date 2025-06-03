@@ -5,7 +5,11 @@ This document describes breaking changes and how to upgrade. For a complete list
 ## [Unreleased]
 
 This release adapts the file filter for the change detection to the new project structure regarding the Python bindings.
-This may cause new warnings in the CI workflow if you have not yet adapted your project to the new structure.
+This new project structure moves all Python code (except tests) to the top-level `python` directory and the C++ code for the Python bindings to the top-level `bindings` directory.
+Hence, the directories `src` and `include` then contain only C++ code that is not related to the Python bindings.
+
+If the old directory structure is still in use, this update may trigger warnings in C++ files when changes are made only to Python files.
+Additionally, pure Python changes will not trigger the Python CI anymore using the old structure.
 
 ## [1.10.0]
 
