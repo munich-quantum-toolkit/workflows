@@ -102,7 +102,12 @@ jobs:
         uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6.1.0
         with:
           python-version: 3.13
-          activate-environment: true
+      # create and activate a Python virtual environment
+      - if: ${{ inputs.setup-python }}
+        name: Create and activate Python virtual environment
+        run: |
+          uv venv --python 3.13 venv
+          source venv/bin/activate
       # install the given packages in the Python virtual environment
       - if: ${{ inputs.setup-python }}
         name: Validate package list and install given packages
