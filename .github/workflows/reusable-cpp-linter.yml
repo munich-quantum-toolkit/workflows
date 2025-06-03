@@ -96,19 +96,20 @@ jobs:
       - if: ${{ inputs.build-project }}
         name: Set up mold as linker
         uses: rui314/setup-mold@67424c1b3680e35255d95971cbd5de0047bf31c3 # v1
-      # set up uv for faster Python package management
+      # set up Python used by cpp-linter
       - if: ${{ inputs.setup-python }}
-        name: Install the latest version of uv
-        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6.1.0
+        name: Set up Python used by cpp-linter
+        id: setup-python
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.13
-      # create and activate a Python virtual environment
+          python-version: "3.10"
+          update-environment: false
+      # create virtual environment
       - if: ${{ inputs.setup-python }}
-        name: Create and activate Python virtual environment
+        name: Create virtual environment
         run: |
-          uv venv --python 3.13 venv
-          source venv/bin/activate
-      # install the given packages in the Python virtual environment
+          ${{ steps.setup-python.outputs.python-path }} -m venv venv
+      # install given packages in the virtual environment
       - if: ${{ inputs.setup-python }}
         name: Validate package list and install given packages
         run: |
@@ -119,7 +120,9 @@ jobs:
           fi
           pkgs_array=()
           IFS=',' read -ra pkgs_array <<< "$pkgs"
-          uv pip install "${pkgs_array[@]}"
+          source venv/bin/activate
+          pip install "${pkgs_array[@]}"
+          deactivate
       # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
         run: |
