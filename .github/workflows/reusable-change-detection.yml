@@ -48,17 +48,13 @@ jobs:
         uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
         with:
           filter: |
+            bindings/**
             include/**
-            !include/python/**
-            !include/**/python/**
             src/**
-            !src/mqt/**
-            !src/python/**
             test/**
             !test/python/**
             CMakeLists.txt
             cmake/**
-            extern/**
             .github/codecov.yml
             .github/workflows/reusable-cpp-tests-ubuntu.yml
             .github/workflows/reusable-cpp-tests-macos.yml
@@ -79,12 +75,9 @@ jobs:
         uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
         with:
           filter: |
+            bindings/**
             include/**
-            !include/python/**
-            !include/**/python/**
             src/**
-            !src/mqt/**
-            !src/python/**
             test/**
             !test/python/**
             mlir/**
@@ -105,8 +98,9 @@ jobs:
         with:
           filter: |
             cmake/**
-            extern/**
+            bindings/**
             include/**
+            python/**
             src/**
             test/**/*.py
             tests/**/*.py
@@ -134,8 +128,9 @@ jobs:
         with:
           filter: |
             cmake/**
-            extern/**
+            bindings/**
             include/**
+            python/**
             src/**
             test/**
             pyproject.toml

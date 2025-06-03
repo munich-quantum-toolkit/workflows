@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- 💚 Adapt file filter for the change detection to the new project structure regarding the python bindings ([#119]) ([**@ystade**])
+
 ## [1.10.0] - 2025-05-23
 
 ### Changed
@@ -41,6 +45,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#119]: https://github.com/munich-quantum-toolkit/workflows/pull/119
 [#114]: https://github.com/munich-quantum-toolkit/workflows/pull/114
 [#102]: https://github.com/munich-quantum-toolkit/workflows/pull/102
 [#100]: https://github.com/munich-quantum-toolkit/workflows/pull/100
