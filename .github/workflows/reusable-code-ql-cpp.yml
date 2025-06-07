@@ -55,7 +55,7 @@ jobs:
         uses: rui314/setup-mold@67424c1b3680e35255d95971cbd5de0047bf31c3 # v1
       # initialize CodeQL with the extended security-and-quality queries
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3
+        uses: github/codeql-action/init@fca7ace96b7d713c7035871441bd52efbe39e27e # v3
         with:
           languages: cpp
           config: |
@@ -69,7 +69,7 @@ jobs:
         run: cmake --build build
       # run CodeQL analysis without uploading results (to avoid false positives on third party code)
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3
+        uses: github/codeql-action/analyze@fca7ace96b7d713c7035871441bd52efbe39e27e # v3
         with:
           upload: False
           output: sarif-results
@@ -84,6 +84,6 @@ jobs:
           output: sarif-results/cpp.sarif
       # upload the results to CodeQL
       - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3
+        uses: github/codeql-action/upload-sarif@fca7ace96b7d713c7035871441bd52efbe39e27e # v3
         with:
           sarif_file: sarif-results/cpp.sarif
