@@ -199,7 +199,7 @@ jobs:
       # set up ccache for faster C++ builds
       - if: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
         name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@f84f86840109403e0fe0ded8b0766c9633affa16 # v1
+        uses: Chocobo1/setup-ccache-action@563420fe2f8f1dd18ad6e58deeb3abfc1b28819e # v1
         with:
           prepend_symlinks_to_path: false
           windows_compile_environment: msvc
