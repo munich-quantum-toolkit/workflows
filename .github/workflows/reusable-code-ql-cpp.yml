@@ -52,7 +52,7 @@ jobs:
           override_cache_key: codeql-cpp
       # set up mold as linker for faster C++ builds
       - name: Set up mold as linker
-        uses: rui314/setup-mold@67424c1b3680e35255d95971cbd5de0047bf31c3 # v1
+        uses: rui314/setup-mold@b3958095189f34b95d402a680b6e96b7f194f7b9 # v1
       # initialize CodeQL with the extended security-and-quality queries
       - name: Initialize CodeQL
         uses: github/codeql-action/init@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3
