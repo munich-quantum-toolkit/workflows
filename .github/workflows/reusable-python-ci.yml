@@ -12,6 +12,16 @@ on:
   workflow_call:
     inputs:
       ###---- General inputs ----------------------------------------------------------------------------------------###
+      repository:
+        description: >
+          The repository to run this action on.
+          Defaults to the repository this workflow is running in (`github.repository`).
+        default: ${{ github.repository }}
+        type: string
+      upload-coverage:
+        description: "Whether to upload the generated coverage reports"
+        default: true
+        type: boolean
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -130,12 +140,15 @@ jobs:
         include: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     uses: ./.github/workflows/reusable-python-tests.yml
     with:
+      repository: ${{ inputs.repository }}
+      upload-coverage: ${{ inputs.upload-coverage }}
       runs-on: ${{ matrix.runs-on }}
       setup-z3: ${{ inputs.setup-z3 }}
       z3-version: ${{ inputs.z3-version }}
 
   python-coverage-upload:
     name: 📈
+    if: ${{ inputs.upload-coverage }}
     needs: [python-tests]
     runs-on: ubuntu-latest
     permissions:

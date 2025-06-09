@@ -12,6 +12,16 @@ on:
   workflow_call:
     inputs:
       ###---- General inputs ----------------------------------------------------------------------------------------###
+      repository:
+        description: >
+          The repository to run this action on.
+          Defaults to the repository this workflow is running in (`github.repository`).
+        default: ${{ github.repository }}
+        type: string
+      upload-artifacts:
+        description: "Whether to upload the generated artifacts"
+        default: true
+        type: boolean
       pure-python:
         description: "Whether this is a pure Python package (or contains compiled extensions)"
         default: false
@@ -90,6 +100,7 @@ jobs:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
+          repository: ${{ inputs.repository }}
           submodules: recursive
           fetch-depth: 0
       # set up uv for faster Python package management
@@ -103,6 +114,7 @@ jobs:
         run: uvx twine check dist/*
       # upload the source distribution as an artifact (adds a `dev-` prefix for PRs)
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ inputs.upload-artifacts }}
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-sdist
           path: dist/*.tar.gz
@@ -115,6 +127,7 @@ jobs:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
+          repository: ${{ inputs.repository }}
           submodules: recursive
           fetch-depth: 0
       # set up uv for faster Python package management
@@ -128,6 +141,7 @@ jobs:
         run: uvx twine check dist/*
       # upload the wheel as an artifact (adds a `dev-` prefix for PRs)
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ inputs.upload-artifacts }}
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheel
           path: dist/*.whl
@@ -188,6 +202,7 @@ jobs:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
+          repository: ${{ inputs.repository }}
           submodules: recursive
           fetch-depth: 0
       # optionally set up Z3 (non-Ubuntu only)
@@ -217,6 +232,7 @@ jobs:
       # upload the wheels as an artifact (adds a `dev-` prefix for PRs)
       - name: Upload wheels
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ inputs.upload-artifacts }}
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ matrix.runs-on }}-${{ strategy.job-index }}
           path: wheelhouse/*.whl

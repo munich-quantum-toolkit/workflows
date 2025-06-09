@@ -10,6 +10,12 @@ name: 🇨 • Tests • macos
 on:
   workflow_call:
     inputs:
+      repository:
+        description: >
+          The repository to run this action on.
+          Defaults to the repository this workflow is running in (`github.repository`).
+        default: ${{ github.repository }}
+        type: string
       runs-on:
         description: >
           The macOS runner image to use. Defaults to 'macos-latest'.
@@ -57,6 +63,7 @@ jobs:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
+          repository: ${{ inputs.repository }}
           submodules: recursive
           fetch-depth: 0
       # optionally set up Z3
