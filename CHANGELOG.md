@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Added
+
+- 🐍🚨 Add support for running Astral's `ty` type checker as part of the `reusable-python-linter.yml` workflow ([#128]) ([**@burgholzer**])
+
+### Changed
+
+- 🐍🚨 Update `reusable-python-linter.yml` to allow disabling the `mypy` type checker ([#128]) ([**@burgholzer**])
+
 ## [1.11.0] - 2025-06-15
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1110)._
