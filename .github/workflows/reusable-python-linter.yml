@@ -10,6 +10,14 @@ name: 🐍 • Lint
 on:
   workflow_call:
     inputs:
+      enable-ty:
+        description: "Whether to enable Astral's ty for type checking"
+        default: false
+        type: boolean
+      enable-mypy:
+        description: "Whether to enable mypy for type checking"
+        default: true
+        type: boolean
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -48,8 +56,14 @@ jobs:
       # set up uv for faster Python package management
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+      # run mypy for static type checking
       - name: Run mypy
+        if: ${{ inputs.enable-mypy }}
         run: uvx --with pre-commit-uv pre-commit run -a mypy
+      # run ty for type checking
+      - name: Run ty
+        if: ${{ inputs.enable-ty }}
+        run: uvx ty check
       # run check-sdist to ensure the package sdist is correct
       - name: Run check-sdist
         run: uvx check-sdist --inject-junk
