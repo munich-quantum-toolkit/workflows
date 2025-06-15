@@ -1,3 +1,5 @@
+<!-- Entries in each category are sorted by merge time, with the latest PRs appearing first. -->
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -7,17 +9,26 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.11.0] - 2025-06-15
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1110)._
+
 ### Changed
 
-- 💚 Adapt file filter for the change detection to the new project structure regarding the python bindings ([#119]) ([**@ystade**])
+- ⬆️ Update `cibuildwheel` to `v3` ([#126]) ([**@burgholzer**])
+- 💚 Adapt file filter for the change detection to the new project structure regarding the Python bindings ([#119]) ([**@ystade**])
 
 ## [1.10.0] - 2025-05-23
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1100)._
 
 ### Changed
 
 - 🚨 Add support for linting Python bindings with clang-tidy ([#114]) ([**@ystade**])
 
 ## [1.9.0] - 2025-04-26
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#190)._
 
 ### Added
 
@@ -38,13 +49,15 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.11.0
 [1.10.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.9.0
 [1.8.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.8.1
 
 <!-- PR links -->
 
+[#126]: https://github.com/munich-quantum-toolkit/workflows/pull/126
 [#119]: https://github.com/munich-quantum-toolkit/workflows/pull/119
 [#114]: https://github.com/munich-quantum-toolkit/workflows/pull/114
 [#102]: https://github.com/munich-quantum-toolkit/workflows/pull/102
