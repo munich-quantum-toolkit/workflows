@@ -4,12 +4,26 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.11.0]
+
 This release adapts the file filter for the change detection to the new project structure regarding the Python bindings.
 This new project structure moves all Python code (except tests) to the top-level `python` directory and the C++ code for the Python bindings to the top-level `bindings` directory.
 Hence, the directories `src` and `include` then contain only C++ code that is not related to the Python bindings.
 
 If the old directory structure is still in use, this update may trigger warnings in C++ files when changes are made only to Python files.
 Additionally, pure Python changes will not trigger the Python CI anymore using the old structure.
+
+This release also updates `cibuildwheel` to `v3`, the latest major version released a couple of weeks ago.
+Most importantly, the default manylinux images have been updated to `manylinux_2_28`, so that the following lines are no longer necessary in Python projects with compiled extensions.
+
+```toml
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+manylinux-ppc64le-image = "manylinux_2_28"
+manylinux-s390x-image = "manylinux_2_28"
+```
+
+In principle, this also marks the point where one could start testing Python 3.14 support, which is currently in beta.
 
 ## [1.10.0]
 
@@ -49,6 +63,7 @@ While initial testing has shown minimal impact, this is still a breaking change.
 For example, it seems like using Ninja as a generator will lead to the wrong compiler being used.
 Consider removing any `-G Ninja` flags from your CMake invocations under Windows.
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.8.1...v1.9.0
