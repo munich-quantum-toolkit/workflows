@@ -15,12 +15,14 @@ Additionally, pure Python changes will not trigger the Python CI anymore using t
 
 This release also updates `cibuildwheel` to `v3`, the latest major version released a couple of weeks ago.
 Most importantly, the default manylinux images have been updated to `manylinux_2_28`, so that the following lines are no longer necessary in Python projects with compiled extensions.
+
 ```toml
 manylinux-x86_64-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
 manylinux-ppc64le-image = "manylinux_2_28"
 manylinux-s390x-image = "manylinux_2_28"
 ```
+
 In principle, this also marks the point where one could start testing Python 3.14 support, which is currently in beta.
 
 ## [1.10.0]
