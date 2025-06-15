@@ -11,6 +11,12 @@ on:
   workflow_call:
     inputs:
       ###---- General inputs ----------------------------------------------------------------------------------------###
+      repository:
+        description: >
+          The repository to run this action on.
+          Defaults to the repository this workflow is running in (`github.repository`).
+        default: ${{ github.repository }}
+        type: string
       cmake-args:
         description: >
           Additional arguments to pass to CMake on every OS. Defaults to an empty string.
@@ -386,6 +392,7 @@ jobs:
       fail-fast: false
     uses: ./.github/workflows/reusable-cpp-tests-ubuntu.yml
     with:
+      repository: ${{ inputs.repository }}
       runs-on: ${{ matrix.runs-on }}
       compiler: ${{ matrix.compiler }}
       config: ${{ matrix.config }}
@@ -403,6 +410,7 @@ jobs:
       fail-fast: false
     uses: ./.github/workflows/reusable-cpp-tests-macos.yml
     with:
+      repository: ${{ inputs.repository }}
       runs-on: ${{ matrix.runs-on }}
       compiler: ${{ matrix.compiler }}
       config: ${{ matrix.config }}
@@ -420,6 +428,7 @@ jobs:
       fail-fast: false
     uses: ./.github/workflows/reusable-cpp-tests-windows.yml
     with:
+      repository: ${{ inputs.repository }}
       runs-on: ${{ matrix.runs-on }}
       compiler: ${{ matrix.compiler }}
       config: ${{ matrix.config }}
