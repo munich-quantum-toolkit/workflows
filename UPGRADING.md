@@ -10,6 +10,11 @@ Additionally, the `mypy` type checker can now be disabled by setting the `run-my
 While `ty` is a drop-in replacement for `mypy`, it is still in alpha and may not be as stable as `mypy`.
 The current recommendation is to use `ty` and `mypy` in parallel, as they may catch different issues.
 Once `ty` is stable, it can be used as a drop-in replacement for `mypy`.
+Project may want to add `ty` to their development dependencies to ensure that the same version is used for all developers.
+
+```commandline
+uv add --dev ty
+```
 
 ## [1.11.0]
 
