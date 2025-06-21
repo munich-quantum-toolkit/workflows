@@ -65,7 +65,7 @@ jobs:
       # optionally set up Z3
       - if: ${{ inputs.setup-z3 }}
         name: Setup Z3
-        uses: cda-tum/setup-z3@34d1e04d31a168fa330626fad1275cf23de02591 # v1
+        uses: cda-tum/setup-z3@4bc179e7fc1cd1a7f5f13429246c692041b19eb3 # v1
         with:
           version: ${{ inputs.z3-version }}
       # configure CMake in the specified mode, optionally with additional arguments
