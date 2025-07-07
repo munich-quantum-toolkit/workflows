@@ -15,9 +15,12 @@ on:
         default: false
         type: boolean
         required: false
-      token:
-        description: Token with permissions to create and update pull requests
-        type: string
+    secrets:    
+      APP_ID:
+        description: ID of the GitHub App with permission to create and update pull requests
+        required: true
+      APP_PRIVATE_KEY:
+        description: Private key of the GitHub App with permission to create and update pull requests
         required: true
 jobs:
   update-mqt-core:
@@ -27,6 +30,12 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      # Create a GitHub App token
+      - id: create-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       # Check out the repository
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
