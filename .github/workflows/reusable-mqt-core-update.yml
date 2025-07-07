@@ -160,7 +160,7 @@ jobs:
         if: steps.compare-versions.outputs.update == 'true'
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
         with:
-          token: ${{ inputs.token }}
+          token: ${{ steps.create-token.outputs.token }}
           commit-message: "⬆️ Update `munich-quantum-toolkit/core`"
           title: "⬆️ Update `munich-quantum-toolkit/core`"
           body: |
