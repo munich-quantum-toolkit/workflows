@@ -15,7 +15,7 @@ on:
         default: false
         type: boolean
         required: false
-    secrets:    
+    secrets:
       APP_ID:
         description: ID of the GitHub App with permission to create and update pull requests
         required: true
