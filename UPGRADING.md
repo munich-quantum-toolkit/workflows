@@ -16,6 +16,10 @@ Project may want to add `ty` to their development dependencies to ensure that th
 uv add --dev ty
 ```
 
+Furthermore, this release changes the `reusable-mqt-core-update.yml` workflow to use a GitHub App token for creating and editing pull requests.
+This token has permissions to the trigger workflows in the created pull requests, which was not the case for the previously used token.
+When using the `reusable-mqt-core-update.yml` workflow, it is now necessary to pass the `APP_ID` and `APP_PRIVATE_KEY` as secrets.
+
 ## [1.11.0]
 
 This release adapts the file filter for the change detection to the new project structure regarding the Python bindings.

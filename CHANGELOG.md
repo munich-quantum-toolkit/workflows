@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Changed
 
+- 👷 Use GitHub App token for workflow that updates MQT Core ([#142]) ([**@denialhaag**])
 - 🐍🚨 Update `reusable-python-linter.yml` to allow disabling the `mypy` type checker ([#128]) ([**@burgholzer**])
 
 ## [1.11.0] - 2025-06-15
@@ -65,6 +66,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#142]: https://github.com/munich-quantum-toolkit/workflows/pull/142
 [#126]: https://github.com/munich-quantum-toolkit/workflows/pull/126
 [#119]: https://github.com/munich-quantum-toolkit/workflows/pull/119
 [#114]: https://github.com/munich-quantum-toolkit/workflows/pull/114
@@ -77,6 +79,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 [**@burgholzer**]: https://github.com/burgholzer
 [**@ystade**]: https://github.com/ystade
+[**@denialhaag**]: https://github.com/denialhaag
 
 <!-- General links -->
 
