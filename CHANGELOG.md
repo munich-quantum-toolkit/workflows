@@ -9,12 +9,17 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.12.0] - 2025-07-08
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1120)._
+
 ### Added
 
 - 🐍🚨 Add support for running Astral's `ty` type checker as part of the `reusable-python-linter.yml` workflow ([#128]) ([**@burgholzer**])
 
 ### Changed
 
+- 👷 Use GitHub App token for workflow that updates MQT Core ([#142]) ([**@denialhaag**])
 - 🐍🚨 Update `reusable-python-linter.yml` to allow disabling the `mypy` type checker ([#128]) ([**@burgholzer**])
 
 ## [1.11.0] - 2025-06-15
@@ -57,7 +62,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.12.0
 [1.11.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.11.0
 [1.10.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.9.0
@@ -65,6 +71,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#142]: https://github.com/munich-quantum-toolkit/workflows/pull/142
 [#126]: https://github.com/munich-quantum-toolkit/workflows/pull/126
 [#119]: https://github.com/munich-quantum-toolkit/workflows/pull/119
 [#114]: https://github.com/munich-quantum-toolkit/workflows/pull/114
@@ -77,6 +84,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 [**@burgholzer**]: https://github.com/burgholzer
 [**@ystade**]: https://github.com/ystade
+[**@denialhaag**]: https://github.com/denialhaag
 
 <!-- General links -->
 

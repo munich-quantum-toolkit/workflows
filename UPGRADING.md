@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.12.0]
+
 This release adds support for running Astral's `ty` type checker as part of the `reusable-python-linter.yml` workflow.
 To enable this, you can set the `run-ty` option to `true` in the workflow configuration.
 Additionally, the `mypy` type checker can now be disabled by setting the `run-mypy` option to `false`.
@@ -15,6 +17,23 @@ Project may want to add `ty` to their development dependencies to ensure that th
 ```commandline
 uv add --dev ty
 ```
+
+Furthermore, this release changes the `reusable-mqt-core-update.yml` workflow to use a GitHub App token for creating and editing pull requests.
+This token has permissions to trigger workflows in the created pull requests, which is not the case for the default GitHub token used previously.
+When using the `reusable-mqt-core-update.yml` workflow, it is now necessary to pass the `APP_ID` and `APP_PRIVATE_KEY` as secrets.
+
+```yaml
+update-mqt-core:
+  name: ⬆️ Update MQT Core
+  uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-mqt-core-update.yml@v1.12
+  with:
+    update-to-head: ${{ github.event.inputs.update-to-head == 'true' }}
+  secrets:
+    APP_ID: ${{ secrets.APP_ID }}
+    APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+```
+
+Both variables are stored as organization-wide secrets and do not need to be explicitly added to each repository.
 
 ## [1.11.0]
 
@@ -75,7 +94,8 @@ While initial testing has shown minimal impact, this is still a breaking change.
 For example, it seems like using Ninja as a generator will lead to the wrong compiler being used.
 Consider removing any `-G Ninja` flags from your CMake invocations under Windows.
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.8.1...v1.9.0

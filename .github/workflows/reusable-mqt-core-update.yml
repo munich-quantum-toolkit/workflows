@@ -11,10 +11,17 @@ on:
   workflow_call:
     inputs:
       update-to-head:
-        description: "Whether to update to the latest commit on the main branch or the latest release"
+        description: Whether to update to the latest commit on the main branch or the latest release
         default: false
         type: boolean
         required: false
+    secrets:
+      APP_ID:
+        description: ID of the GitHub App with permission to create and update pull requests
+        required: true
+      APP_PRIVATE_KEY:
+        description: Private key of the GitHub App with permission to create and update pull requests
+        required: true
 jobs:
   update-mqt-core:
     name: ⬆️ Update MQT Core
@@ -23,6 +30,12 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      # Create a GitHub App token
+      - id: create-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       # Check out the repository
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
@@ -147,17 +160,13 @@ jobs:
         if: steps.compare-versions.outputs.update == 'true'
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
         with:
-          token: ${{ github.token }}
+          token: ${{ steps.create-token.outputs.token }}
           commit-message: "⬆️ Update `munich-quantum-toolkit/core`"
           title: "⬆️ Update `munich-quantum-toolkit/core`"
           body: |
             This pull request updates the [munich-quantum-toolkit/core](https://github.com/munich-quantum-toolkit/core) dependency from munich-quantum-toolkit/core@${{ steps.get-used-version.outputs.revision }} (version v${{ steps.get-used-version.outputs.version }}) to munich-quantum-toolkit/core@${{ steps.determine-new-version-and-revision.outputs.new_revision }} (version v${{ steps.determine-new-version-and-revision.outputs.new_version }}).
 
             **Full Changelog**: https://github.com/munich-quantum-toolkit/core/compare/${{ steps.get-used-version.outputs.revision }}...${{ steps.determine-new-version-and-revision.outputs.new_revision }}
-
-            > [!NOTE]
-            > This pull request was automatically created by a GitHub Actions workflow, which does not have permissions to trigger other workflows.
-            > Manually close and reopen this pull request to trigger the dependent workflows.
           branch: "update-mqt-core-${{ steps.determine-new-version-and-revision.outputs.new_revision }}"
           labels: "dependencies,c++"
           base: "main"
