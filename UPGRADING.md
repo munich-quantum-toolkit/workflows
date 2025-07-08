@@ -18,17 +18,17 @@ uv add --dev ty
 
 Furthermore, this release changes the `reusable-mqt-core-update.yml` workflow to use a GitHub App token for creating and editing pull requests.
 This token has permissions to trigger workflows in the created pull requests, which is not the case for the default GitHub token used previously.
-When using the `reusable-mqt-core-update.yml` workflow, it is now necessary to pass the `APP_ID` and `APP_PRIVATE_KEY` as secrets. 
+When using the `reusable-mqt-core-update.yml` workflow, it is now necessary to pass the `APP_ID` and `APP_PRIVATE_KEY` as secrets.
 
 ```yaml
 update-mqt-core:
-    name: ⬆️ Update MQT Core
-    uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-mqt-core-update.yml@v1.12
-    with:
-      update-to-head: ${{ github.event.inputs.update-to-head == 'true' }}
-    secrets:
-      APP_ID: ${{ secrets.APP_ID }}
-      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+  name: ⬆️ Update MQT Core
+  uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-mqt-core-update.yml@v1.12
+  with:
+    update-to-head: ${{ github.event.inputs.update-to-head == 'true' }}
+  secrets:
+    APP_ID: ${{ secrets.APP_ID }}
+    APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
 Both variables are stored as organization wide secrets and do not need to be explicitly added to each repository.
