@@ -33,7 +33,7 @@ update-mqt-core:
     APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
-Both variables are stored as organization wide secrets and do not need to be explicitly added to each repository.
+Both variables are stored as organization-wide secrets and do not need to be explicitly added to each repository.
 
 ## [1.11.0]
 
