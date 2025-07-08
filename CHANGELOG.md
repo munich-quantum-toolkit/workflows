@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.12.0] - 2025-07-08
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1120)._
+
 ### Added
 
 - 🐍🚨 Add support for running Astral's `ty` type checker as part of the `reusable-python-linter.yml` workflow ([#128]) ([**@burgholzer**])
@@ -58,7 +62,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.12.0
 [1.11.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.11.0
 [1.10.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.9.0

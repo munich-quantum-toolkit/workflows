@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.12.0]
+
 This release adds support for running Astral's `ty` type checker as part of the `reusable-python-linter.yml` workflow.
 To enable this, you can set the `run-ty` option to `true` in the workflow configuration.
 Additionally, the `mypy` type checker can now be disabled by setting the `run-mypy` option to `false`.
