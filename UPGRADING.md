@@ -94,7 +94,8 @@ While initial testing has shown minimal impact, this is still a breaking change.
 For example, it seems like using Ninja as a generator will lead to the wrong compiler being used.
 Consider removing any `-G Ninja` flags from your CMake invocations under Windows.
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.8.1...v1.9.0
