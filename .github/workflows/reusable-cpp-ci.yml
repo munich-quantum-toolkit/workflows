@@ -127,13 +127,17 @@ jobs:
 
       - id: build-macos-matrix
         name: Build macOS matrix
+        env:
+          MACOS_RUNNERS: ${{ inputs.macos-runners }}
+          MACOS_COMPILERS: ${{ inputs.macos-compilers }}
+          MACOS_CONFIGS: ${{ inputs.macos-configs }}
         run: |
           macos_matrix='[]'
 
           # Parse input arrays
-          runners='${{ inputs.macos-runners }}'
-          compilers='${{ inputs.macos-compilers }}'
-          configs='${{ inputs.macos-configs }}'
+          runners="$MACOS_RUNNERS"
+          compilers="$MACOS_COMPILERS"
+          configs="$MACOS_CONFIGS"
 
           # Build Cartesian product
           for runner in $(echo $runners | jq -r '.[]'); do
