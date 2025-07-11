@@ -26,204 +26,70 @@ on:
         default: "4.13.4"
         type: string
       ###---- Ubuntu-specific inputs --------------------------------------------------------------------------------###
-      ### Runs (ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm) x (gcc, clang) x (Release, Debug)
-      ### Defaults are
-      ### - ubuntu-24.04, gcc, Release,
-      ### - ubuntu-22.04, gcc, Release,
-      ### - ubuntu-24.04-arm, gcc, Release,
-      ### - ubuntu-22.04-arm, gcc, Release,
+      ### Supports (ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm) x (gcc, clang, clang-XX) x (Release, Debug)
       ###------------------------------------------------------------------------------------------------------------###
       enable-ubuntu:
         description: "Whether to enable C++ testing on Ubuntu"
         default: true
         type: boolean
-      enable-ubuntu2404-gcc-release:
-        description: "Whether to enable C++ testing on Ubuntu 24.04 with GCC in Release mode"
-        default: true
-        type: boolean
-      enable-ubuntu2404-gcc-debug:
-        description: "Whether to enable C++ testing on Ubuntu 24.04 with GCC in Debug mode"
-        default: false
-        type: boolean
-      enable-ubuntu2404-clang-release:
-        description: "Whether to enable C++ testing on Ubuntu 24.04 with Clang in Release mode"
-        default: false
-        type: boolean
-      enable-ubuntu2404-clang-debug:
-        description: "Whether to enable C++ testing on Ubuntu 24.04 with Clang in Debug mode"
-        default: false
-        type: boolean
-      enable-ubuntu2204-gcc-release:
-        description: "Whether to enable C++ testing on Ubuntu 22.04 with GCC in Release mode"
-        default: false
-        type: boolean
-      enable-ubuntu2204-gcc-debug:
-        description: "Whether to enable C++ testing on Ubuntu 22.04 with GCC in Debug mode"
-        default: false
-        type: boolean
-      enable-ubuntu2204-clang-release:
-        description: "Whether to enable C++ testing on Ubuntu 22.04 with Clang in Release mode"
-        default: false
-        type: boolean
-      enable-ubuntu2204-clang-debug:
-        description: "Whether to enable C++ testing on Ubuntu 22.04 with Clang in Debug mode"
-        default: false
-        type: boolean
-      enable-ubuntu2404-arm-gcc-release:
-        description: "Whether to enable C++ testing on Ubuntu 24.04 ARM with GCC in Release mode"
-        default: true
-        type: boolean
-      enable-ubuntu2404-arm-gcc-debug:
-        description: "Whether to enable C++ testing on Ubuntu 24.04 ARM with GCC in Debug mode"
-        default: false
-        type: boolean
-      enable-ubuntu2404-arm-clang-release:
-        description: "Whether to enable C++ testing on Ubuntu 24.04 ARM with Clang in Release mode"
-        default: false
-        type: boolean
-      enable-ubuntu2404-arm-clang-debug:
-        description: "Whether to enable C++ testing on Ubuntu 24.04 ARM with Clang in Debug mode"
-        default: false
-        type: boolean
-      enable-ubuntu2204-arm-gcc-release:
-        description: "Whether to enable C++ testing on Ubuntu 22.04 ARM with GCC in Release mode"
-        default: false
-        type: boolean
-      enable-ubuntu2204-arm-gcc-debug:
-        description: "Whether to enable C++ testing on Ubuntu 22.04 ARM with GCC in Debug mode"
-        default: false
-        type: boolean
-      enable-ubuntu2204-arm-clang-release:
-        description: "Whether to enable C++ testing on Ubuntu 22.04 ARM with Clang in Release mode"
-        default: false
-        type: boolean
-      enable-ubuntu2204-arm-clang-debug:
-        description: "Whether to enable C++ testing on Ubuntu 22.04 ARM with Clang in Debug mode"
-        default: false
-        type: boolean
+      ubuntu-runners:
+        description: "List of Ubuntu runners to test on (e.g., 'ubuntu-24.04', 'ubuntu-22.04', 'ubuntu-24.04-arm', 'ubuntu-22.04-arm')"
+        default: '["ubuntu-24.04", "ubuntu-24.04-arm"]'
+        type: string
+      ubuntu-compilers:
+        description: "List of compilers to test on Ubuntu (e.g., 'gcc', 'clang', 'clang-19', 'clang-20')"
+        default: '["gcc"]'
+        type: string
+      ubuntu-configs:
+        description: "List of build configurations to test on Ubuntu (e.g., 'Release', 'Debug')"
+        default: '["Release"]'
+        type: string
       cmake-args-ubuntu:
         description: "Additional arguments to pass to CMake on Ubuntu"
         default: ""
         type: string
       ###---- macOS-specific inputs ---------------------------------------------------------------------------------###
-      ### Runs (macos-13, macos-14, macos-15) x (clang, gcc) x (Release, Debug)
-      ### Defaults are
-      ### - macos-13, clang, Release,
-      ### - macos-14, clang, Release,
+      ### Supports (macos-13, macos-14, macos-15) x (clang, clang-XX, gcc-XX) x (Release, Debug)
       ###------------------------------------------------------------------------------------------------------------###
       enable-macos:
         description: "Whether to enable C++ testing on macOS"
         default: true
         type: boolean
-      enable-macos13-clang-release:
-        description: "Whether to enable C++ testing on macOS 13 with Apple Clang in Release mode"
-        default: true
-        type: boolean
-      enable-macos13-clang-debug:
-        description: "Whether to enable C++ testing on macOS 13 with Apple Clang in Debug mode"
-        default: false
-        type: boolean
-      enable-macos13-gcc-release:
-        description: "Whether to enable C++ testing on macOS 13 with GCC in Release mode"
-        default: false
-        type: boolean
-      enable-macos13-gcc-debug:
-        description: "Whether to enable C++ testing on macOS 13 with GCC in Debug mode"
-        default: false
-        type: boolean
-      enable-macos14-clang-release:
-        description: "Whether to enable C++ testing on macOS 14 with Apple Clang in Release mode"
-        default: true
-        type: boolean
-      enable-macos14-clang-debug:
-        description: "Whether to enable C++ testing on macOS 14 with Apple Clang in Debug mode"
-        default: false
-        type: boolean
-      enable-macos14-gcc-release:
-        description: "Whether to enable C++ testing on macOS 14 with GCC in Release mode"
-        default: false
-        type: boolean
-      enable-macos14-gcc-debug:
-        description: "Whether to enable C++ testing on macOS 14 with GCC in Debug mode"
-        default: false
-        type: boolean
-      enable-macos15-clang-release:
-        description: "Whether to enable C++ testing on macOS 15 with Apple Clang in Release mode"
-        default: false
-        type: boolean
-      enable-macos15-clang-debug:
-        description: "Whether to enable C++ testing on macOS 15 with Apple Clang in Debug mode"
-        default: false
-        type: boolean
-      enable-macos15-gcc-release:
-        description: "Whether to enable C++ testing on macOS 15 with GCC in Release mode"
-        default: false
-        type: boolean
-      enable-macos15-gcc-debug:
-        description: "Whether to enable C++ testing on macOS 15 with GCC in Debug mode"
-        default: false
-        type: boolean
+      macos-runners:
+        description: "List of macOS runners to test on (e.g., 'macos-13', 'macos-14', 'macos-15')"
+        default: '["macos-13", "macos-14"]'
+        type: string
+      macos-compilers:
+        description: "List of compilers to test on macOS (e.g., 'clang', 'clang-19', 'clang-20', 'gcc-14', 'gcc-15')"
+        default: '["clang"]'
+        type: string
+      macos-configs:
+        description: "List of build configurations to test on macOS (e.g., 'Release', 'Debug')"
+        default: '["Release"]'
+        type: string
       cmake-args-macos:
         description: "Additional arguments to pass to CMake on macOS"
         default: ""
         type: string
       ###---- Windows-specific inputs -------------------------------------------------------------------------------###
-      ### Runs (windows-2022, windows-2025, windows-11-arm) x (msvc, clang) x (Release, Debug)
-      ### Defaults are
-      ### - windows-2022, msvc, Release,
+      ### Supports (windows-2022, windows-2025, windows-11-arm) x (msvc, clang) x (Release, Debug)
       ###------------------------------------------------------------------------------------------------------------###
       enable-windows:
         description: "Whether to enable C++ testing on Windows"
         default: true
         type: boolean
-      enable-windows2022-msvc-release:
-        description: "Whether to enable C++ testing on Windows 2022 with MSVC in Release mode"
-        default: true
-        type: boolean
-      enable-windows2022-msvc-debug:
-        description: "Whether to enable C++ testing on Windows 2022 with MSVC in Debug mode"
-        default: false
-        type: boolean
-      enable-windows2022-clang-release:
-        description: "Whether to enable C++ testing on Windows 2022 with Clang in Release mode"
-        default: false
-        type: boolean
-      enable-windows2022-clang-debug:
-        description: "Whether to enable C++ testing on Windows 2022 with Clang in Debug mode"
-        default: false
-        type: boolean
-      enable-windows2025-msvc-release:
-        description: "Whether to enable C++ testing on Windows 2025 with MSVC in Release mode"
-        default: false
-        type: boolean
-      enable-windows2025-msvc-debug:
-        description: "Whether to enable C++ testing on Windows 2025 with MSVC in Debug mode"
-        default: false
-        type: boolean
-      enable-windows2025-clang-release:
-        description: "Whether to enable C++ testing on Windows 2025 with Clang in Release mode"
-        default: false
-        type: boolean
-      enable-windows2025-clang-debug:
-        description: "Whether to enable C++ testing on Windows 2025 with Clang in Debug mode"
-        default: false
-        type: boolean
-      enable-windows11-arm-msvc-release:
-        description: "Whether to enable C++ testing on Windows 11 ARM with MSVC in Release mode"
-        default: false
-        type: boolean
-      enable-windows11-arm-msvc-debug:
-        description: "Whether to enable C++ testing on Windows 11 ARM with MSVC in Debug mode"
-        default: false
-        type: boolean
-      enable-windows11-arm-clang-release:
-        description: "Whether to enable C++ testing on Windows 11 ARM with Clang in Release mode"
-        default: false
-        type: boolean
-      enable-windows11-arm-clang-debug:
-        description: "Whether to enable C++ testing on Windows 11 ARM with Clang in Debug mode"
-        default: false
-        type: boolean
+      windows-runners:
+        description: "List of Windows runners to test on (e.g., 'windows-2022', 'windows-2025', 'windows-11-arm')"
+        default: '["windows-2022"]'
+        type: string
+      windows-compilers:
+        description: "List of compilers to test on Windows (e.g., 'msvc', 'clang')"
+        default: '["msvc"]'
+        type: string
+      windows-configs:
+        description: "List of build configurations to test on Windows (e.g., 'Release', 'Debug')"
+        default: '["Release"]'
+        type: string
       cmake-args-windows:
         description: "Additional arguments to pass to CMake on Windows"
         default: ""
@@ -241,140 +107,67 @@ jobs:
         name: Build Ubuntu matrix
         run: |
           ubuntu_matrix='[]'
-          if [ "${{ inputs.enable-ubuntu2404-gcc-release }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-24.04", "config": "Release", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2404-gcc-debug }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-24.04", "config": "Debug", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2404-clang-release }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-24.04", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2404-clang-debug }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-24.04", "config": "Debug", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2204-gcc-release }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-22.04", "config": "Release", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2204-gcc-debug }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-22.04", "config": "Debug", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2204-clang-release }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-22.04", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2204-clang-debug }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-22.04", "config": "Debug", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2404-arm-gcc-release }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-24.04-arm", "config": "Release", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2404-arm-gcc-debug }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-24.04-arm", "config": "Debug", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2404-arm-clang-release }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-24.04-arm", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2404-arm-clang-debug }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-24.04-arm", "config": "Debug", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2204-arm-gcc-release }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-22.04-arm", "config": "Release", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2204-arm-gcc-debug }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-22.04-arm", "config": "Debug", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2204-arm-clang-release }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-22.04-arm", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-ubuntu2204-arm-clang-debug }}" == "true" ]; then
-            ubuntu_matrix=$(echo $ubuntu_matrix | jq '. += [{"runs-on": "ubuntu-22.04-arm", "config": "Debug", "compiler": "clang"}]')
-          fi
+
+          # Parse input arrays
+          runners='${{ inputs.ubuntu-runners }}'
+          compilers='${{ inputs.ubuntu-compilers }}'
+          configs='${{ inputs.ubuntu-configs }}'
+
+          # Build Cartesian product
+          for runner in $(echo $runners | jq -r '.[]'); do
+            for compiler in $(echo $compilers | jq -r '.[]'); do
+              for config in $(echo $configs | jq -r '.[]'); do
+                ubuntu_matrix=$(echo $ubuntu_matrix | jq --arg runner "$runner" --arg compiler "$compiler" --arg config "$config" '. += [{"runs-on": $runner, "config": $config, "compiler": $compiler}]')
+              done
+            done
+          done
+
           echo "ubuntu-matrix=$(echo $ubuntu_matrix | jq -rc .)" >> $GITHUB_OUTPUT
-          echo $(echo $ubuntu_matrix | jq -rc .)
+          echo "Generated Ubuntu matrix: $(echo $ubuntu_matrix | jq -rc .)"
+
       - id: build-macos-matrix
         name: Build macOS matrix
         run: |
           macos_matrix='[]'
-          if [ "${{ inputs.enable-macos13-clang-release }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-13", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-macos13-clang-debug }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-13", "config": "Debug", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-macos13-gcc-release }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-13", "config": "Release", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-macos13-gcc-debug }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-13", "config": "Debug", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-macos14-clang-release }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-14", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-macos14-clang-debug }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-14", "config": "Debug", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-macos14-gcc-release }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-14", "config": "Release", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-macos14-gcc-debug }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-14", "config": "Debug", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-macos15-clang-release }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-15", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-macos15-clang-debug }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-15", "config": "Debug", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-macos15-gcc-release }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-15", "config": "Release", "compiler": "gcc"}]')
-          fi
-          if [ "${{ inputs.enable-macos15-gcc-debug }}" == "true" ]; then
-            macos_matrix=$(echo $macos_matrix | jq '. += [{"runs-on": "macos-15", "config": "Debug", "compiler": "gcc"}]')
-          fi
+
+          # Parse input arrays
+          runners='${{ inputs.macos-runners }}'
+          compilers='${{ inputs.macos-compilers }}'
+          configs='${{ inputs.macos-configs }}'
+
+          # Build Cartesian product
+          for runner in $(echo $runners | jq -r '.[]'); do
+            for compiler in $(echo $compilers | jq -r '.[]'); do
+              for config in $(echo $configs | jq -r '.[]'); do
+                macos_matrix=$(echo $macos_matrix | jq --arg runner "$runner" --arg compiler "$compiler" --arg config "$config" '. += [{"runs-on": $runner, "config": $config, "compiler": $compiler}]')
+              done
+            done
+          done
+
           echo "macos-matrix=$(echo $macos_matrix | jq -rc .)" >> $GITHUB_OUTPUT
-          echo $(echo $macos_matrix | jq -rc .)
+          echo "Generated macOS matrix: $(echo $macos_matrix | jq -rc .)"
+
       - id: build-windows-matrix
         name: Build Windows matrix
         run: |
           windows_matrix='[]'
-          if [ "${{ inputs.enable-windows2022-msvc-release }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2022", "config": "Release", "compiler": "msvc"}]')
-          fi
-          if [ "${{ inputs.enable-windows2022-msvc-debug }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2022", "config": "Debug", "compiler": "msvc"}]')
-          fi
-          if [ "${{ inputs.enable-windows2022-clang-release }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2022", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-windows2022-clang-debug }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2022", "config": "Debug", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-windows2025-msvc-release }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2025", "config": "Release", "compiler": "msvc"}]')
-          fi
-          if [ "${{ inputs.enable-windows2025-msvc-debug }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2025", "config": "Debug", "compiler": "msvc"}]')
-          fi
-          if [ "${{ inputs.enable-windows2025-clang-release }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2025", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-windows2025-clang-debug }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-2025", "config": "Debug", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-windows11-arm-msvc-release }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-11-arm", "config": "Release", "compiler": "msvc"}]')
-          fi
-          if [ "${{ inputs.enable-windows11-arm-msvc-debug }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-11-arm", "config": "Debug", "compiler": "msvc"}]')
-          fi
-          if [ "${{ inputs.enable-windows11-arm-clang-release }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-11-arm", "config": "Release", "compiler": "clang"}]')
-          fi
-          if [ "${{ inputs.enable-windows11-arm-clang-debug }}" == "true" ]; then
-            windows_matrix=$(echo $windows_matrix | jq '. += [{"runs-on": "windows-11-arm", "config": "Debug", "compiler": "clang"}]')
-          fi
+
+          # Parse input arrays
+          runners='${{ inputs.windows-runners }}'
+          compilers='${{ inputs.windows-compilers }}'
+          configs='${{ inputs.windows-configs }}'
+
+          # Build Cartesian product
+          for runner in $(echo $runners | jq -r '.[]'); do
+            for compiler in $(echo $compilers | jq -r '.[]'); do
+              for config in $(echo $configs | jq -r '.[]'); do
+                windows_matrix=$(echo $windows_matrix | jq --arg runner "$runner" --arg compiler "$compiler" --arg config "$config" '. += [{"runs-on": $runner, "config": $config, "compiler": $compiler}]')
+              done
+            done
+          done
+
           echo "windows-matrix=$(echo $windows_matrix | jq -rc .)" >> $GITHUB_OUTPUT
-          echo $(echo $windows_matrix | jq -rc .)
+          echo "Generated Windows matrix: $(echo $windows_matrix | jq -rc .)"
 
   cpp-tests-ubuntu:
     name: 🐧 ${{ matrix.runs-on }} ${{ matrix.compiler }} ${{ matrix.config }}
