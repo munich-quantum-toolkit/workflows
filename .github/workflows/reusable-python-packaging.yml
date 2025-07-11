@@ -93,19 +93,19 @@ jobs:
     steps:
       - id: build-matrix
         name: Build runner matrix
+        env:
+          RUNNERS: ${{ inputs.runners }}
         run: |
           matrix='[]'
-
-          # Parse input array
-          runners='${{ inputs.runners }}'
+          runners="$RUNNERS"
 
           # Build matrix from runners array
-          for runner in $(echo $runners | jq -r '.[]'); do
-            matrix=$(echo $matrix | jq --arg runner "$runner" '. += [{"runs-on": $runner}]')
+          for runner in $(echo "$runners" | jq -r '.[]'); do
+            matrix=$(echo "$matrix" | jq --arg runner "$runner" '. += [{"runs-on": $runner}]')
           done
 
-          echo "matrix=$(echo $matrix | jq -rc .)" >> $GITHUB_OUTPUT
-          echo "Generated matrix: $(echo $matrix | jq -rc .)"
+          echo "matrix=$(echo "$matrix" | jq -rc .)" >> $GITHUB_OUTPUT
+          echo "Generated matrix: $(echo "$matrix" | jq -rc .)"
 
   build-wheels:
     if: ${{ !inputs.pure-python }}
