@@ -76,6 +76,7 @@ jobs:
                                     libmlir-${{ env.clang-version }}-dev \
                                     mlir-${{ env.clang-version }}-tools \
                                     clang-${{ env.clang-version}} \
+                                    clang-${{ env.clang-version }}-tools \
                 || exit 1
           else
             echo "Installation from script failed."
