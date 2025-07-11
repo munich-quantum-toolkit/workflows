@@ -145,7 +145,7 @@ jobs:
         with:
           style: ""
           tidy-checks: ""
-          version: ${{ env.clang-version }}
+          version: ${{ inputs.clang-version }}
           ignore: "build|!build/mlir/**|**/include|include"
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
           step-summary: true
