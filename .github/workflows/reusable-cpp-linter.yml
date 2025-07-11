@@ -82,7 +82,7 @@ jobs:
                                     libmlir-"$clang_version"-dev \
                                     mlir-"$clang_version"-tools \
                                     clang-"$clang_version" \
-                                    clang-"$clang_version"-tools \
+                                    clang-tools-"$clang_version" \
                 || exit 1
           else
             echo "Installation from script failed."
