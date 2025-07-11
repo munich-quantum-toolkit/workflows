@@ -99,6 +99,10 @@ jobs:
           if [[ "$COMPILER" =~ ^clang-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/clang-//')
             brew install llvm@"$version"
+          else
+            echo "Invalid compiler specified: $COMPILER" >&2
+            exit 1
+          fi
       # configure CMake in the specified mode, optionally with additional arguments
       - name: Configure CMake
         env:
