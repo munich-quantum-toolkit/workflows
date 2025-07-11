@@ -153,13 +153,17 @@ jobs:
 
       - id: build-windows-matrix
         name: Build Windows matrix
+        env:
+          WINDOWS_RUNNERS: ${{ inputs.windows-runners }}
+          WINDOWS_COMPILERS: ${{ inputs.windows-compilers }}
+          WINDOWS_CONFIGS: ${{ inputs.windows-configs }}
         run: |
           windows_matrix='[]'
 
           # Parse input arrays
-          runners='${{ inputs.windows-runners }}'
-          compilers='${{ inputs.windows-compilers }}'
-          configs='${{ inputs.windows-configs }}'
+          runners="$WINDOWS_RUNNERS"
+          compilers="$WINDOWS_COMPILERS"
+          configs="$WINDOWS_CONFIGS"
 
           # Build Cartesian product
           for runner in $(echo $runners | jq -r '.[]'); do
