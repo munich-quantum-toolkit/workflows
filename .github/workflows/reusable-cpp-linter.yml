@@ -67,25 +67,30 @@ jobs:
       # install a specific version of the LLVM toolchain
       - name: Install llvm@${{ env.clang-version }}
         run: |
+          clang_version="${{ env.clang-version }}"
+          if ! [[ "$clang_version" =~ ^[0-9]+$ ]]; then
+            echo "Error: Invalid clang-version input. Must be a numeric value."
+            exit 1
+          fi
           sudo apt-get update
           wget https://apt.llvm.org/llvm.sh -O ${{ runner.temp }}/llvm_install.sh
           chmod +x ${{ runner.temp }}/llvm_install.sh
-          if sudo ${{ runner.temp }}/llvm_install.sh ${{ env.clang-version }}; then
-            sudo apt-get install -y clang-format-${{ env.clang-version }} \
-                                    clang-tidy-${{ env.clang-version }} \
-                                    libmlir-${{ env.clang-version }}-dev \
-                                    mlir-${{ env.clang-version }}-tools \
-                                    clang-${{ env.clang-version}} \
-                                    clang-${{ env.clang-version }}-tools \
+          if sudo ${{ runner.temp }}/llvm_install.sh $clang_version; then
+            sudo apt-get install -y clang-format-"$clang_version" \
+                                    clang-tidy-"$clang_version" \
+                                    libmlir-"$clang_version"-dev \
+                                    mlir-"$clang_version"-tools \
+                                    clang-"$clang_version" \
+                                    clang-"$clang_version"-tools \
                 || exit 1
           else
             echo "Installation from script failed."
             exit 1
           fi
-          echo "CC=clang-${{ env.clang-version }}" >> $GITHUB_ENV
-          echo "CXX=clang++-${{ env.clang-version }}" >> $GITHUB_ENV
-          echo "MLIR_DIR=/usr/lib/llvm-${{ env.clang-version }}/lib/cmake/mlir" >> $GITHUB_ENV
-          echo "LLVM_DIR=/usr/lib/llvm-${{ env.clang-version }}/lib/cmake/llvm" >> $GITHUB_ENV
+          echo "CC=clang-$clang_version" >> $GITHUB_ENV
+          echo "CXX=clang++-$clang_version" >> $GITHUB_ENV
+          echo "MLIR_DIR=/usr/lib/llvm-$clang_version/lib/cmake/mlir" >> $GITHUB_ENV
+          echo "LLVM_DIR=/usr/lib/llvm-$clang_version/lib/cmake/llvm" >> $GITHUB_ENV
       # set up ccache for faster C++ builds if building the project
       - if: ${{ inputs.build-project }}
         name: Setup ccache
