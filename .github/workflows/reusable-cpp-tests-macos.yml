@@ -98,7 +98,7 @@ jobs:
         run: |
           if [[ "$COMPILER" =~ ^clang-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/clang-//')
-            brew install llvm@$
+            brew install llvm@"$version"
       # configure CMake in the specified mode, optionally with additional arguments
       - name: Configure CMake
         env:
