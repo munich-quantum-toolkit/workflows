@@ -53,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CLANG_VERSION: ${{ inputs.clang-version }}
+      TEMP_DIR: ${{ runner.temp }}
     steps:
       # check out the repository (including submodules)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -73,9 +74,9 @@ jobs:
             exit 1
           fi
           sudo apt-get update
-          wget https://apt.llvm.org/llvm.sh -O ${{ runner.temp }}/llvm_install.sh
-          chmod +x ${{ runner.temp }}/llvm_install.sh
-          if sudo ${{ runner.temp }}/llvm_install.sh $clang_version; then
+          wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
+          chmod +x "$TEMP_DIR/llvm_install.sh"
+          if sudo "$TEMP_DIR/llvm_install.sh" "$clang_version"; then
             sudo apt-get install -y clang-format-"$clang_version" \
                                     clang-tidy-"$clang_version" \
                                     libmlir-"$clang_version"-dev \
