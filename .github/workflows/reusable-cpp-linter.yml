@@ -53,7 +53,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CLANG_VERSION: ${{ inputs.clang-version }}
-      TEMP_DIR: ${{ runner.temp }}
     steps:
       # check out the repository (including submodules)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -69,6 +68,7 @@ jobs:
       - name: Install llvm@${{ env.clang-version }}
         run: |
           clang_version="$CLANG_VERSION"
+          TEMP_DIR=${{ runner.temp }}
           if ! [[ "$clang_version" =~ ^[0-9]+$ ]]; then
             echo "Error: Invalid clang-version input. Must be a numeric value."
             exit 1
