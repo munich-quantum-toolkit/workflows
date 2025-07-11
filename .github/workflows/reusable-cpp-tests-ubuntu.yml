@@ -112,10 +112,16 @@ jobs:
           echo "LLVM_DIR=/usr/lib/llvm-$version/lib/cmake/llvm" >> $GITHUB_ENV
       # configure CMake in the specified mode, optionally with additional arguments
       - name: Configure CMake
-        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} ${{ inputs.cmake-args }}
+        env:
+          CONFIG: ${{ inputs.config }}
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE="$CONFIG" ${{ inputs.cmake-args }}
       # build the project in the specified mode
       - name: Build
-        run: cmake --build build --config ${{ inputs.config }}
+        env:
+          CONFIG: ${{ inputs.config }}
+        run: cmake --build build --config "$CONFIG"
       # run the tests
       - name: Test
-        run: ctest -C ${{ inputs.config }} --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
+        env:
+          CONFIG: ${{ inputs.config }}
+        run: ctest -C "$CONFIG" --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
