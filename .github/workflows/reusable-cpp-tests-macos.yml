@@ -27,7 +27,8 @@ on:
           The compiler to use. Defaults to 'clang'.
           This can be 'clang' or 'gcc'.
           If 'clang' is selected, this will use the default Apple Clang compiler.
-          If 'gcc' is selected, this will use `gcc-14` from Homebrew, which is available by default on macOS runners.
+          If 'gcc-XX' is selected, this will use `gcc-XX` from Homebrew, where XX is the version number (e.g., 'gcc-14').
+          A specific version of Clang, including MLIR, can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
         default: "clang"
         type: string
       cmake-args:
@@ -74,14 +75,33 @@ jobs:
       # make sure ninja is installed
       - name: Install Ninja
         run: brew install ninja
+      # set up gcc if specified
+      - if: ${{ startsWith(inputs.compiler, 'gcc-') }}
+        name: Set up GCC
+        run: |
+          version=$(echo ${{ inputs.compiler }} | sed 's/gcc-//')
+          brew install gcc@$version
+          echo "CC=gcc-$version" >> $GITHUB_ENV
+          echo "CXX=g++-$version" >> $GITHUB_ENV
+      # set up clang if specified
+      - if: ${{ startsWith(inputs.compiler, 'clang-') }}
+        name: Set up Clang
+        run: |
+          version=$(echo ${{ inputs.compiler }} | sed 's/clang-//')
+          brew install llvm@$version
+          if [ "$(uname -m)" = "x86_64" ]; then
+            LLVM_PREFIX="/usr/local/opt/llvm@${{ matrix.llvm-version }}"
+          else
+            LLVM_PREFIX="/opt/homebrew/opt/llvm@${{ matrix.llvm-version }}"
+          fi
+          echo "CC=$LLVM_PREFIX/bin/clang" >> $GITHUB_ENV
+          echo "CXX=$LLVM_PREFIX/bin/clang++" >> $GITHUB_ENV
+          echo "LLVM_DIR=$LLVM_PREFIX/lib/cmake/llvm" >> $GITHUB_ENV
+          echo "MLIR_DIR=$LLVM_PREFIX/lib/cmake/mlir" >> $GITHUB_ENV
+          echo "$LLVM_PREFIX/bin" >> $GITHUB_PATH
       # configure CMake in the specified mode, optionally with additional arguments
       - name: Configure CMake
-        run: |
-          cmake_args="${{ inputs.cmake-args }}"
-          if [ "${{ inputs.compiler }}" == "gcc" ]; then
-            cmake_args="$cmake_args -DCMAKE_C_COMPILER=gcc-14 -DCMAKE_CXX_COMPILER=g++-14"
-          fi
-          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} $cmake_args
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} ${{ inputs.cmake-args }}
       # build the project in the specified mode
       - name: Build
         run: cmake --build build --config ${{ inputs.config }}
