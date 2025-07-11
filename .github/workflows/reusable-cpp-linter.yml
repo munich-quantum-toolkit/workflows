@@ -52,7 +52,7 @@ jobs:
     name: 🚨 Lint
     runs-on: ubuntu-latest
     env:
-      clang-version: ${{ inputs.clang-version }}
+      CLANG_VERSION: ${{ inputs.clang-version }}
     steps:
       # check out the repository (including submodules)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -67,7 +67,7 @@ jobs:
       # install a specific version of the LLVM toolchain
       - name: Install llvm@${{ env.clang-version }}
         run: |
-          clang_version="${{ env.clang-version }}"
+          clang_version="$CLANG_VERSION"
           if ! [[ "$clang_version" =~ ^[0-9]+$ ]]; then
             echo "Error: Invalid clang-version input. Must be a numeric value."
             exit 1
