@@ -87,8 +87,10 @@ jobs:
       # set up Clang with a specific version (including MLIR)
       - if: ${{ startsWith(inputs.compiler, 'clang-') }}
         name: Set up Clang
+        env:
+          COMPILER: ${{ inputs.compiler }}
         run: |
-          version=$(echo "${{ inputs.compiler }}" | sed 's/clang-//')
+          version=$(echo "$COMPILER" | sed 's/clang-//')
           sudo apt-get update
           wget https://apt.llvm.org/llvm.sh -O ${{ runner.temp }}/llvm_install.sh
           chmod +x ${{ runner.temp }}/llvm_install.sh
