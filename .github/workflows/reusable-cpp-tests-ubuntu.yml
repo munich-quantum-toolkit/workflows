@@ -89,10 +89,11 @@ jobs:
         name: Set up Clang
         env:
           COMPILER: ${{ inputs.compiler }}
+          RUNNER_TEMP: ${{ runner.temp }}
         run: |
           version=$(echo "$COMPILER" | sed 's/clang-//')
           sudo apt-get update
-          export TEMP_DIR="${{ runner.temp }}"
+          TEMP_DIR=$RUNNER_TEMP
           wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
           chmod +x "$TEMP_DIR/llvm_install.sh"
           if sudo "$TEMP_DIR/llvm_install.sh" $version; then
