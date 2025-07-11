@@ -4,6 +4,34 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+This release streamlines the runner and compiler configuration in the C++ as well as Python workflows.
+Instead of having an ever growing list of options for the C++ and Python testing as well as the Python packaging workflows, the configuration options have been simplified.
+Most options have been removed and replaced with single list options out of which the desired configuration can be selected.
+Specifically, the `reusable-cpp-ci.yml` workflow now has the following new options:
+
+- `ubuntu-runners`: A list of Ubuntu runners to use for the C++ testing workflow.
+- `ubuntu-compilers`: A list of compilers to use for the C++ testing workflow on Ubuntu.
+- `ubuntu-configs`: A list of configurations to use for the C++ testing workflow on Ubuntu.
+- `macos-runners`: A list of macOS runners to use for the C++ testing workflow.
+- `macos-compilers`: A list of compilers to use for the C++ testing workflow on macOS.
+- `macos-configs`: A list of configurations to use for the C++ testing workflow on macOS.
+- `windows-runners`: A list of Windows runners to use for the C++ testing workflow.
+- `windows-compilers`: A list of compilers to use for the C++ testing workflow on Windows.
+- `windows-configs`: A list of configurations to use for the C++ testing workflow on Windows.
+
+The `reusable-python-ci.yml` and the `reusable-python-packaging.yml` workflows have also been updated with the following new option:
+
+- `runners`: A list of runners to use for the workflow.
+
+In addition, support for additional compilers has been added to the C++ testing workflows.
+Specifically, the following compilers are now also supported:
+
+- `clang-XX`: The Clang compiler with version `XX` (e.g., `clang-20`) on Linux and macOS.
+- `gcc-XX`: The GCC compiler with version `XX` (e.g., `gcc-15`) on macOS.
+
+When using the `clang-XX` compiler on Linux and macOS, the necessary dependencies for MLIR are automatically installed.
+This is a first step towards integrating MLIR into the MQT workflows.
+
 ## [1.12.0]
 
 This release adds support for running Astral's `ty` type checker as part of the `reusable-python-linter.yml` workflow.
