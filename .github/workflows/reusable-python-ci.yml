@@ -39,14 +39,13 @@ jobs:
     steps:
       - id: build-matrix
         name: Build runner matrix
+        env:
+          RUNNERS: ${{ inputs.runners }}
         run: |
           matrix='[]'
 
-          # Parse input array
-          runners='${{ inputs.runners }}'
-
           # Build matrix from runners array
-          for runner in $(echo $runners | jq -r '.[]'); do
+          for runner in $(echo "$RUNNERS" | jq -r '.[]'); do
             matrix=$(echo $matrix | jq --arg runner "$runner" '. += [{"runs-on": $runner}]')
           done
 
