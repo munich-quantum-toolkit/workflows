@@ -78,27 +78,27 @@ jobs:
       # set up gcc if specified
       - if: ${{ startsWith(inputs.compiler, 'gcc-') }}
         name: Set up GCC
+        env:
+          COMPILER: ${{ inputs.compiler }}
         run: |
-          version=$(echo ${{ inputs.compiler }} | sed 's/gcc-//')
-          brew install gcc@$version
-          echo "CC=gcc-$version" >> $GITHUB_ENV
-          echo "CXX=g++-$version" >> $GITHUB_ENV
+          if [[ "$COMPILER" =~ ^gcc-[0-9]+$ ]]; then
+            version=$(echo "$COMPILER" | sed 's/gcc-//')
+            brew install gcc@$version
+            echo "CC=gcc-$version" >> $GITHUB_ENV
+            echo "CXX=g++-$version" >> $GITHUB_ENV
+          else
+            echo "Invalid compiler specified: $COMPILER" >&2
+            exit 1
+          fi
       # set up clang if specified
       - if: ${{ startsWith(inputs.compiler, 'clang-') }}
         name: Set up Clang
+        env:
+          COMPILER: ${{ inputs.compiler }}
         run: |
-          version=$(echo ${{ inputs.compiler }} | sed 's/clang-//')
-          brew install llvm@$version
-          if [ "$(uname -m)" = "x86_64" ]; then
-            LLVM_PREFIX="/usr/local/opt/llvm@${{ matrix.llvm-version }}"
-          else
-            LLVM_PREFIX="/opt/homebrew/opt/llvm@${{ matrix.llvm-version }}"
-          fi
-          echo "CC=$LLVM_PREFIX/bin/clang" >> $GITHUB_ENV
-          echo "CXX=$LLVM_PREFIX/bin/clang++" >> $GITHUB_ENV
-          echo "LLVM_DIR=$LLVM_PREFIX/lib/cmake/llvm" >> $GITHUB_ENV
-          echo "MLIR_DIR=$LLVM_PREFIX/lib/cmake/mlir" >> $GITHUB_ENV
-          echo "$LLVM_PREFIX/bin" >> $GITHUB_PATH
+          if [[ "$COMPILER" =~ ^clang-[0-9]+$ ]]; then
+            version=$(echo "$COMPILER" | sed 's/clang-//')
+            brew install llvm@$
       # configure CMake in the specified mode, optionally with additional arguments
       - name: Configure CMake
         run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} ${{ inputs.cmake-args }}
