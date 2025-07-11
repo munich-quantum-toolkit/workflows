@@ -65,7 +65,7 @@ jobs:
         with:
           version: ${{ inputs.z3-version }}
       # install a specific version of the LLVM toolchain
-      - name: Install llvm@${{ env.clang-version }}
+      - name: Install llvm@${{ inputs.clang-version }}
         run: |
           clang_version="$CLANG_VERSION"
           TEMP_DIR=${{ runner.temp }}
