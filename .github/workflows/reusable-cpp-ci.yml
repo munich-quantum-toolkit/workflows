@@ -105,11 +105,13 @@ jobs:
     steps:
       - id: build-ubuntu-matrix
         name: Build Ubuntu matrix
+        env:
+          RUNNERS: ${{ inputs.ubuntu-runners }}
         run: |
           ubuntu_matrix='[]'
 
           # Parse input arrays
-          runners='${{ inputs.ubuntu-runners }}'
+          runners="$RUNNERS"
           compilers='${{ inputs.ubuntu-compilers }}'
           configs='${{ inputs.ubuntu-configs }}'
 
