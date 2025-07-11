@@ -106,14 +106,16 @@ jobs:
       - id: build-ubuntu-matrix
         name: Build Ubuntu matrix
         env:
-          RUNNERS: ${{ inputs.ubuntu-runners }}
+          UBUNTU_RUNNERS: ${{ inputs.ubuntu-runners }}
+          UBUNTU_COMPILERS: ${{ inputs.ubuntu-compilers }}
+          UBUNTU_CONFIGS: ${{ inputs.ubuntu-configs }}
         run: |
           ubuntu_matrix='[]'
 
           # Parse input arrays
-          runners="$RUNNERS"
-          compilers='${{ inputs.ubuntu-compilers }}'
-          configs='${{ inputs.ubuntu-configs }}'
+          runners="$UBUNTU_RUNNERS"
+          compilers="$UBUNTU_COMPILERS"
+          configs="$UBUNTU_CONFIGS"
 
           # Build Cartesian product
           for runner in $(echo $runners | jq -r '.[]'); do
