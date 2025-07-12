@@ -137,16 +137,26 @@ jobs:
           MACOS_CONFIGS: ${{ inputs.macos-configs }}
         run: |
           macos_matrix='[]'
+          warning_issued=0
 
           # Parse input arrays
           runners="$MACOS_RUNNERS"
           compilers="$MACOS_COMPILERS"
           configs="$MACOS_CONFIGS"
 
-          # Build Cartesian product
+          # Build Cartesian product, skipping macos-15 with gcc-XX due to _bounds.h error
           for runner in $(echo $runners | jq -r '.[]'); do
             for compiler in $(echo $compilers | jq -r '.[]'); do
               for config in $(echo $configs | jq -r '.[]'); do
+                # Exclude macos-15 with any gcc-XX (e.g., gcc-14, gcc-15)
+                if [[ "$runner" == "macos-15" && "$compiler" == gcc-* ]]; then
+                  # Skip this combination due to fatal error: _bounds.h: No such file or directory
+                  if [[ $warning_issued -eq 0 ]]; then
+                    echo "::warning title=Matrix Exclusion::Skipping macos-15 with gcc-* due to fatal error: _bounds.h: No such file or directory"
+                    warning_issued=1
+                  fi
+                  continue
+                fi
                 macos_matrix=$(echo $macos_matrix | jq --arg runner "$runner" --arg compiler "$compiler" --arg config "$config" '. += [{"runs-on": $runner, "config": $config, "compiler": $compiler}]')
               done
             done
