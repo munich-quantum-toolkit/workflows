@@ -82,7 +82,7 @@ jobs:
           COMPILER: ${{ inputs.compiler }}
         run: |
           # Sanitize COMPILER to remove unsafe characters
-          COMPILER=$(echo "$COMPILER" | tr -d '\n' | tr -d '\r')
+          COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g')
           if [[ "$COMPILER" =~ ^gcc-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/gcc-//')
             brew install gcc@$version
@@ -98,9 +98,20 @@ jobs:
         env:
           COMPILER: ${{ inputs.compiler }}
         run: |
+          COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g')
           if [[ "$COMPILER" =~ ^clang-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/clang-//')
-            brew install llvm@"$version"
+            brew install llvm@$version
+            if [ "$(uname -m)" = "x86_64" ]; then
+              LLVM_PREFIX="/usr/local/opt/llvm@$version"
+            else
+              LLVM_PREFIX="/opt/homebrew/opt/llvm@$version"
+            fi
+            echo "CC=$LLVM_PREFIX/bin/clang" >> $GITHUB_ENV
+            echo "CXX=$LLVM_PREFIX/bin/clang++" >> $GITHUB_ENV
+            echo "LLVM_DIR=$LLVM_PREFIX/lib/cmake/llvm" >> $GITHUB_ENV
+            echo "MLIR_DIR=$LLVM_PREFIX/lib/cmake/mlir" >> $GITHUB_ENV
+            echo "$LLVM_PREFIX/bin" >> $GITHUB_PATH
           else
             echo "Invalid compiler specified: $COMPILER" >&2
             exit 1
