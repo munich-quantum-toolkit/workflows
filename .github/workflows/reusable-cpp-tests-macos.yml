@@ -82,7 +82,8 @@ jobs:
           COMPILER: ${{ inputs.compiler }}
         run: |
           # Sanitize COMPILER to remove unsafe characters
-          COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g')
+          # Sanitize COMPILER to remove unsafe characters and newlines
+          COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g' | tr -d '\n')
           if [[ "$COMPILER" =~ ^gcc-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/gcc-//')
             brew install gcc@$version
@@ -98,7 +99,7 @@ jobs:
         env:
           COMPILER: ${{ inputs.compiler }}
         run: |
-          COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g')
+          COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g' | tr -d '\n')
           if [[ "$COMPILER" =~ ^clang-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/clang-//')
             brew install llvm@$version
