@@ -81,7 +81,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
-[#146]: https://github.com/munich-quantum-toolkit/workflows/pull/144
+[#146]: https://github.com/munich-quantum-toolkit/workflows/pull/146
 [#142]: https://github.com/munich-quantum-toolkit/workflows/pull/142
 [#126]: https://github.com/munich-quantum-toolkit/workflows/pull/126
 [#119]: https://github.com/munich-quantum-toolkit/workflows/pull/119
