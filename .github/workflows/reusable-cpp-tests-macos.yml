@@ -25,7 +25,7 @@ on:
       compiler:
         description: >
           The compiler to use. Defaults to 'clang'.
-          This can be 'clang' or 'gcc'.
+          This can be 'clang', `clang-XX` or 'gcc-XX'.
           If 'clang' is selected, this will use the default Apple Clang compiler.
           If 'gcc-XX' is selected, this will use `gcc-XX` from Homebrew, where XX is the version number (e.g., 'gcc-14').
           A specific version of Clang, including MLIR, can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
@@ -81,8 +81,6 @@ jobs:
         env:
           COMPILER: ${{ inputs.compiler }}
         run: |
-          # Sanitize COMPILER to remove unsafe characters
-          # Sanitize COMPILER to remove unsafe characters and newlines
           COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g' | tr -d '\n')
           if [[ "$COMPILER" =~ ^gcc-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/gcc-//')
