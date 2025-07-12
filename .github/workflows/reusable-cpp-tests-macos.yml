@@ -81,6 +81,8 @@ jobs:
         env:
           COMPILER: ${{ inputs.compiler }}
         run: |
+          # Sanitize COMPILER to remove unsafe characters
+          COMPILER=$(echo "$COMPILER" | tr -d '\n' | tr -d '\r')
           if [[ "$COMPILER" =~ ^gcc-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/gcc-//')
             brew install gcc@$version
