@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 ### Removed
 
 - 🔥 Remove `reusable-cpp-ci.yml` workflow ([#150]) ([**@denialhaag**])
+- 🔥 Remove `reusable-python-ci.yml` workflow ([#150]) ([**@denialhaag**])
 
 ## [1.13.0] - 2025-07-16
 
