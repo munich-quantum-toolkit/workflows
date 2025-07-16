@@ -5,7 +5,7 @@ This document describes breaking changes and how to upgrade. For a complete list
 ## [Unreleased]
 
 This release streamlines the runner and compiler configuration in the C++ as well as Python workflows.
-Instead of having an ever growing list of options for the C++ and Python testing as well as the Python packaging workflows, the configuration options have been simplified.
+Instead of having an ever-growing list of options for the C++ and Python testing as well as the Python packaging workflows, the configuration options have been simplified.
 Most options have been removed and replaced with single list options out of which the desired configuration can be selected.
 Specifically, the `reusable-cpp-ci.yml` workflow now has the following new options:
 

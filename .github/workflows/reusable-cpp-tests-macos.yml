@@ -25,8 +25,8 @@ on:
       compiler:
         description: >
           The compiler to use. Defaults to 'clang'.
-          This can be 'clang', `clang-XX` or 'gcc-XX'.
-          If 'clang' is selected, this will use the default Apple Clang compiler.
+          This can be 'clang', `clang-XX`, or 'gcc-XX'.
+          If 'clang' is selected, the default Apple Clang compiler is used.
           If 'gcc-XX' is selected, this will use `gcc-XX` from Homebrew, where XX is the version number (e.g., 'gcc-14').
           A specific version of Clang, including MLIR, can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
         default: "clang"
