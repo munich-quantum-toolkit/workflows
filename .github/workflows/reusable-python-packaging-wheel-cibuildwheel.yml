@@ -15,14 +15,6 @@ on:
         description: "The runner image to test on"
         default: "ubuntu-24.04"
         type: string
-      job-index:
-        description: "The index of the job in the matrix"
-        default: 0
-        type: number
-      pure-python:
-        description: "Whether this is a pure Python package (or contains compiled extensions)"
-        default: false
-        type: boolean
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -33,57 +25,7 @@ on:
         type: string
 
 jobs:
-  build-sdist:
-    name: 📦 SDist
-    runs-on: ubuntu-latest
-    steps:
-      # check out the repository (including submodules and all history)
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-      # set up uv for faster Python package management
-      - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@bd01e18f51369d5a26f1651c3cb451d3417e3bba # v6
-      # build the source distribution
-      - name: Build SDist
-        run: uv build --sdist
-      # check the metadata of the source distribution
-      - name: Check metadata
-        run: uvx twine check dist/*
-      # upload the source distribution as an artifact (adds a `dev-` prefix for PRs)
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-sdist
-          path: dist/*.tar.gz
-
   build-wheel:
-    if: ${{ inputs.pure-python }}
-    name: 🛞 Wheel
-    runs-on: ubuntu-latest
-    steps:
-      # check out the repository (including submodules and all history)
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-      # set up uv for faster Python package management
-      - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@bd01e18f51369d5a26f1651c3cb451d3417e3bba # v6
-      # build the wheel
-      - name: Build Wheel
-        run: uv build --wheel
-      # check the metadata of the wheel
-      - name: Check metadata
-        run: uvx twine check dist/*
-      # upload the wheel as an artifact (adds a `dev-` prefix for PRs)
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheel
-          path: dist/*.whl
-
-  build-wheels:
-    if: ${{ !inputs.pure-python }}
     name: 🎡 ${{ inputs.runs-on }}
     runs-on: ${{ inputs.runs-on }}
     steps:
@@ -120,5 +62,5 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}-${{ inputs.job-index }}
+          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse/*.whl
