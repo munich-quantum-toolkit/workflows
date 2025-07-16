@@ -15,6 +15,10 @@ on:
         description: "The runner image to test on"
         default: "ubuntu-24.04"
         type: string
+      job-index:
+        description: "The index of the job in the matrix"
+        default: 0
+        type: number
       pure-python:
         description: "Whether this is a pure Python package (or contains compiled extensions)"
         default: false
@@ -116,5 +120,5 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ matrix.runs-on }}-${{ strategy.job-index }}
+          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}-${{ inputs.job-index }}
           path: wheelhouse/*.whl
