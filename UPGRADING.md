@@ -11,12 +11,9 @@ Instead, the `reusable-cpp-tests-ubuntu.yml`, `reusable-cpp-tests-macos.yml`, an
 A matrix strategy can be defined in the workflow calling the respective test workflows.
 
 Similarly, `reusable-python-ci.yml` has been removed.
-The `reusable-python-tests.yml` and `reusable-cpp-coverage.yml` can be used instead.
+The `reusable-python-tests.yml` and `reusable-cpp-coverage.yml` workflows can be used instead.
 
-Finnally, `reusable-python-packaging.yml` workflows no longer accept a list of `runners`.
-Instead, a single runner can be specified using `runs-on`.
-A matrix strategy can be defined in calling workflows.
-The index of a job in the matrix has to be provided using `job-index`.
+Finally, the `reusable-python-packaging.yml` workflow has been split into `reusable-python-packaging-sdist.yml`, `reusable-python-packaging-wheel-build.yml`, and `reusable-python-packaging-wheel-cibuildwheel.yml`.
 
 ## [1.13.0]
 

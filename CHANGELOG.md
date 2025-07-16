@@ -9,6 +9,13 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Added
+
+- 👷 Add `reusable-python-coverage.yml` workflow for uploading Python coverage ([#150]) ([**@denialhaag**])
+- 👷 Add `reusable-python-packaging-sdist.yml` workflow for building source distributions ([#150]) ([**@denialhaag**])
+- 👷 Add `reusable-python-packaging-wheel-build.yml` workflow for building wheels using `build` ([#150]) ([**@denialhaag**])
+- 👷 Add `reusable-python-packaging-wheel-cibuildwheel.yml` workflow for building wheels using `cibuildwheel` ([#150]) ([**@denialhaag**])
+
 ### Changed
 
 - ♻️ Move matrix generation to calling workflow ([#150]) ([**@denialhaag**])
@@ -17,6 +24,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 - 🔥 Remove `reusable-cpp-ci.yml` workflow ([#150]) ([**@denialhaag**])
 - 🔥 Remove `reusable-python-ci.yml` workflow ([#150]) ([**@denialhaag**])
+- 🔥 Remove `reusable-python-packaging.yml` workflow ([#150]) ([**@denialhaag**])
 
 ## [1.13.0] - 2025-07-16
 
