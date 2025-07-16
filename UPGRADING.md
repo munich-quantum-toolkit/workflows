@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.13.0]
+
 This release streamlines the runner and compiler configuration in the C++ as well as Python workflows.
 Instead of having an ever-growing list of options for the C++ and Python testing as well as the Python packaging workflows, the configuration options have been simplified.
 Most options have been removed and replaced with single list options out of which the desired configuration can be selected.
@@ -122,7 +124,10 @@ While initial testing has shown minimal impact, this is still a breaking change.
 For example, it seems like using Ninja as a generator will lead to the wrong compiler being used.
 Consider removing any `-G Ninja` flags from your CMake invocations under Windows.
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...HEAD
+<!-- Version links -->
+
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.13.0...HEAD
+[1.13.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.9.0...v1.10.0
