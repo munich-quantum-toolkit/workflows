@@ -4,6 +4,16 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+This release overwrites some of the changes released with [1.13.0].
+
+The `reusable-cpp-ci.yml` has been removed.
+Instead, the `reusable-cpp-tests-ubuntu.yml`, `reusable-cpp-tests-macos.yml`, and `reusable-cpp-tests-windows.yml` workflows should be used directly.
+A matrix strategy can be defined in the workflow calling the respective test workflows.
+
+The `reusable-python-ci.yml` and `reusable-python-packaging.yml` workflows no longer accept a list of `runners`.
+Instead, a single runner can be specified using `runs-on`.
+A matrix strategy can be defined in calling workflows.
+
 ## [1.13.0]
 
 This release streamlines the runner and compiler configuration in the C++ as well as Python workflows.

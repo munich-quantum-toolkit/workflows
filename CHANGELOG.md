@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- ♻️ Move matrix generation to calling workflow ([#150]) ([**@denialhaag**])
+
+### Removed
+
+- 🔥 Remove `reusable-cpp-ci.yml` workflow ([#150]) ([**@denialhaag**])
+
 ## [1.13.0] - 2025-07-16
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1130)._
@@ -86,6 +94,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#150]: https://github.com/munich-quantum-toolkit/workflows/pull/150
 [#146]: https://github.com/munich-quantum-toolkit/workflows/pull/146
 [#142]: https://github.com/munich-quantum-toolkit/workflows/pull/142
 [#126]: https://github.com/munich-quantum-toolkit/workflows/pull/126
