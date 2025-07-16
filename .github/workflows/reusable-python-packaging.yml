@@ -11,7 +11,10 @@ name: 🐍 • Packaging
 on:
   workflow_call:
     inputs:
-      ###---- General inputs ----------------------------------------------------------------------------------------###
+      runs-on:
+        description: "The runner image to test on"
+        default: "ubuntu-24.04"
+        type: string
       pure-python:
         description: "Whether this is a pure Python package (or contains compiled extensions)"
         default: false
@@ -23,16 +26,6 @@ on:
       z3-version:
         description: "The version of Z3 to set up"
         default: "4.13.4"
-        type: string
-      ###---- Runner configuration ----------------------------------------------------------------------------------###
-      ### Supports any combination of:
-      ### - Ubuntu: ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm
-      ### - macOS: macos-13, macos-14, macos-15
-      ### - Windows: windows-2022, windows-2025, windows-11-arm
-      ###------------------------------------------------------------------------------------------------------------###
-      runners:
-        description: "List of runners to build wheels on (e.g., 'ubuntu-24.04', 'macos-13', 'windows-2022')"
-        default: '["ubuntu-24.04", "ubuntu-24.04-arm", "macos-13", "macos-14", "windows-2022"]'
         type: string
 
 jobs:
@@ -85,35 +78,10 @@ jobs:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheel
           path: dist/*.whl
 
-  build-matrix:
-    if: ${{ !inputs.pure-python }}
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.build-matrix.outputs.matrix }}
-    steps:
-      - id: build-matrix
-        name: Build runner matrix
-        env:
-          RUNNERS: ${{ inputs.runners }}
-        run: |
-          matrix='[]'
-          # Build matrix from runners array
-          for runner in $(echo "$RUNNERS" | jq -r '.[]'); do
-            matrix=$(echo "$matrix" | jq --arg runner "$runner" '. += [{"runs-on": $runner}]')
-          done
-
-          echo "matrix=$(echo "$matrix" | jq -rc .)" >> $GITHUB_OUTPUT
-          echo "Generated matrix: $(echo "$matrix" | jq -rc .)"
-
   build-wheels:
     if: ${{ !inputs.pure-python }}
-    needs: [build-matrix]
-    name: 🎡 ${{ matrix.runs-on }}
-    runs-on: ${{ matrix.runs-on }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    name: 🎡 ${{ inputs.runs-on }}
+    runs-on: ${{ inputs.runs-on }}
     steps:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -121,24 +89,24 @@ jobs:
           submodules: recursive
           fetch-depth: 0
       # optionally set up Z3 (non-Ubuntu only)
-      - if: ${{ inputs.setup-z3 && matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
+      - if: ${{ inputs.setup-z3 && inputs.runs-on != 'ubuntu-24.04' && inputs.runs-on != 'ubuntu-24.04-arm' && inputs.runs-on != 'ubuntu-22.04' && inputs.runs-on != 'ubuntu-22.04-arm' }}
         name: Setup Z3
         uses: cda-tum/setup-z3@4bc179e7fc1cd1a7f5f13429246c692041b19eb3 # v1
         with:
           version: ${{ inputs.z3-version }}
       # set up ccache for faster C++ builds
-      - if: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
+      - if: ${{ inputs.runs-on != 'ubuntu-24.04' && inputs.runs-on != 'ubuntu-24.04-arm' && inputs.runs-on != 'ubuntu-22.04' && inputs.runs-on != 'ubuntu-22.04-arm' }}
         name: Setup ccache
         uses: Chocobo1/setup-ccache-action@563420fe2f8f1dd18ad6e58deeb3abfc1b28819e # v1
         with:
           prepend_symlinks_to_path: false
           windows_compile_environment: msvc
-          override_cache_key: wheels-${{ matrix.runs-on }}
+          override_cache_key: wheels-${{ inputs.runs-on }}
       # set up uv for faster Python package management
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@bd01e18f51369d5a26f1651c3cb451d3417e3bba # v6
         with:
-          enable-cache: ${{ matrix.runs-on != 'ubuntu-24.04' && matrix.runs-on != 'ubuntu-24.04-arm' && matrix.runs-on != 'ubuntu-22.04' && matrix.runs-on != 'ubuntu-22.04-arm' }}
+          enable-cache: ${{ inputs.runs-on != 'ubuntu-24.04' && inputs.runs-on != 'ubuntu-24.04-arm' && inputs.runs-on != 'ubuntu-22.04' && inputs.runs-on != 'ubuntu-22.04-arm' }}
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@95d2f3a92fbf80abe066b09418bbf128a8923df2 # v3.0
       - name: Verify clean directory
