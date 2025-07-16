@@ -10,11 +10,34 @@ name: 🇨‌ • CI
 on:
   workflow_call:
     inputs:
-      ###---- General inputs ----------------------------------------------------------------------------------------###
+      runner:
+        description: "The runner to use for the job."
+        default: "ubuntu-24.04"
+        type: string
+      compiler:
+        description: "The compiler to use for the job."
+        default: "gcc"
+        type: string
+      config:
+        description: "The build configuration to use for the job."
+        default: "Release"
+        type: string
       cmake-args:
         description: >
           Additional arguments to pass to CMake on every OS. Defaults to an empty string.
           This can be any valid CMake argument, such as '-DBUILD_SHARED_LIBS=ON'.
+        default: ""
+        type: string
+      cmake-args-ubuntu:
+        description: Additional arguments to pass to CMake on Ubuntu. Defaults to an empty string.
+        default: ""
+        type: string
+      cmake-args-macos:
+        description: Additional arguments to pass to CMake on macOS. Defaults to an empty string.
+        default: ""
+        type: string
+      cmake-args-windows:
+        description: Additional arguments to pass to CMake on Windows. Defaults to an empty string.
         default: ""
         type: string
       setup-z3:
@@ -25,219 +48,40 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
-      ###---- Ubuntu-specific inputs --------------------------------------------------------------------------------###
-      ### Supports (ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm) x (gcc, clang, clang-XX) x (Release, Debug)
-      ###------------------------------------------------------------------------------------------------------------###
-      enable-ubuntu:
-        description: "Whether to enable C++ testing on Ubuntu"
-        default: true
-        type: boolean
-      ubuntu-runners:
-        description: "List of Ubuntu runners to test on (e.g., 'ubuntu-24.04', 'ubuntu-22.04', 'ubuntu-24.04-arm', 'ubuntu-22.04-arm')"
-        default: '["ubuntu-24.04", "ubuntu-24.04-arm"]'
-        type: string
-      ubuntu-compilers:
-        description: "List of compilers to test on Ubuntu (e.g., 'gcc', 'clang', 'clang-19', 'clang-20')"
-        default: '["gcc"]'
-        type: string
-      ubuntu-configs:
-        description: "List of build configurations to test on Ubuntu (e.g., 'Release', 'Debug')"
-        default: '["Release"]'
-        type: string
-      cmake-args-ubuntu:
-        description: "Additional arguments to pass to CMake on Ubuntu"
-        default: ""
-        type: string
-      ###---- macOS-specific inputs ---------------------------------------------------------------------------------###
-      ### Supports (macos-13, macos-14, macos-15) x (clang, clang-XX, gcc-XX) x (Release, Debug)
-      ###------------------------------------------------------------------------------------------------------------###
-      enable-macos:
-        description: "Whether to enable C++ testing on macOS"
-        default: true
-        type: boolean
-      macos-runners:
-        description: "List of macOS runners to test on (e.g., 'macos-13', 'macos-14', 'macos-15')"
-        default: '["macos-13", "macos-14"]'
-        type: string
-      macos-compilers:
-        description: "List of compilers to test on macOS (e.g., 'clang', 'clang-19', 'clang-20', 'gcc-14', 'gcc-15')"
-        default: '["clang"]'
-        type: string
-      macos-configs:
-        description: "List of build configurations to test on macOS (e.g., 'Release', 'Debug')"
-        default: '["Release"]'
-        type: string
-      cmake-args-macos:
-        description: "Additional arguments to pass to CMake on macOS"
-        default: ""
-        type: string
-      ###---- Windows-specific inputs -------------------------------------------------------------------------------###
-      ### Supports (windows-2022, windows-2025, windows-11-arm) x (msvc, clang) x (Release, Debug)
-      ###------------------------------------------------------------------------------------------------------------###
-      enable-windows:
-        description: "Whether to enable C++ testing on Windows"
-        default: true
-        type: boolean
-      windows-runners:
-        description: "List of Windows runners to test on (e.g., 'windows-2022', 'windows-2025', 'windows-11-arm')"
-        default: '["windows-2022"]'
-        type: string
-      windows-compilers:
-        description: "List of compilers to test on Windows (e.g., 'msvc', 'clang')"
-        default: '["msvc"]'
-        type: string
-      windows-configs:
-        description: "List of build configurations to test on Windows (e.g., 'Release', 'Debug')"
-        default: '["Release"]'
-        type: string
-      cmake-args-windows:
-        description: "Additional arguments to pass to CMake on Windows"
-        default: ""
-        type: string
 
 jobs:
-  build-matrices:
-    runs-on: ubuntu-latest
-    outputs:
-      ubuntu-matrix: ${{ steps.build-ubuntu-matrix.outputs.ubuntu-matrix }}
-      macos-matrix: ${{ steps.build-macos-matrix.outputs.macos-matrix }}
-      windows-matrix: ${{ steps.build-windows-matrix.outputs.windows-matrix }}
-    steps:
-      - id: build-ubuntu-matrix
-        name: Build Ubuntu matrix
-        env:
-          UBUNTU_RUNNERS: ${{ inputs.ubuntu-runners }}
-          UBUNTU_COMPILERS: ${{ inputs.ubuntu-compilers }}
-          UBUNTU_CONFIGS: ${{ inputs.ubuntu-configs }}
-        run: |
-          ubuntu_matrix='[]'
-
-          # Parse input arrays
-          runners="$UBUNTU_RUNNERS"
-          compilers="$UBUNTU_COMPILERS"
-          configs="$UBUNTU_CONFIGS"
-
-          # Build Cartesian product
-          for runner in $(echo $runners | jq -r '.[]'); do
-            for compiler in $(echo $compilers | jq -r '.[]'); do
-              for config in $(echo $configs | jq -r '.[]'); do
-                ubuntu_matrix=$(echo $ubuntu_matrix | jq --arg runner "$runner" --arg compiler "$compiler" --arg config "$config" '. += [{"runs-on": $runner, "config": $config, "compiler": $compiler}]')
-              done
-            done
-          done
-
-          echo "ubuntu-matrix=$(echo $ubuntu_matrix | jq -rc .)" >> $GITHUB_OUTPUT
-          echo "Generated Ubuntu matrix: $(echo $ubuntu_matrix | jq -rc .)"
-
-      - id: build-macos-matrix
-        name: Build macOS matrix
-        env:
-          MACOS_RUNNERS: ${{ inputs.macos-runners }}
-          MACOS_COMPILERS: ${{ inputs.macos-compilers }}
-          MACOS_CONFIGS: ${{ inputs.macos-configs }}
-        run: |
-          macos_matrix='[]'
-          warning_issued=0
-
-          # Parse input arrays
-          runners="$MACOS_RUNNERS"
-          compilers="$MACOS_COMPILERS"
-          configs="$MACOS_CONFIGS"
-
-          # Build Cartesian product, skipping macos-15 with gcc-XX due to _bounds.h error
-          for runner in $(echo $runners | jq -r '.[]'); do
-            for compiler in $(echo $compilers | jq -r '.[]'); do
-              for config in $(echo $configs | jq -r '.[]'); do
-                # Exclude macos-15 with any gcc-XX (e.g., gcc-14, gcc-15)
-                if [[ "$runner" == "macos-15" && "$compiler" == gcc-* ]]; then
-                  # Skip this combination due to fatal error: _bounds.h: No such file or directory
-                  if [[ $warning_issued -eq 0 ]]; then
-                    echo "::warning title=Matrix Exclusion::Skipping macos-15 with gcc-* due to fatal error: _bounds.h: No such file or directory"
-                    warning_issued=1
-                  fi
-                  continue
-                fi
-                macos_matrix=$(echo $macos_matrix | jq --arg runner "$runner" --arg compiler "$compiler" --arg config "$config" '. += [{"runs-on": $runner, "config": $config, "compiler": $compiler}]')
-              done
-            done
-          done
-
-          echo "macos-matrix=$(echo $macos_matrix | jq -rc .)" >> $GITHUB_OUTPUT
-          echo "Generated macOS matrix: $(echo $macos_matrix | jq -rc .)"
-
-      - id: build-windows-matrix
-        name: Build Windows matrix
-        env:
-          WINDOWS_RUNNERS: ${{ inputs.windows-runners }}
-          WINDOWS_COMPILERS: ${{ inputs.windows-compilers }}
-          WINDOWS_CONFIGS: ${{ inputs.windows-configs }}
-        run: |
-          windows_matrix='[]'
-
-          # Parse input arrays
-          runners="$WINDOWS_RUNNERS"
-          compilers="$WINDOWS_COMPILERS"
-          configs="$WINDOWS_CONFIGS"
-
-          # Build Cartesian product
-          for runner in $(echo $runners | jq -r '.[]'); do
-            for compiler in $(echo $compilers | jq -r '.[]'); do
-              for config in $(echo $configs | jq -r '.[]'); do
-                windows_matrix=$(echo $windows_matrix | jq --arg runner "$runner" --arg compiler "$compiler" --arg config "$config" '. += [{"runs-on": $runner, "config": $config, "compiler": $compiler}]')
-              done
-            done
-          done
-
-          echo "windows-matrix=$(echo $windows_matrix | jq -rc .)" >> $GITHUB_OUTPUT
-          echo "Generated Windows matrix: $(echo $windows_matrix | jq -rc .)"
-
   cpp-tests-ubuntu:
-    name: 🐧 ${{ matrix.runs-on }} ${{ matrix.compiler }} ${{ matrix.config }}
-    if: ${{ inputs.enable-ubuntu }}
-    needs: build-matrices
-    strategy:
-      matrix:
-        include: ${{ fromJson(needs.build-matrices.outputs.ubuntu-matrix) }}
-      fail-fast: false
+    if: startsWith(inputs.runner, 'ubuntu')
+    name: 🐧 ${{ inputs.runner }} ${{ inputs.compiler }} ${{ inputs.config }}
     uses: ./.github/workflows/reusable-cpp-tests-ubuntu.yml
     with:
-      runs-on: ${{ matrix.runs-on }}
-      compiler: ${{ matrix.compiler }}
-      config: ${{ matrix.config }}
-      cmake-args: ${{ inputs.cmake-args }} ${{ inputs.cmake-args-ubuntu }}
+      runs-on: ${{ inputs.runner }}
+      compiler: ${{ inputs.compiler }}
+      config: ${{ inputs.config }}
+      cmake-args: ${{ inputs.cmake-args }}
       setup-z3: ${{ inputs.setup-z3 }}
       z3-version: ${{ inputs.z3-version }}
 
   cpp-tests-macos:
-    name: 🍎 ${{ matrix.runs-on }} ${{ matrix.compiler }} ${{ matrix.config }}
-    if: ${{ inputs.enable-macos }}
-    needs: build-matrices
-    strategy:
-      matrix:
-        include: ${{ fromJson(needs.build-matrices.outputs.macos-matrix) }}
-      fail-fast: false
+    name: 🍎 ${{ inputs.runner }} ${{ inputs.compiler }} ${{ inputs.config }}
+    if: startsWith(inputs.runner, 'macos')
     uses: ./.github/workflows/reusable-cpp-tests-macos.yml
     with:
-      runs-on: ${{ matrix.runs-on }}
-      compiler: ${{ matrix.compiler }}
-      config: ${{ matrix.config }}
-      cmake-args: ${{ inputs.cmake-args }} ${{ inputs.cmake-args-macos }}
+      runs-on: ${{ inputs.runner }}
+      compiler: ${{ inputs.compiler }}
+      config: ${{ inputs.config }}
+      cmake-args: ${{ inputs.cmake-args }}
       setup-z3: ${{ inputs.setup-z3 }}
       z3-version: ${{ inputs.z3-version }}
 
   cpp-tests-windows:
-    name: 🏁 ${{ matrix.runs-on }} ${{ matrix.compiler }} ${{ matrix.config }}
-    if: ${{ inputs.enable-windows }}
-    needs: build-matrices
-    strategy:
-      matrix:
-        include: ${{ fromJson(needs.build-matrices.outputs.windows-matrix) }}
-      fail-fast: false
+    name: 🏁 ${{ inputs.runner }} ${{ inputs.compiler }} ${{ inputs.config }}
+    if: startsWith(inputs.runner, 'windows')
     uses: ./.github/workflows/reusable-cpp-tests-windows.yml
     with:
-      runs-on: ${{ matrix.runs-on }}
-      compiler: ${{ matrix.compiler }}
-      config: ${{ matrix.config }}
-      cmake-args: ${{ inputs.cmake-args }} ${{ inputs.cmake-args-windows }}
+      runs-on: ${{ inputs.runner }}
+      compiler: ${{ inputs.compiler }}
+      config: ${{ inputs.config }}
+      cmake-args: ${{ inputs.cmake-args }}
       setup-z3: ${{ inputs.setup-z3 }}
       z3-version: ${{ inputs.z3-version }}
