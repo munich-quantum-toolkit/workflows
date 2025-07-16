@@ -25,9 +25,10 @@ on:
       compiler:
         description: >
           The compiler to use. Defaults to 'gcc'.
-          This can be 'gcc' or 'clang'.
+          This can be 'gcc', 'clang', or 'clang-XX'.
           If 'gcc' is selected, this will use the default GCC compiler.
-          If 'clang' is selected, this will use the default Clang compiler.
+          If 'clang' is selected, the default Clang compiler will be used.
+          A specific version of Clang, including MLIR, can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
         default: "gcc"
         type: string
       cmake-args:
@@ -77,17 +78,50 @@ jobs:
       # make sure ninja is installed
       - name: Install Ninja
         run: pipx install ninja
+      # set up default system Clang
+      - if: ${{ inputs.compiler == 'clang' }}
+        name: Set up default system Clang
+        run: |
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+      # set up Clang with a specific version (including MLIR)
+      - if: ${{ startsWith(inputs.compiler, 'clang-') }}
+        name: Set up Clang
+        env:
+          COMPILER: ${{ inputs.compiler }}
+        run: |
+          version=$(echo "$COMPILER" | sed 's/clang-//')
+          sudo apt-get update
+          TEMP_DIR=${{ runner.temp }}
+          wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
+          chmod +x "$TEMP_DIR/llvm_install.sh"
+          if sudo "$TEMP_DIR/llvm_install.sh" $version; then
+            sudo apt-get install -y libmlir-$version-dev \
+                                    mlir-$version-tools \
+                                    clang-$version \
+                                    clang-tools-$version \
+             || exit 1
+          else
+            echo "Installation from script failed."
+            exit 1
+          fi
+          echo "CC=clang-$version" >> $GITHUB_ENV
+          echo "CXX=clang++-$version" >> $GITHUB_ENV
+          echo "MLIR_DIR=/usr/lib/llvm-$version/lib/cmake/mlir" >> $GITHUB_ENV
+          echo "LLVM_DIR=/usr/lib/llvm-$version/lib/cmake/llvm" >> $GITHUB_ENV
       # configure CMake in the specified mode, optionally with additional arguments
       - name: Configure CMake
-        run: |
-          cmake_args="${{ inputs.cmake-args }}"
-          if [ "${{ inputs.compiler }}" == "clang" ]; then
-            cmake_args="$cmake_args -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
-          fi
-          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} $cmake_args
+        env:
+          CONFIG: ${{ inputs.config }}
+          CMAKE_ARGS: ${{ inputs.cmake-args }}
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE="$CONFIG" "$CMAKE_ARGS"
       # build the project in the specified mode
       - name: Build
-        run: cmake --build build --config ${{ inputs.config }}
+        env:
+          CONFIG: ${{ inputs.config }}
+        run: cmake --build build --config "$CONFIG"
       # run the tests
       - name: Test
-        run: ctest -C ${{ inputs.config }} --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
+        env:
+          CONFIG: ${{ inputs.config }}
+        run: ctest -C "$CONFIG" --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600

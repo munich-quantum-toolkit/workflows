@@ -9,6 +9,16 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Added
+
+- 👷🐧 Allow configuring Clang version in Ubuntu C++ testing workflow ([#146]) ([**@burgholzer**])
+- 👷🍎 Allow configuring GCC and Clang version in macOS C++ testing workflow ([#146]) ([**@burgholzer**])
+- ✨🐉 Add MLIR configuration when specifying `clang-XX` as the `compiler` in the C++ testing workflows on Linux and macOS ([#144]) ([**@burgholzer**])
+
+### Changed
+
+- ♻️ Streamline runner and compiler configuration in C++ as well as Python workflows ([#146]) ([**@burgholzer**])
+
 ## [1.12.0] - 2025-07-08
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1120)._
@@ -71,6 +81,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#146]: https://github.com/munich-quantum-toolkit/workflows/pull/146
 [#142]: https://github.com/munich-quantum-toolkit/workflows/pull/142
 [#126]: https://github.com/munich-quantum-toolkit/workflows/pull/126
 [#119]: https://github.com/munich-quantum-toolkit/workflows/pull/119
