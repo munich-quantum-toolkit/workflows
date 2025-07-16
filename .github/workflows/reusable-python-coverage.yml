@@ -6,36 +6,14 @@
 #
 # Licensed under the MIT License
 
-name: 🐍 • CI
+name: 🐍 • Coverage
 
 on:
   workflow_call:
-    inputs:
-      runs-on:
-        description: "The runner image to test on"
-        default: "ubuntu-24.04"
-        type: string
-      setup-z3:
-        description: "Whether to set up Z3"
-        default: false
-        type: boolean
-      z3-version:
-        description: "The version of Z3 to set up"
-        default: "4.13.4"
-        type: string
 
 jobs:
-  python-tests:
-    name: 🐍 ${{ inputs.runs-on }}
-    uses: ./.github/workflows/reusable-python-tests.yml
-    with:
-      runs-on: ${{ inputs.runs-on }}
-      setup-z3: ${{ inputs.setup-z3 }}
-      z3-version: ${{ inputs.z3-version }}
-
-  python-coverage-upload:
-    name: 📈
-    needs: [python-tests]
+  coverage:
+    name: 📈 Coverage
     runs-on: ubuntu-latest
     permissions:
       contents: read # Required for the `actions/checkout` action
