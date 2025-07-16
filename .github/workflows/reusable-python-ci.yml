@@ -11,7 +11,10 @@ name: 🐍 • CI
 on:
   workflow_call:
     inputs:
-      ###---- General inputs ----------------------------------------------------------------------------------------###
+      runs-on:
+        description: "The runner image to test on"
+        default: "ubuntu-24.04"
+        type: string
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -20,48 +23,13 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
-      ###---- Runner configuration ----------------------------------------------------------------------------------###
-      ### Supports any combination of:
-      ### - Ubuntu: ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm
-      ### - macOS: macos-13, macos-14, macos-15
-      ### - Windows: windows-2022, windows-2025, windows-11-arm
-      ###------------------------------------------------------------------------------------------------------------###
-      runners:
-        description: "List of runners to test on (e.g., 'ubuntu-24.04', 'macos-13', 'windows-2022')"
-        default: '["ubuntu-24.04", "ubuntu-24.04-arm", "macos-13", "macos-14", "windows-2022"]'
-        type: string
 
 jobs:
-  build-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.build-matrix.outputs.matrix }}
-    steps:
-      - id: build-matrix
-        name: Build runner matrix
-        env:
-          RUNNERS: ${{ inputs.runners }}
-        run: |
-          matrix='[]'
-
-          # Build matrix from runners array
-          for runner in $(echo "$RUNNERS" | jq -r '.[]'); do
-            matrix=$(echo $matrix | jq --arg runner "$runner" '. += [{"runs-on": $runner}]')
-          done
-
-          echo "matrix=$(echo $matrix | jq -rc .)" >> $GITHUB_OUTPUT
-          echo "Generated matrix: $(echo $matrix | jq -rc .)"
-
   python-tests:
-    needs: [build-matrix]
-    name: 🐍 ${{ matrix.runs-on }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    name: 🐍 ${{ inputs.runs-on }}
     uses: ./.github/workflows/reusable-python-tests.yml
     with:
-      runs-on: ${{ matrix.runs-on }}
+      runs-on: ${{ inputs.runs-on }}
       setup-z3: ${{ inputs.setup-z3 }}
       z3-version: ${{ inputs.z3-version }}
 
