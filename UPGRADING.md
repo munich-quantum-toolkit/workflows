@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.14.0]
+
 This release overwrites some of the changes released with [1.13.0].
 
 The `reusable-cpp-ci.yml` has been removed.
@@ -137,7 +139,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.13.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.14.0...HEAD
+[1.14.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...v1.11.0

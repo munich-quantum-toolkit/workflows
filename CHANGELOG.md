@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.14.0] - 2025-07-17
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1140)._
+
 ### Added
 
 - 👷 Add `reusable-python-coverage.yml` workflow for uploading Python coverage ([#150]) ([**@denialhaag**])
@@ -93,7 +97,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.13.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.14.0...HEAD
+[1.14.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.14.0
 [1.13.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.13.0
 [1.12.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.12.0
 [1.11.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.11.0
