@@ -11,7 +11,7 @@ Instead, the `reusable-cpp-tests-ubuntu.yml`, `reusable-cpp-tests-macos.yml`, an
 A matrix strategy can be defined in the workflow calling the respective test workflows.
 
 Similarly, `reusable-python-ci.yml` has been removed.
-The `reusable-python-tests.yml` and `reusable-cpp-coverage.yml` workflows can be used instead.
+The `reusable-python-tests.yml` and `reusable-python-coverage.yml` workflows can be used instead.
 
 Finally, the `reusable-python-packaging.yml` workflow has been split into `reusable-python-packaging-sdist.yml`, `reusable-python-packaging-wheel-build.yml`, and `reusable-python-packaging-wheel-cibuildwheel.yml`.
 
