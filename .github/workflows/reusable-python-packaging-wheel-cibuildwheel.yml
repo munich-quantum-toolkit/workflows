@@ -1,0 +1,66 @@
+# Copyright (c) 2023 - 2025 Chair for Design Automation, TUM
+# Copyright (c) 2025 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: 🐍 • Packaging
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: "The runner image to test on"
+        default: "ubuntu-24.04"
+        type: string
+      setup-z3:
+        description: "Whether to set up Z3"
+        default: false
+        type: boolean
+      z3-version:
+        description: "The version of Z3 to set up"
+        default: "4.13.4"
+        type: string
+
+jobs:
+  build-wheel:
+    name: 🎡 ${{ inputs.runs-on }}
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      # check out the repository (including submodules and all history)
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      # optionally set up Z3 (non-Ubuntu only)
+      - if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
+        name: Setup Z3
+        uses: cda-tum/setup-z3@4bc179e7fc1cd1a7f5f13429246c692041b19eb3 # v1
+        with:
+          version: ${{ inputs.z3-version }}
+      # set up ccache for faster C++ builds
+      - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+        name: Setup ccache
+        uses: Chocobo1/setup-ccache-action@563420fe2f8f1dd18ad6e58deeb3abfc1b28819e # v1
+        with:
+          prepend_symlinks_to_path: false
+          windows_compile_environment: msvc
+          override_cache_key: wheels-${{ inputs.runs-on }}
+      # set up uv for faster Python package management
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@bd01e18f51369d5a26f1651c3cb451d3417e3bba # v6
+        with:
+          enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+      # run cibuildwheel to build wheels for the specified Python version
+      - uses: pypa/cibuildwheel@95d2f3a92fbf80abe066b09418bbf128a8923df2 # v3.0
+      - name: Verify clean directory
+        run: git diff --exit-code
+        shell: bash
+      # upload the wheels as an artifact (adds a `dev-` prefix for PRs)
+      - name: Upload wheels
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
+          path: wheelhouse/*.whl
