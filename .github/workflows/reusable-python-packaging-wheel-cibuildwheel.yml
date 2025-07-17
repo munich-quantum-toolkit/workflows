@@ -35,13 +35,13 @@ jobs:
           submodules: recursive
           fetch-depth: 0
       # optionally set up Z3 (non-Ubuntu only)
-      - if: ${{ inputs.setup-z3 && inputs.runs-on != 'ubuntu-24.04' && inputs.runs-on != 'ubuntu-24.04-arm' && inputs.runs-on != 'ubuntu-22.04' && inputs.runs-on != 'ubuntu-22.04-arm' }}
+      - if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
         name: Setup Z3
         uses: cda-tum/setup-z3@4bc179e7fc1cd1a7f5f13429246c692041b19eb3 # v1
         with:
           version: ${{ inputs.z3-version }}
       # set up ccache for faster C++ builds
-      - if: ${{ inputs.runs-on != 'ubuntu-24.04' && inputs.runs-on != 'ubuntu-24.04-arm' && inputs.runs-on != 'ubuntu-22.04' && inputs.runs-on != 'ubuntu-22.04-arm' }}
+      - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
         name: Setup ccache
         uses: Chocobo1/setup-ccache-action@563420fe2f8f1dd18ad6e58deeb3abfc1b28819e # v1
         with:
@@ -52,7 +52,7 @@ jobs:
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@bd01e18f51369d5a26f1651c3cb451d3417e3bba # v6
         with:
-          enable-cache: ${{ inputs.runs-on != 'ubuntu-24.04' && inputs.runs-on != 'ubuntu-24.04-arm' && inputs.runs-on != 'ubuntu-22.04' && inputs.runs-on != 'ubuntu-22.04-arm' }}
+          enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@95d2f3a92fbf80abe066b09418bbf128a8923df2 # v3.0
       - name: Verify clean directory
