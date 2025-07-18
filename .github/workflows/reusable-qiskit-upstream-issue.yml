@@ -32,17 +32,21 @@ jobs:
           QISKIT_COMMIT_DATE=$(curl -s https://api.github.com/repos/Qiskit/qiskit/commits/${QISKIT_COMMIT} | jq -r '.commit.author.date')
           echo "url=${QISKIT_COMMIT_URL}" >> $GITHUB_OUTPUT
           echo "date=${QISKIT_COMMIT_DATE}" >> $GITHUB_OUTPUT
+          echo "QISKIT_COMMIT_URL=${QISKIT_COMMIT_URL}" >> $GITHUB_ENV
+          echo "QISKIT_COMMIT_DATE=${QISKIT_COMMIT_DATE}" >> $GITHUB_ENV
 
       - name: Create or update issue
         uses: actions/github-script@v7
+        env:
+          TEST_RESULT: ${{ inputs.tests-result }}
         with:
           github-token: ${{ github.token }}
           script: |
             const runId = context.runId;
             const workflowRunUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}`;
-            const testResult = '${{ inputs.tests-result }}';
-            const qiskitCommitUrl = '${{ steps.qiskit-commit.outputs.url }}';
-            const qiskitCommitDate = '${{ steps.qiskit-commit.outputs.date }}';
+            const testResult = process.env.TEST_RESULT;
+            const qiskitCommitUrl = process.env.QISKIT_COMMIT_URL;
+            const qiskitCommitDate = process.env.QISKIT_COMMIT_DATE;
 
             // Search for existing open issues with a specific title pattern
             const issueTitle = "❌ Qiskit Upstream Tests Failure";
