@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.15.0]
+
 The `reusable-qiskit-upstream.yml` workflow has been renamed to `reusable-qiskit-upstream-tests.yml` to align with the added `reusable-qiskit-upstream-issue.yml` workflow.
 The added workflow can be used to create an issue if the Qiskit upstream tests have failed.
 
@@ -142,7 +144,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.14.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.0...HEAD
+[1.15.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.14.0...v1.15.0
 [1.14.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.11.0...v1.12.0
