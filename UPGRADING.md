@@ -4,15 +4,18 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+The `reusable-qiskit-upstream.yml` worflow has been renamed to `reusable-qiskit-upstream-tests.yml` to align with the added `reusable-qiskit-upstream-issue.yml` workflow.
+The added workflow can be used to create an issue if the Qiskit upstream tests have failed.
+
 ## [1.14.0]
 
 This release overwrites some of the changes released with [1.13.0].
 
-The `reusable-cpp-ci.yml` has been removed.
+The `reusable-cpp-ci.yml` workflow has been removed.
 Instead, the `reusable-cpp-tests-ubuntu.yml`, `reusable-cpp-tests-macos.yml`, and `reusable-cpp-tests-windows.yml` workflows should be used directly.
 A matrix strategy can be defined in the workflow calling the respective test workflows.
 
-Similarly, `reusable-python-ci.yml` has been removed.
+Similarly, `reusable-python-ci.yml` workflow has been removed.
 The `reusable-python-tests.yml` and `reusable-python-coverage.yml` workflows can be used instead.
 
 Finally, the `reusable-python-packaging.yml` workflow has been split into `reusable-python-packaging-sdist.yml`, `reusable-python-packaging-wheel-build.yml`, and `reusable-python-packaging-wheel-cibuildwheel.yml`.
