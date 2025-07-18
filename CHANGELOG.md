@@ -9,6 +9,16 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.15.0] - 2025-07-18
+
+### Added
+
+- 👷 Add `reusable-qiskit-upstream-issue.yml` workflow for creating an issue if the Qiskit upstream tests fail ([#151]) ([**@denialhaag**])
+
+### Changed
+
+- ♻️ Rename `reusable-qiskit-upstream.yml` to `reusable-qiskit-upstream-tests.yml` ([#151]) ([**@denialhaag**])
+
 ## [1.14.0] - 2025-07-17
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1140)._
@@ -97,7 +107,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.14.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.0...HEAD
+[1.15.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.15.0
 [1.14.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.14.0
 [1.13.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.13.0
 [1.12.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.12.0
@@ -108,6 +119,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#151]: https://github.com/munich-quantum-toolkit/workflows/pull/151
 [#150]: https://github.com/munich-quantum-toolkit/workflows/pull/150
 [#146]: https://github.com/munich-quantum-toolkit/workflows/pull/146
 [#142]: https://github.com/munich-quantum-toolkit/workflows/pull/142
