@@ -4,7 +4,7 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
-The `reusable-qiskit-upstream.yml` worflow has been renamed to `reusable-qiskit-upstream-tests.yml` to align with the added `reusable-qiskit-upstream-issue.yml` workflow.
+The `reusable-qiskit-upstream.yml` workflow has been renamed to `reusable-qiskit-upstream-tests.yml` to align with the added `reusable-qiskit-upstream-issue.yml` workflow.
 The added workflow can be used to create an issue if the Qiskit upstream tests have failed.
 
 ## [1.14.0]
