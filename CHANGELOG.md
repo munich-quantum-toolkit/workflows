@@ -9,11 +9,15 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.15.1] - 2025-07-29
+
 ### Fixed
 
 - 🐛 Fix bug preventing multiple CMake args ([#160]) ([**@denialhaag**])
 
 ## [1.15.0] - 2025-07-18
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1150)._
 
 ### Added
 
@@ -111,7 +115,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.1...HEAD
+[1.15.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.15.1
 [1.15.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.15.0
 [1.14.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.14.0
 [1.13.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.13.0
