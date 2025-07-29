@@ -4,6 +4,15 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+This release updates `cibuildwheel` to `v3.1`.
+As a result, CPython 3.14 wheels are built by default.
+As free-threading is no longer experimental, also free-threaded wheels are built.
+When upgrading, ensure that the following conditions are met:
+
+1. `pybind11` modules are marked with `py::mod_gil_not_used()`
+2. `cibuildwheel` skips tests for `cp3*t-*` (because Qiskit does not support free threading)
+3. `cibuildwheel` skips tests for `cp314-*` (because not all dependencies support Python 3.14 yet)
+
 ## [1.15.0]
 
 The `reusable-qiskit-upstream.yml` workflow has been renamed to `reusable-qiskit-upstream-tests.yml` to align with the added `reusable-qiskit-upstream-issue.yml` workflow.

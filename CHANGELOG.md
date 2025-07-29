@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- ⬆️ Update `cibuildwheel` to `v3.1` ([#157]) ([**@denialhaag**])
+
 ## [1.15.1] - 2025-07-29
 
 ### Fixed
@@ -129,6 +133,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 <!-- PR links -->
 
 [#160]: https://github.com/munich-quantum-toolkit/workflows/pull/160
+[#157]: https://github.com/munich-quantum-toolkit/workflows/pull/157
 [#151]: https://github.com/munich-quantum-toolkit/workflows/pull/151
 [#150]: https://github.com/munich-quantum-toolkit/workflows/pull/150
 [#146]: https://github.com/munich-quantum-toolkit/workflows/pull/146
