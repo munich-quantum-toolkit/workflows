@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Fixed
 
-- 🐛 Fix bug preventing multiple cmake args ([#160]) ([**@denialhaag**])
+- 🐛 Fix bug preventing multiple CMake args ([#160]) ([**@denialhaag**])
 
 ## [1.15.0] - 2025-07-18
 
