@@ -54,7 +54,9 @@ jobs:
       - name: Install Ninja
         run: pipx install ninja
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ${{ inputs.cmake-args }}
+        env:
+          CMAKE_ARGS: ${{ inputs.cmake-args }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS
       - name: Build
         run: cmake --build build --config Debug
       - name: Test

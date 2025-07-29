@@ -113,8 +113,10 @@ jobs:
       # install the given packages in the Python virtual environment
       - if: ${{ inputs.setup-python }}
         name: Validate package list and install given packages
+        env:
+          INSTALL_PKGS: ${{ inputs.install-pkgs }}
         run: |
-          pkgs="${{ inputs.install-pkgs }}"
+          pkgs=$INSTALL_PKGS
           if [[ ! "$pkgs" =~ ^[a-zA-Z0-9=._-]+(,[a-zA-Z0-9=._-]+)*$ ]]; then
             echo "Invalid package list"
             exit 1
@@ -124,6 +126,8 @@ jobs:
           uv pip install "${pkgs_array[@]}"
       # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
+        env:
+          CMAKE_ARGS: ${{ inputs.cmake-args }}
         run: |
           echo $CC
           echo $CXX
@@ -131,7 +135,7 @@ jobs:
           $CXX --version
           echo $MLIR_DIR
           echo $LLVM_DIR
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug ${{ inputs.cmake-args }}
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug $CMAKE_ARGS
       # build the project, if configured to do so
       - if: ${{ inputs.build-project }}
         name: Build

@@ -63,7 +63,9 @@ jobs:
               - uses: security-and-quality
       # configure CMake in Debug mode, optionally with additional arguments
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug ${{ inputs.cmake-args }}
+        env:
+          CMAKE_ARGS: ${{ inputs.cmake-args }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug $CMAKE_ARGS
       # build the project
       - name: Build
         run: cmake --build build

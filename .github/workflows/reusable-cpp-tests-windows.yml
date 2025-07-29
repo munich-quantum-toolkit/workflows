@@ -70,21 +70,28 @@ jobs:
           version: ${{ inputs.z3-version }}
       # configure CMake in the specified mode, optionally with additional arguments
       - name: Configure CMake
+        env:
+          CONFIG: ${{ inputs.config }}
+          CMAKE_ARGS: ${{ inputs.cmake-args }}
         run: |
-          cmake_args="${{ inputs.cmake-args }}"
+          cmake_args=$CMAKE_ARGS
           if [ "${{ inputs.compiler }}" == "clang" ]; then
             cmake_args="$cmake_args -T ClangCL"
           fi
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ inputs.config }} $cmake_args
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $cmake_args
       # build the project in the specified mode with retries
       - name: Build
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3 # Windows builds with MSVC are flaky and frequently run out of heap space
+        env:
+          CONFIG: ${{ inputs.config }}
         with:
           timeout_minutes: 15
           max_attempts: 5
           shell: bash
           retry_on: error
-          command: cmake --build build --config ${{ inputs.config }}
+          command: cmake --build build --config $CONFIG
       # run the tests
       - name: Test
-        run: ctest -C ${{ inputs.config }} --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
+        env:
+          CONFIG: ${{ inputs.config }}
+        run: ctest -C $CONFIG --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600

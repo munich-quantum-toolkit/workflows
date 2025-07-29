@@ -120,14 +120,14 @@ jobs:
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
-        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE="$CONFIG" "$CMAKE_ARGS"
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS
       # build the project in the specified mode
       - name: Build
         env:
           CONFIG: ${{ inputs.config }}
-        run: cmake --build build --config "$CONFIG"
+        run: cmake --build build --config $CONFIG
       # run the tests
       - name: Test
         env:
           CONFIG: ${{ inputs.config }}
-        run: ctest -C "$CONFIG" --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
+        run: ctest -C $CONFIG --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
