@@ -54,7 +54,7 @@ jobs:
         with:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
       # run cibuildwheel to build wheels for the specified Python version
-      - uses: pypa/cibuildwheel@e6de07ed3921b51089aae6981989889cf1eddd0c # v3.1
+      - uses: pypa/cibuildwheel@e6de07ed3921b51089aae6981989889cf1eddd0c # v3.1.1
       - name: Verify clean directory
         run: git diff --exit-code
         shell: bash
