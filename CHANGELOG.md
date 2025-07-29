@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [1.15.2] - 2025-07-29
 
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1152)._
+
 ### Changed
 
 - ⬆️ Update `cibuildwheel` to `v3.1` ([#157]) ([**@denialhaag**])
