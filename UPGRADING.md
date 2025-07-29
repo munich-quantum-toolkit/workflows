@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.15.2]
+
 This release updates `cibuildwheel` to `v3.1`.
 As a result, CPython 3.14 wheels are built by default.
 As free-threading is no longer experimental, also free-threaded wheels are built.
@@ -153,7 +155,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.2...HEAD
+[1.15.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.0...v1.15.2
 [1.15.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.14.0...v1.15.0
 [1.14.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.12.0...v1.13.0
