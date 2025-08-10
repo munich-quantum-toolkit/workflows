@@ -43,7 +43,7 @@ jobs:
       # set up ccache for faster C++ builds
       - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
         name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@563420fe2f8f1dd18ad6e58deeb3abfc1b28819e # v1
+        uses: Chocobo1/setup-ccache-action@830b194e8e70c39cb5c4dbe3e937cf774e61e433 # v1
         with:
           prepend_symlinks_to_path: false
           windows_compile_environment: msvc
