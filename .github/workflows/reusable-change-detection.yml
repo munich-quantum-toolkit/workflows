@@ -41,7 +41,7 @@ jobs:
       run-code-ql: ${{ steps.code-ql-changes.outputs.run-code-ql || false }}
       run-cd: ${{ steps.cd-changes.outputs.run-cd || false }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
       - name: Get a list of the changed files relevant for the C++ tests
         if: github.event_name == 'pull_request'
         id: changed-cpp-testable-files
