@@ -44,7 +44,7 @@ jobs:
           version: ${{ inputs.z3-version }}
       # set up ccache for faster C++ builds
       - name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@830b194e8e70c39cb5c4dbe3e937cf774e61e433 # v1
+        uses: Chocobo1/setup-ccache-action@830b194e8e70c39cb5c4dbe3e937cf774e61e433 # v1.4.9
         with:
           prepend_symlinks_to_path: false
           windows_compile_environment: msvc
