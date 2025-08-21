@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.16.1] - 2025-08-21
+
+### Added
+
+- ✨🐉 Add change detection for MLIR code ([#184]) ([**@burgholzer**])
+
 ## [1.16.0] - 2025-07-30
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1160)._
@@ -123,7 +129,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.1...HEAD
+[1.16.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.16.1
 [1.16.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.16.0
 [1.15.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.15.1
 [1.15.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.15.0
@@ -137,12 +144,14 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#184]: https://github.com/munich-quantum-toolkit/workflows/pull/184
 [#160]: https://github.com/munich-quantum-toolkit/workflows/pull/160
 [#157]: https://github.com/munich-quantum-toolkit/workflows/pull/157
 [#151]: https://github.com/munich-quantum-toolkit/workflows/pull/151
 [#150]: https://github.com/munich-quantum-toolkit/workflows/pull/150
 [#146]: https://github.com/munich-quantum-toolkit/workflows/pull/146
 [#142]: https://github.com/munich-quantum-toolkit/workflows/pull/142
+[#128]: https://github.com/munich-quantum-toolkit/workflows/pull/128
 [#126]: https://github.com/munich-quantum-toolkit/workflows/pull/126
 [#119]: https://github.com/munich-quantum-toolkit/workflows/pull/119
 [#114]: https://github.com/munich-quantum-toolkit/workflows/pull/114
