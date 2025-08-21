@@ -55,7 +55,7 @@ jobs:
         uses: rui314/setup-mold@702b1908b5edf30d71a8d1666b724e0f0c6fa035 # v1
       # set up uv for faster Python package management
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@d9e0f98d3fc6adb07d1e3d37f3043649ddad06a1 # v6
+        uses: astral-sh/setup-uv@d9e0f98d3fc6adb07d1e3d37f3043649ddad06a1 # v6.5.0
       # run mypy for static type checking
       - name: Run mypy
         if: ${{ inputs.enable-mypy }}
