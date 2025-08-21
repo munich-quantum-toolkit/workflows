@@ -28,7 +28,7 @@ jobs:
           path: coverage-reports
           merge-multiple: true
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           fail_ci_if_error: true
           flags: python
