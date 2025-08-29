@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.16.2] - 2025-08-29
+
+### Changed
+
+- ♻️ Only use workflow-local compiler caching in Python CI and CD ([#188]) ([**@burgholzer**])
+
 ## [1.16.1] - 2025-08-21
 
 ### Added
@@ -129,7 +135,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.2...HEAD
+[1.16.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.16.2
 [1.16.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.16.1
 [1.16.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.16.0
 [1.15.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.15.1
@@ -144,6 +151,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#188]: https://github.com/munich-quantum-toolkit/workflows/pull/188
 [#184]: https://github.com/munich-quantum-toolkit/workflows/pull/184
 [#160]: https://github.com/munich-quantum-toolkit/workflows/pull/160
 [#157]: https://github.com/munich-quantum-toolkit/workflows/pull/157

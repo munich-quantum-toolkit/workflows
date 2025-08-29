@@ -40,19 +40,15 @@ jobs:
         uses: cda-tum/setup-z3@4bc179e7fc1cd1a7f5f13429246c692041b19eb3 # v1
         with:
           version: ${{ inputs.z3-version }}
-      # set up ccache for faster C++ builds
-      - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@830b194e8e70c39cb5c4dbe3e937cf774e61e433 # v1.4.9
-        with:
-          prepend_symlinks_to_path: false
-          windows_compile_environment: msvc
-          override_cache_key: wheels-${{ inputs.runs-on }}
       # set up uv for faster Python package management
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@4959332f0f014c5280e7eac8b70c90cb574c9f9b # v6.6.0
         with:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+      # set up sccache for faster C++ builds
+      - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+        name: Setup sccache
+        run: uv tool install sccache
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@c923d83ad9c1bc00211c5041d0c3f73294ff88f6 # v3.1.4
       - name: Verify clean directory
@@ -64,3 +60,7 @@ jobs:
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse/*.whl
+      # show sccache stats (non-Ubuntu only)
+      - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+        name: Show sccache stats
+        run: sccache --show-stats

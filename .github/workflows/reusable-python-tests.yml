@@ -42,26 +42,15 @@ jobs:
         uses: cda-tum/setup-z3@4bc179e7fc1cd1a7f5f13429246c692041b19eb3 # v1
         with:
           version: ${{ inputs.z3-version }}
-      # set up ccache for faster C++ builds
-      - name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@830b194e8e70c39cb5c4dbe3e937cf774e61e433 # v1.4.9
-        with:
-          prepend_symlinks_to_path: false
-          windows_compile_environment: msvc
-          override_cache_key: python-tests-${{ inputs.runs-on }}
       # set up mold as linker for faster C++ builds (Linux only)
       - name: Set up mold as linker (Linux only)
         uses: rui314/setup-mold@7344740a9418dcdcb481c7df83d9fbd1d5072d7d # v1
       # set up uv for faster Python package management
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@4959332f0f014c5280e7eac8b70c90cb574c9f9b # v6.6.0
-      # explicitly set CC and CXX for Ubuntu ARM runners to work around an issue
-      # where CXX would wrongfully be set to an x86_64 compiler.
-      - name: Set CC and CXX for ARM
-        if: ${{ runner.os }} == 'Linux' && ${{ runner.arch }} == 'ARM64'
-        run: |
-          echo "CC=gcc" >> $GITHUB_ENV
-          echo "CXX=g++" >> $GITHUB_ENV
+      # set up sccache for faster C++ builds
+      - name: Install sccache
+        run: uv tool install sccache
       # run the nox minimums session (assumes a nox session named "minimums" exists) with coverage
       - name: 🐍 Test with minimal versions
         run: uvx nox -s minimums --verbose -- --cov --cov-report=xml:coverage-${{ inputs.runs-on }}.xml --cov-append
@@ -74,3 +63,6 @@ jobs:
         with:
           name: coverage-${{ inputs.runs-on }}
           path: coverage-*
+      # show sccache stats
+      - name: Show sccache stats
+        run: sccache --show-stats
