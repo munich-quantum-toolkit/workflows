@@ -1,18 +1,14 @@
-# Copyright (c) 2023 - 2025 Chair for Design Automation, TUM
-# Copyright (c) 2025 Munich Quantum Software Company GmbH
-# All rights reserved.
-#
-# SPDX-License-Identifier: MIT
-#
-# Licensed under the MIT License
+# This file has been generated from an external template. Please do not modify it directly.
+# Changes should be contributed to https://github.com/munich-quantum-toolkit/templates.
 
-name-template: "MQT Reusable Workflows $RESOLVED_VERSION Release"
+name-template: "MQT Workflows $RESOLVED_VERSION Release"
 tag-template: "v$RESOLVED_VERSION"
 categories:
   - title: "🚀 Features and Enhancements"
     labels:
-      - "feature"
       - "enhancement"
+      - "feature"
+      - "refactor"
       - "usability"
   - title: "🐛 Bug Fixes"
     labels:
@@ -34,9 +30,10 @@ categories:
     collapse-after: 5
     labels:
       - "dependencies"
+      - "github-actions"
+      - "pre-commit"
       - "submodules"
-      - "github_actions"
-change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
+change-template: "- $TITLE ([#$NUMBER]($URL)) ([**@$AUTHOR**](https://github.com/$AUTHOR))"
 change-title-escapes: '\<*_&'
 version-resolver:
   major:

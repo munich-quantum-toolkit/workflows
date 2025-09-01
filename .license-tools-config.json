@@ -8,20 +8,33 @@
   "title": false,
   "include": ["**/*"],
   "style_override_for_suffix": {
-    ".pyi": "DOCSTRING_STYLE"
+    ".pyi": "DOCSTRING_STYLE",
+    ".in": "POUND_STYLE",
+    ".mlir": "SLASH_STYLE",
+    ".td": "SLASH_STYLE",
+    ".yaml": "POUND_STYLE",
+    ".toml": "POUND_STYLE",
+    ".yml": "POUND_STYLE"
   },
   "exclude": [
+    "^\\.[^/]+",
+    "/\\.[^/]+",
+    ".*\\.qasm",
+    ".*\\.arch",
+    ".*\\.md",
     ".*\\.bib",
     ".*\\.cff",
     ".*\\.css",
+    ".*\\.csv",
     ".*\\.json",
     ".*\\.html",
-    ".*\\.md",
-    ".*\\.svg",
+    ".*\\.tfc",
+    ".*\\.qc",
+    ".*\\.real",
+    ".*\\.tex",
+    ".*\\.profile",
     "uv\\.lock",
     "py\\.typed",
-    ".*build.*",
-    ".gitignore",
-    ".editorconfig"
+    ".*build.*"
   ]
 }
