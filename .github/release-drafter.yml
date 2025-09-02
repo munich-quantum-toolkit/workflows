@@ -1,7 +1,7 @@
 # This file has been generated from an external template. Please do not modify it directly.
 # Changes should be contributed to https://github.com/munich-quantum-toolkit/templates.
 
-name-template: "MQT Workflows $RESOLVED_VERSION Release"
+name-template: "MQT Reusable Workflows $RESOLVED_VERSION Release"
 tag-template: "v$RESOLVED_VERSION"
 categories:
   - title: "🚀 Features and Enhancements"
