@@ -26,7 +26,7 @@ jobs:
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-      - uses: munich-quantum-toolkit/templates@main # v1.1.4
+      - uses: munich-quantum-toolkit/templates@0a1b7578679a5a0d532018c18e40025827a2bb4c # v1.1.4
         with:
           token: ${{ steps.create-token.outputs.token }}
           name: Reusable Workflows
