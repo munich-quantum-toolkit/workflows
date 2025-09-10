@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.17.0]
+
 This release removes all CodeQL workflows because CodeQL is now run automatically by GitHub.
 
 ## [1.16.0]
@@ -157,7 +159,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.0...HEAD
+[1.17.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.0...v1.17.0
 [1.16.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.0...v1.16.0
 [1.15.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.14.0...v1.15.0
 [1.14.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.13.0...v1.14.0
