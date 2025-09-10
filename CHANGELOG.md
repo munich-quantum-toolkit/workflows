@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Removed
+
+- 🔥 Remove CodeQL workflows ([#206]) ([**@denialhaag**])
+
 ## [1.16.2] - 2025-08-29
 
 ### Changed
@@ -151,6 +155,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#206]: https://github.com/munich-quantum-toolkit/workflows/pull/206
 [#188]: https://github.com/munich-quantum-toolkit/workflows/pull/188
 [#184]: https://github.com/munich-quantum-toolkit/workflows/pull/184
 [#160]: https://github.com/munich-quantum-toolkit/workflows/pull/160
