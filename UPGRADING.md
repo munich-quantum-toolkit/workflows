@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+This release removes all CodeQL workflows because CodeQL is now run automatically by GitHub.
+
 ## [1.16.0]
 
 This release updates `cibuildwheel` to `v3.1`.

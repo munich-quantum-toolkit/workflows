@@ -18,7 +18,6 @@ This repository provides reusable GitHub workflows for the MQT, which can be use
 - Change detection for selective workflow execution.
 - C++ testing, linting, and coverage reporting.
 - Python testing (including coverage reporting), linting, and packaging.
-- Running GitHub's CodeQL.
 - Dependabot-like updates for MQT Core.
 - Upstream testing against Qiskit.
 
