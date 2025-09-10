@@ -39,7 +39,7 @@ jobs:
       # optionally set up Z3
       - if: ${{ inputs.setup-z3 }}
         name: Setup Z3
-        uses: cda-tum/setup-z3@4bc179e7fc1cd1a7f5f13429246c692041b19eb3 # v1
+        uses: cda-tum/setup-z3@b1aecd324aca7d6056d3ec203194779ac785949d # v1
         with:
           version: ${{ inputs.z3-version }}
       # set up mold as linker for faster C++ builds (Linux only)
