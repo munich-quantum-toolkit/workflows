@@ -56,7 +56,7 @@ jobs:
         shell: bash
       # upload the wheels as an artifact (adds a `dev-` prefix for PRs)
       - name: Upload wheels
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse/*.whl
