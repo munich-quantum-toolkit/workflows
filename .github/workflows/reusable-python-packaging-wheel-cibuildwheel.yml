@@ -45,6 +45,7 @@ jobs:
         uses: astral-sh/setup-uv@b75a909f75acd358c2196fb9a5f1299a9a8868a4 # v6.7.0
         with:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
       # set up sccache for faster C++ builds
       - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
         name: Setup sccache

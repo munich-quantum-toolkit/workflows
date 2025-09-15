@@ -110,6 +110,8 @@ jobs:
         with:
           python-version: 3.13
           activate-environment: true
+          enable-cache: true
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
       # install the given packages in the Python virtual environment
       - if: ${{ inputs.setup-python }}
         name: Validate package list and install given packages
