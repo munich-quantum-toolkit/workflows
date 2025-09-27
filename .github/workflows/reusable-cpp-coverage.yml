@@ -45,7 +45,7 @@ jobs:
         with:
           version: ${{ inputs.z3-version }}
       - name: Setup ccache
-        uses: Chocobo1/setup-ccache-action@830b194e8e70c39cb5c4dbe3e937cf774e61e433 # v1.4.9
+        uses: Chocobo1/setup-ccache-action@4179d89536f10cd93294f884323bba301364e430 # v1.5.0
         with:
           prepend_symlinks_to_path: false
           override_cache_key: c++-coverage
