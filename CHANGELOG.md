@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.1] - 2025-11-19
+
+### Changed
+
+- 👷 Free up space on Linux runners before running Python tests ([#247]) ([**@denialhaag**])
+
 ## [1.17.0] - 2025-09-10
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1170)._
@@ -147,7 +153,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.1...HEAD
+[1.17.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.1
 [1.17.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.0
 [1.16.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.16.2
 [1.16.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.16.1
@@ -164,6 +171,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#247]: https://github.com/munich-quantum-toolkit/workflows/pull/247
 [#206]: https://github.com/munich-quantum-toolkit/workflows/pull/206
 [#188]: https://github.com/munich-quantum-toolkit/workflows/pull/188
 [#184]: https://github.com/munich-quantum-toolkit/workflows/pull/184
