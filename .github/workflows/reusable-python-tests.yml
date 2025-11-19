@@ -31,6 +31,14 @@ jobs:
       FORCE_COLOR: 3
       GITHUB_TOKEN: ${{ github.token }}
     steps:
+      # free up some space on the Linux runners
+      # the nox environments can get quite large, especially if torch is installed
+      - name: Free up space
+        if: runner.os == 'Linux'
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
