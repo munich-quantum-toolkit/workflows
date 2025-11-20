@@ -31,6 +31,27 @@ jobs:
       FORCE_COLOR: 3
       GITHUB_TOKEN: ${{ github.token }}
     steps:
+      # free up space on the runners
+      # the nox environments can get quite large, especially if torch is installed
+      - name: Free up space (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /usr/local/lib/android/sdk || true
+          sudo rm -rf /usr/share/dotnet || true
+          sudo rm -rf /usr/share/swift || true
+      - name: Free up space (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          sudo rm -rf /usr/local/share/android-sdk || true
+          sudo rm -rf /usr/local/share/dotnet || true
+          sudo rm -rf /usr/share/swift || true
+      - name: Free up space (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Remove-Item -Recurse -Force "C:\Android\android-sdk" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "C:\Program Files\dotnet" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "C:\Program Files\ghc" -ErrorAction SilentlyContinue
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
