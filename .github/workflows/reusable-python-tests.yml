@@ -36,21 +36,22 @@ jobs:
       - name: Free up space (Linux)
         if: runner.os == 'Linux'
         run: |
-          sudo rm -rf /usr/local/lib/android/sdk
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/share/swift
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /usr/local/lib/android/sdk || true
+          sudo rm -rf /usr/share/dotnet || true
+          sudo rm -rf /usr/share/swift || true
       - name: Free up space (macOS)
         if: runner.os == 'macOS'
         run: |
-          sudo rm -rf /usr/local/share/android-sdk
-          sudo rm -rf /usr/local/share/dotnet
-          sudo rm -rf /usr/share/swift
+          sudo rm -rf /usr/local/share/android-sdk || true
+          sudo rm -rf /usr/local/share/dotnet || true
+          sudo rm -rf /usr/share/swift || true
       - name: Free up space (Windows)
         if: runner.os == 'Windows'
         run: |
-          Remove-Item -Recurse -Force "C:\Android\android-sdk"
-          Remove-Item -Recurse -Force "C:\Program Files\dotnet"
+          Remove-Item -Recurse -Force "C:\Android\android-sdk" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "C:\Program Files\dotnet" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "C:\Program Files\ghc" -ErrorAction SilentlyContinue
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
