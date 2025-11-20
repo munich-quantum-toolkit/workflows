@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Changed
 
-- 👷 Free up space on Linux runners before running Python tests ([#247]) ([**@denialhaag**])
+- 👷 Free up disk space before running Python tests ([#247]) ([**@denialhaag**])
 
 ## [1.17.0] - 2025-09-10
 
