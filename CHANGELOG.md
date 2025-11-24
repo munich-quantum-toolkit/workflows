@@ -9,6 +9,16 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.2] - 2025-11-24
+
+### Changed
+
+- 🐍🚨 Use `prek` instead of `pre-commit` for running `mypy` ([#254]) ([**@burgholzer**])
+
+### Fixed
+
+- 🐍🚨 Ensure project dependencies are installed when running `ty` ([#254]) ([**@burgholzer**])
+
 ## [1.17.1] - 2025-11-20
 
 ### Changed
@@ -153,7 +163,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.2...HEAD
+[1.17.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.2
 [1.17.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.1
 [1.17.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.0
 [1.16.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.16.2
@@ -171,6 +182,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#254]: https://github.com/munich-quantum-toolkit/workflows/pull/254
 [#247]: https://github.com/munich-quantum-toolkit/workflows/pull/247
 [#206]: https://github.com/munich-quantum-toolkit/workflows/pull/206
 [#188]: https://github.com/munich-quantum-toolkit/workflows/pull/188
