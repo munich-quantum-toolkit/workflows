@@ -53,11 +53,13 @@ jobs:
       # run mypy for static type checking
       - name: Run mypy
         if: ${{ inputs.enable-mypy }}
-        run: uvx --with pre-commit-uv pre-commit run -a mypy
+        run: uvx prek run -a mypy
       # run ty for type checking
       - name: Run ty
         if: ${{ inputs.enable-ty }}
-        run: uvx ty check
+        run: |
+          uv sync --no-install-project --all-groups
+          uvx ty check
       # run check-sdist to ensure the package sdist is correct
       - name: Run check-sdist
         run: uvx check-sdist --inject-junk
