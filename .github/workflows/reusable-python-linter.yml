@@ -58,7 +58,7 @@ jobs:
       - name: Run ty
         if: ${{ inputs.enable-ty }}
         run: |
-          uv sync --no-install-project
+          uv sync --no-install-project --all-groups
           uvx ty check
       # run check-sdist to ensure the package sdist is correct
       - name: Run check-sdist
