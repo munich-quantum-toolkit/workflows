@@ -4,6 +4,13 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.17.3]
+
+This release fixes the `ty` linter workflow, which would always use the latest version of `ty` available on PyPI.
+As `ty` is still moving pretty fast and the latest version may not be stable yet, this was not ideal.
+This release changes the behavior to use the version of `ty` listed as a development dependency in `pyproject.toml`.
+If you have the `enable-ty` option set to `true` in your workflow configuration, you **must** add `ty` to your development dependencies or the workflow will fail.
+
 ## [1.17.0]
 
 This release removes all CodeQL workflows because CodeQL is now run automatically by GitHub.
