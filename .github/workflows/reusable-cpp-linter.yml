@@ -46,6 +46,10 @@ on:
         description: "Packages to install in the Python virtual environment as a comma-separated list"
         default: ""
         type: string
+      cpp-linter-ignore-extra:
+        description: "Extra pipe-separated ignore globs for cpp-linter (e.g., 'plugin/**|subdir/third_party/**')"
+        default: ""
+        type: string
 
 jobs:
   lint:
@@ -152,7 +156,11 @@ jobs:
           style: ""
           tidy-checks: ""
           version: ${{ inputs.clang-version }}
-          ignore: "build|!build/mlir/**|**/include|include"
+          ignore: ${{ format(
+            'build|!build/mlir/**|**/include|include{0}{1}',
+            inputs.cpp-linter-ignore-extra != '' && '|' || '',
+            inputs.cpp-linter-ignore-extra
+            ) }}
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
           step-summary: true
           database: "build"

@@ -11,6 +11,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [1.17.3] - 2025-11-26
 
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1173)._
+
+### Added
+
+- ✨ Add optional `cpp-linter-ignore-extra` input to allow ignoring additional files in C++ linter ([#241]) ([**@flowerthrower**])
+
 ### Fixed
 
 - 🐍🚨 Ensure a locked version of `ty` is used when enabled to guarantee stability ([#255]) ([**@burgholzer**])
@@ -192,6 +198,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [#255]: https://github.com/munich-quantum-toolkit/workflows/pull/255
 [#254]: https://github.com/munich-quantum-toolkit/workflows/pull/254
 [#247]: https://github.com/munich-quantum-toolkit/workflows/pull/247
+[#241]: https://github.com/munich-quantum-toolkit/workflows/pull/241
 [#206]: https://github.com/munich-quantum-toolkit/workflows/pull/206
 [#188]: https://github.com/munich-quantum-toolkit/workflows/pull/188
 [#184]: https://github.com/munich-quantum-toolkit/workflows/pull/184
@@ -215,6 +222,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [**@burgholzer**]: https://github.com/burgholzer
 [**@ystade**]: https://github.com/ystade
 [**@denialhaag**]: https://github.com/denialhaag
+[**@flowerthrower**]: https://github.com/flowerthrower
 
 <!-- General links -->
 
