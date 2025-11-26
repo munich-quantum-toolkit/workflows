@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.3] - 2025-11-26
+
+### Fixed
+
+- 🐍🚨 Ensure a locked version of `ty` is used when enabled to guarantee stability ([#255]) ([**@burgholzer**])
+
 ## [1.17.2] - 2025-11-24
 
 ### Changed
@@ -163,7 +169,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.2...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...HEAD
+[1.17.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.3
 [1.17.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.2
 [1.17.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.1
 [1.17.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.0
@@ -182,6 +189,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#255]: https://github.com/munich-quantum-toolkit/workflows/pull/255
 [#254]: https://github.com/munich-quantum-toolkit/workflows/pull/254
 [#247]: https://github.com/munich-quantum-toolkit/workflows/pull/247
 [#206]: https://github.com/munich-quantum-toolkit/workflows/pull/206

@@ -59,7 +59,7 @@ jobs:
         if: ${{ inputs.enable-ty }}
         run: |
           uv sync --no-install-project --all-groups
-          uvx ty check
+          ty check
       # run check-sdist to ensure the package sdist is correct
       - name: Run check-sdist
         run: uvx check-sdist --inject-junk
