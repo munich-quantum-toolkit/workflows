@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.4] - 2025-11-26
+
+### Added
+
+- ✨ Add optional `cpp-linter-ignore-extra` input to allow ignoring additional files in C++ linter ([#241]) ([**@flowerthrower**])
+
 ## [1.17.3] - 2025-11-26
 
 ### Fixed
@@ -169,7 +175,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.4...HEAD
+[1.17.4]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.4
 [1.17.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.3
 [1.17.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.2
 [1.17.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.1
@@ -192,6 +199,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [#255]: https://github.com/munich-quantum-toolkit/workflows/pull/255
 [#254]: https://github.com/munich-quantum-toolkit/workflows/pull/254
 [#247]: https://github.com/munich-quantum-toolkit/workflows/pull/247
+[#241]: https://github.com/munich-quantum-toolkit/workflows/pull/241
 [#206]: https://github.com/munich-quantum-toolkit/workflows/pull/206
 [#188]: https://github.com/munich-quantum-toolkit/workflows/pull/188
 [#184]: https://github.com/munich-quantum-toolkit/workflows/pull/184
@@ -215,6 +223,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [**@burgholzer**]: https://github.com/burgholzer
 [**@ystade**]: https://github.com/ystade
 [**@denialhaag**]: https://github.com/denialhaag
+[**@flowerthrower**]: https://github.com/flowerthrower
 
 <!-- General links -->
 
