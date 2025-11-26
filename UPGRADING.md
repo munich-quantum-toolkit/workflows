@@ -6,10 +6,24 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [1.17.3]
 
+### Type checking with `ty`
+
 This release fixes the `ty` linter workflow, which would always use the latest version of `ty` available on PyPI.
 As `ty` is still moving pretty fast and the latest version may not be stable yet, this was not ideal.
 This release changes the behavior to use the version of `ty` listed as a development dependency in `pyproject.toml`.
 If you have the `enable-ty` option set to `true` in your workflow configuration, you **must** add `ty` to your development dependencies or the workflow will fail.
+
+### Additional customization for the C++ linter
+
+This release adds the optional `cpp-linter-ignore-extra` input to the `reusable-cpp-linter.yml` workflow.
+This allows ignoring additional files in the C++ linter workflow by passing a pipe-separated list of globs.
+For example, to ignore all files in the `plugin` directory and the `subdir/third_party` directory, you can use the following configuration:
+
+```yaml
+uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-cpp-linter.yml@v1.17.3
+with:
+  cpp-linter-ignore-extra: "plugin/**|subdir/third_party/**"
+```
 
 ## [1.17.0]
 
@@ -166,7 +180,7 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...HEAD
 [1.17.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.0...v1.17.0
 [1.16.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.0...v1.16.0
 [1.15.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.14.0...v1.15.0
