@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 ## [Unreleased]
 
 ## [1.17.3] - 2025-11-26
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1173)._
 
 ### Added
 
