@@ -160,7 +160,7 @@ jobs:
             'build|!build/mlir/**|**/include|include{0}{1}',
             inputs.cpp-linter-ignore-extra != '' && '|' || '',
             inputs.cpp-linter-ignore-extra
-          ) }}
+            ) }}
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
           step-summary: true
           database: "build"
