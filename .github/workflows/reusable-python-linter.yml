@@ -50,8 +50,6 @@ jobs:
         with:
           enable-cache: true
           save-cache: ${{ github.ref == 'refs/heads/main' }}
-          python-version: 3.13
-          activate-environment: true
       # run mypy for static type checking
       - name: Run mypy
         if: ${{ inputs.enable-mypy }}
@@ -59,10 +57,7 @@ jobs:
       # run ty for type checking
       - name: Run ty
         if: ${{ inputs.enable-ty }}
-        run: |
-          uv sync --no-install-project --all-groups
-          command -v ty > /dev/null || { echo "ty not found. Add 'ty' to dev dependencies via 'uv add --dev ty'"; exit 1; }
-          ty check
+        run: uv run --only-dev ty check
       # run check-sdist to ensure the package sdist is correct
       - name: Run check-sdist
         run: uvx check-sdist --inject-junk
