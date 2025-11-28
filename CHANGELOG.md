@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## Changed
+
+- 👨‍💻 Simplify the workflow for running `ty` ([#257]) ([**@burgholzer**])
+
 ## [1.17.3] - 2025-11-26
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1173)._
@@ -195,6 +199,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#257]: https://github.com/munich-quantum-toolkit/workflows/pull/257
 [#255]: https://github.com/munich-quantum-toolkit/workflows/pull/255
 [#254]: https://github.com/munich-quantum-toolkit/workflows/pull/254
 [#247]: https://github.com/munich-quantum-toolkit/workflows/pull/247
