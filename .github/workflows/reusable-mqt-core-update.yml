@@ -110,8 +110,10 @@ jobs:
       # - the latest version is the same as the used version, but its tag has a different commit SHA than the used revision.
       - name: Compare versions
         id: compare-versions
+        env:
+          UPDATE_TO_HEAD: ${{ inputs.update-to-head }}
         run: |
-          if [ ${{ inputs.update-to-head }} = true ]; then
+          if [ "$UPDATE_TO_HEAD" = true ]; then
             if [ ${{ steps.get-used-version.outputs.revision }} != ${{ steps.get-latest-commit.outputs.latest_commit_sha }} ]; then
               update=true
             else
