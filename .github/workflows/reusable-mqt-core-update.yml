@@ -169,9 +169,12 @@ jobs:
       - name: Update MQT Core version and revision
         id: update-version
         if: steps.compare-versions.outputs.update == 'true'
+        env:
+          NEW_VERSION: ${{ steps.determine-new-version-and-revision.outputs.new_version }}
+          NEW_REVISION: ${{ steps.determine-new-version-and-revision.outputs.new_revision }}
         run: |
-          sed -i 's/set(MQT_CORE_VERSION.*/set(MQT_CORE_VERSION ${{ steps.determine-new-version-and-revision.outputs.new_version }}/' cmake/ExternalDependencies.cmake
-          sed -i 's/set(MQT_CORE_REV.*/set(MQT_CORE_REV "${{ steps.determine-new-version-and-revision.outputs.new_revision }}"/' cmake/ExternalDependencies.cmake
+          sed -i "s/set(MQT_CORE_VERSION.*/set(MQT_CORE_VERSION $NEW_VERSION/" cmake/ExternalDependencies.cmake
+          sed -i "s/set(MQT_CORE_REV.*/set(MQT_CORE_REV \"$NEW_REVISION\"/" cmake/ExternalDependencies.cmake
           git diff
       # Create a pull request to merge the changes into the main branch.
       - name: Create pull request
