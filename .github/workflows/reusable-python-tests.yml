@@ -77,10 +77,14 @@ jobs:
         run: uv tool install sccache
       # run the nox minimums session (assumes a nox session named "minimums" exists) with coverage
       - name: 🐍 Test with minimal versions
-        run: uvx nox -s minimums --verbose -- --cov --cov-report=xml:coverage-${{ inputs.runs-on }}.xml --cov-append
+        env:
+          RUNS_ON: ${{ inputs.runs-on }}
+        run: uvx nox -s minimums --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
       # run the nox tests session (assumes a nox session named "tests" exists) with coverage
       - name: 🐍 Test
-        run: uvx nox -s tests --verbose -- --cov --cov-report=xml:coverage-${{ inputs.runs-on }}.xml --cov-append
+        env:
+          RUNS_ON: ${{ inputs.runs-on }}
+        run: uvx nox -s tests --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
       # upload the report as an artifact to GitHub so that it can later be uploaded to Codecov
       - name: Upload 🐍 coverage report for ${{ inputs.runs-on }}
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
