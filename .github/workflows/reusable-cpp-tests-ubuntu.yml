@@ -83,13 +83,19 @@ jobs:
         name: Set up Clang
         env:
           COMPILER: ${{ inputs.compiler }}
+          TEMP_DIR: ${{ runner.temp }}
         run: |
-          version=$(echo "$COMPILER" | sed 's/clang-//')
+          # Extract version from compiler input in the form 'clang-<version>'
+          if [[ "$COMPILER" =~ ^clang-([0-9]+(\.[0-9]+)?)$ ]]; then
+            version="${BASH_REMATCH[1]}"
+          else
+            echo "Error: Compiler input '$COMPILER' is not in the expected format 'clang-<version>' (numeric version only)."
+            exit 1
+          fi
           sudo apt-get update
-          TEMP_DIR=${{ runner.temp }}
           wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
           chmod +x "$TEMP_DIR/llvm_install.sh"
-          if sudo "$TEMP_DIR/llvm_install.sh" $version; then
+          if sudo "$TEMP_DIR/llvm_install.sh" "$version"; then
             sudo apt-get install -y libmlir-$version-dev \
                                     mlir-$version-tools \
                                     clang-$version \
@@ -99,6 +105,7 @@ jobs:
             echo "Installation from script failed."
             exit 1
           fi
+          # Safe environment variable assignment (version is safe due to above check)
           echo "CC=clang-$version" >> $GITHUB_ENV
           echo "CXX=clang++-$version" >> $GITHUB_ENV
           echo "MLIR_DIR=/usr/lib/llvm-$version/lib/cmake/mlir" >> $GITHUB_ENV
