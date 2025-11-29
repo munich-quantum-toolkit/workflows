@@ -73,9 +73,10 @@ jobs:
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
+          COMPILER: ${{ inputs.compiler }}
         run: |
           cmake_args=$CMAKE_ARGS
-          if [ "${{ inputs.compiler }}" == "clang" ]; then
+          if [ "$COMPILER" == "clang" ]; then
             cmake_args="$cmake_args -T ClangCL"
           fi
           cmake -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $cmake_args
