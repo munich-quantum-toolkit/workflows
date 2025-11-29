@@ -71,10 +71,11 @@ jobs:
       # install a specific version of the LLVM toolchain
       - name: Install llvm@${{ inputs.clang-version }}
         run: |
-          clang_version="$CLANG_VERSION"
+          # Sanitize CLANG_VERSION: Remove any newlines and ensure it is numeric
+          clang_version="$(echo "$CLANG_VERSION" | tr -d '\n')"
           TEMP_DIR=${{ runner.temp }}
-          if ! [[ "$clang_version" =~ ^[0-9]+$ ]]; then
-            echo "Error: Invalid clang-version input. Must be a numeric value."
+          if [[ -z "$clang_version" || ! "$clang_version" =~ ^[0-9]+$ ]]; then
+            echo "Error: Invalid clang-version input. Must be a non-empty numeric value."
             exit 1
           fi
           sudo apt-get update
