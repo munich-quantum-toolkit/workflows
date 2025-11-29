@@ -96,10 +96,10 @@ jobs:
           wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
           chmod +x "$TEMP_DIR/llvm_install.sh"
           if sudo "$TEMP_DIR/llvm_install.sh" "$version"; then
-            sudo apt-get install -y libmlir-"$version"-dev \
-                                    mlir-"$version"-tools \
-                                    clang-"$version" \
-                                    clang-tools-"$version" \
+            sudo apt-get install -y libmlir-$version-dev \
+                                    mlir-$version-tools \
+                                    clang-$version \
+                                    clang-tools-$version \
              || exit 1
           else
             echo "Installation from script failed."
