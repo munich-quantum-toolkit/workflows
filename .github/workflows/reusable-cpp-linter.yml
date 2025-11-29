@@ -70,10 +70,11 @@ jobs:
           version: ${{ inputs.z3-version }}
       # install a specific version of the LLVM toolchain
       - name: Install llvm@${{ inputs.clang-version }}
+        env:
+          TEMP_DIR: ${{ runner.temp }}
         run: |
           # Sanitize CLANG_VERSION: Remove any newlines and ensure it is numeric
           clang_version="$(echo "$CLANG_VERSION" | tr -d '\n')"
-          TEMP_DIR=${{ runner.temp }}
           if [[ -z "$clang_version" || ! "$clang_version" =~ ^[0-9]+$ ]]; then
             echo "Error: Invalid clang-version input. Must be a non-empty numeric value."
             exit 1
