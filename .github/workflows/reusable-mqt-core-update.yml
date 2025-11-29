@@ -75,22 +75,22 @@ jobs:
           echo "latest_version=$latest_version"
           echo "latest_version=$latest_version" >> $GITHUB_OUTPUT
       # Query the commit SHA of the latest tag of mqt-core via the GitHub API (using the GitHub token for authentication).
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
       - name: Get the commit SHA of the latest tag of MQT Core
         id: get-latest-tag-sha
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           echo "Querying the tags of MQT Core..."
           tags=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/munich-quantum-toolkit/core/tags)
           echo "tags=$tags"
           latest_tag_sha=$(echo $tags | jq -r '.[0].commit.sha')
           echo "latest_tag_sha=$latest_tag_sha"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
           echo "latest_tag_sha=$latest_tag_sha" >> $GITHUB_OUTPUT
       # Query the latest commit of the main branch of mqt-core via the GitHub API (using the GitHub token for authentication).
       - name: Get the latest commit of the main branch of MQT Core
         id: get-latest-commit
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           echo "Querying the latest commit of the main branch of MQT Core..."
           latest_commit=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/munich-quantum-toolkit/core/commits/main)
