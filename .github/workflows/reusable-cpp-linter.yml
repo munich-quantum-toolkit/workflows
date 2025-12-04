@@ -83,6 +83,33 @@ jobs:
         with:
           tag: ${{ inputs.setup-mlir-tag }}
 
+      - name: Set up Clang ${{ inputs.clang-version }}
+        env:
+          TEMP_DIR: ${{ runner.temp }}
+        run: |
+          # Sanitize CLANG_VERSION: Remove any newlines and ensure it is numeric
+          clang_version="$(echo "$CLANG_VERSION" | tr -d '\n')"
+          if [[ -z "$clang_version" || ! "$clang_version" =~ ^[0-9]+$ ]]; then
+            echo "Error: Invalid clang-version input. Must be a non-empty numeric value."
+            exit 1
+          fi
+          sudo apt-get update
+          wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
+          chmod +x "$TEMP_DIR/llvm_install.sh"
+          if sudo "$TEMP_DIR/llvm_install.sh" "$clang_version"; then
+            sudo apt-get install -y clang-format-"$clang_version" \
+                                    clang-tidy-"$clang_version" \
+                                    clang-"$clang_version" \
+                                    clang-tools-"$clang_version" \
+            || exit 1
+          else
+            echo "Installation from script failed."
+            exit 1
+          fi
+          echo "CC=clang-$clang_version" >> $GITHUB_ENV
+          echo "CXX=clang++-$clang_version" >> $GITHUB_ENV
+
+      # set up ccache for faster builds
       - name: Set up ccache
         if: ${{ inputs.build-project }}
         uses: Chocobo1/setup-ccache-action@85ed78428a2cf784edc1d4cb9c784af4bc9baaab # v1.5.1

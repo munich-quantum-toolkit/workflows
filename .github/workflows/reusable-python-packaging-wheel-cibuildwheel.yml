@@ -60,7 +60,7 @@ jobs:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
-      # set up sccache for faster C++ builds (non-Ubuntu only)
+      # set up sccache for faster builds (non-Ubuntu only)
       - name: Setup sccache
         if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
         run: uv tool install sccache

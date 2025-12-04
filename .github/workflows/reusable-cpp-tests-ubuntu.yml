@@ -86,13 +86,13 @@ jobs:
       - name: Install Ninja
         run: pipx install ninja
 
-      - name: Set up default system Clang
+      - name: Set up default Clang
         if: ${{ inputs.compiler == 'clang' }}
         run: |
           echo "CC=clang" >> $GITHUB_ENV
           echo "CXX=clang++" >> $GITHUB_ENV
 
-      - name: Set up Clang
+      - name: Set up specified Clang
         if: ${{ startsWith(inputs.compiler, 'clang-') }}
         env:
           COMPILER: ${{ inputs.compiler }}

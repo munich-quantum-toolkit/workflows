@@ -65,7 +65,7 @@ jobs:
           enable-cache: true
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
-      # Set up sccache for faster C++ builds
+      # Set up sccache for faster builds
       - name: Install sccache
         run: uv tool install sccache
 
