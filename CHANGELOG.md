@@ -14,7 +14,6 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 ## Changed
 
 - 🔧 Specify `LDFLAGS` and `SDKROOT` to fix macOS builds with Homebrew Clang ([#271]) ([**@denialhaag**])
-- 🔧 Specify `CXXFLAGS` to fix macOS builds with GCC ([#271]) ([**@denialhaag**])
 - 👨‍💻 Simplify the workflow for running `ty` ([#257]) ([**@burgholzer**])
 
 ## [1.17.3] - 2025-11-26
