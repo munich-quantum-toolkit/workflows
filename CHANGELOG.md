@@ -9,8 +9,11 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
-## Changed
+## [1.17.4] - 2025-12-05
 
+### Changed
+
+- 🔧 Specify `LDFLAGS` and `SDKROOT` to fix macOS builds with Homebrew Clang ([#271]) ([**@denialhaag**])
 - 👨‍💻 Simplify the workflow for running `ty` ([#257]) ([**@burgholzer**])
 
 ## [1.17.3] - 2025-11-26
@@ -179,7 +182,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.4...HEAD
+[1.17.4]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.4
 [1.17.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.3
 [1.17.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.2
 [1.17.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.1
@@ -199,6 +203,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#271]: https://github.com/munich-quantum-toolkit/workflows/pull/271
 [#257]: https://github.com/munich-quantum-toolkit/workflows/pull/257
 [#255]: https://github.com/munich-quantum-toolkit/workflows/pull/255
 [#254]: https://github.com/munich-quantum-toolkit/workflows/pull/254

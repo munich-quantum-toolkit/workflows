@@ -95,13 +95,13 @@ jobs:
           if [[ "$COMPILER" =~ ^clang-[0-9]+$ ]]; then
             version=$(echo "$COMPILER" | sed 's/clang-//')
             brew install llvm@$version
-            if [ "$(uname -m)" = "x86_64" ]; then
-              LLVM_PREFIX="/usr/local/opt/llvm@$version"
-            else
-              LLVM_PREFIX="/opt/homebrew/opt/llvm@$version"
-            fi
+            SDK_PATH=$(xcrun --sdk macosx --show-sdk-path)
+            echo "SDKROOT=$SDK_PATH" >> $GITHUB_ENV
+            LLVM_PREFIX=$(brew --prefix llvm@$version)
             echo "CC=$LLVM_PREFIX/bin/clang" >> $GITHUB_ENV
             echo "CXX=$LLVM_PREFIX/bin/clang++" >> $GITHUB_ENV
+            # Link against Homebrew Clang's libc++ and unwind library to resolve symbol conflicts
+            echo "LDFLAGS=$LDFLAGS -L$LLVM_PREFIX/lib/c++ -L$LLVM_PREFIX/lib/unwind -lunwind" >> $GITHUB_ENV
             echo "LLVM_DIR=$LLVM_PREFIX/lib/cmake/llvm" >> $GITHUB_ENV
             echo "MLIR_DIR=$LLVM_PREFIX/lib/cmake/mlir" >> $GITHUB_ENV
             echo "$LLVM_PREFIX/bin" >> $GITHUB_PATH
