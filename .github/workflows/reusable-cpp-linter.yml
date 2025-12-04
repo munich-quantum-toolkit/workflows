@@ -83,6 +83,21 @@ jobs:
         with:
           tag: ${{ inputs.setup-mlir-tag }}
 
+      # set up ccache for faster builds
+      - name: Set up ccache
+        if: ${{ inputs.build-project }}
+        uses: Chocobo1/setup-ccache-action@85ed78428a2cf784edc1d4cb9c784af4bc9baaab # v1.5.1
+        with:
+          prepend_symlinks_to_path: false
+          override_cache_key: c++-lint
+
+      - name: Set up mold as linker
+        if: ${{ inputs.build-project }}
+        uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
+
+      - name: Install Ninja
+        run: pipx install ninja
+
       - name: Set up Clang ${{ inputs.clang-version }}
         env:
           TEMP_DIR: ${{ runner.temp }}
@@ -97,9 +112,9 @@ jobs:
           wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
           chmod +x "$TEMP_DIR/llvm_install.sh"
           if sudo "$TEMP_DIR/llvm_install.sh" "$clang_version"; then
-            sudo apt-get install -y clang-format-"$clang_version" \
+            sudo apt-get install -y clang-"$clang_version" \
+                                    clang-format-"$clang_version" \
                                     clang-tidy-"$clang_version" \
-                                    clang-"$clang_version" \
                                     clang-tools-"$clang_version" \
             || exit 1
           else
@@ -108,18 +123,6 @@ jobs:
           fi
           echo "CC=clang-$clang_version" >> $GITHUB_ENV
           echo "CXX=clang++-$clang_version" >> $GITHUB_ENV
-
-      # set up ccache for faster builds
-      - name: Set up ccache
-        if: ${{ inputs.build-project }}
-        uses: Chocobo1/setup-ccache-action@85ed78428a2cf784edc1d4cb9c784af4bc9baaab # v1.5.1
-        with:
-          prepend_symlinks_to_path: false
-          override_cache_key: c++-lint
-
-      - name: Set up mold as linker
-        if: ${{ inputs.build-project }}
-        uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
 
       - name: Install the latest version of uv
         if: ${{ inputs.setup-python }}
@@ -157,7 +160,7 @@ jobs:
           $CXX --version
           echo $MLIR_DIR
           echo $LLVM_DIR
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug $CMAKE_ARGS
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug $CMAKE_ARGS
 
       - name: Build
         if: ${{ inputs.build-project }}
