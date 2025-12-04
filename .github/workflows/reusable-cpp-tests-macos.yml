@@ -102,6 +102,7 @@ jobs:
             fi
             echo "CC=$LLVM_PREFIX/bin/clang" >> $GITHUB_ENV
             echo "CXX=$LLVM_PREFIX/bin/clang++" >> $GITHUB_ENV
+            echo "LDFLAGS=-L$LLVM_PREFIX/lib/c++ -L$LLVM_PREFIX/lib/unwind -lunwind" >> $GITHUB_ENV
             echo "LLVM_DIR=$LLVM_PREFIX/lib/cmake/llvm" >> $GITHUB_ENV
             echo "MLIR_DIR=$LLVM_PREFIX/lib/cmake/mlir" >> $GITHUB_ENV
             echo "$LLVM_PREFIX/bin" >> $GITHUB_PATH
