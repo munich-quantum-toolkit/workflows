@@ -136,13 +136,15 @@ jobs:
           INSTALL_PKGS: ${{ inputs.install-pkgs }}
         run: |
           pkgs=$INSTALL_PKGS
-          if [[ ! "$pkgs" =~ ^[a-zA-Z0-9=._-]+(,[a-zA-Z0-9=._-]+)*$ ]]; then
+          if [[ -n "$pkgs" && ! "$pkgs" =~ ^[a-zA-Z0-9=._-]+(,[a-zA-Z0-9=._-]+)*$ ]]; then
             echo "Invalid package list"
             exit 1
           fi
-          pkgs_array=()
-          IFS=',' read -ra pkgs_array <<< "$pkgs"
-          uv pip install "${pkgs_array[@]}"
+          if [[ -n "$pkgs" ]]; then
+            pkgs_array=()
+            IFS=',' read -ra pkgs_array <<< "$pkgs"
+            uv pip install "${pkgs_array[@]}"
+          fi
 
       # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
