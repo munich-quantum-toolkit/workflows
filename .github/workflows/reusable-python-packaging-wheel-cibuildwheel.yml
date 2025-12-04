@@ -49,7 +49,7 @@ jobs:
           version: ${{ inputs.z3-version }}
 
       - name: Set up MLIR
-        if: ${{ inputs.setup-mlir }}
+        if: ${{ inputs.setup-mlir && !startsWith(inputs.runs-on, 'ubuntu') }}
         uses: munich-quantum-software/setup-mlir@2f40b6e56a9bda0f539d7a251dfc6de2dbfeeb14 # 2025.11.25
         with:
           tag: ${{ inputs.setup-mlir-tag }}
