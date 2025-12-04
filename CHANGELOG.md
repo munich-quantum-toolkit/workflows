@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [1.17.4] - 2025-12-05
 
-## Changed
+### Changed
 
 - 🔧 Specify `LDFLAGS` and `SDKROOT` to fix macOS builds with Homebrew Clang ([#271]) ([**@denialhaag**])
 - 👨‍💻 Simplify the workflow for running `ty` ([#257]) ([**@burgholzer**])
