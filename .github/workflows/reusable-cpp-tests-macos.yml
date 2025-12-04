@@ -81,6 +81,7 @@ jobs:
             brew reinstall gcc@$version
             echo "CC=gcc-$version" >> $GITHUB_ENV
             echo "CXX=g++-$version" >> $GITHUB_ENV
+            echo "CXXFLAGS=-D_DARWIN_C_SOURCE -U_FORTIFY_SOURCE" >> $GITHUB_ENV
           else
             echo "Invalid compiler specified: $COMPILER" >&2
             exit 1
