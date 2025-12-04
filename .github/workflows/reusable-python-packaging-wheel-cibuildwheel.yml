@@ -23,45 +23,62 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      setup-mlir:
+        description: "Whether to set up MLIR"
+        default: false
+        type: boolean
+      setup-mlir-tag:
+        description: "The setup-mlir release tag"
+        default: 2025.11.25
+        type: string
 
 jobs:
   build-wheel:
     name: 🎡 ${{ inputs.runs-on }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      # check out the repository (including submodules and all history)
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           submodules: recursive
           fetch-depth: 0
-      # optionally set up Z3 (non-Ubuntu only)
-      - if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
-        name: Setup Z3
+
+      - name: Set up Z3
+        if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
         uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
         with:
           version: ${{ inputs.z3-version }}
-      # set up uv for faster Python package management
+
+      - name: Set up MLIR
+        if: ${{ inputs.setup-mlir }}
+        uses: munich-quantum-software/setup-mlir@2f40b6e56a9bda0f539d7a251dfc6de2dbfeeb14 # 2025.11.25
+        with:
+          tag: ${{ inputs.setup-mlir-tag }}
+
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7.1.4
         with:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
-      # set up sccache for faster C++ builds
-      - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        name: Setup sccache
+
+      # set up sccache for faster C++ builds (non-Ubuntu only)
+      - name: Setup sccache
+        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
         run: uv tool install sccache
+
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@63fd63b352a9a8bdcc24791c9dbee952ee9a8abc # v3.3.0
+
       - name: Verify clean directory
         run: git diff --exit-code
         shell: bash
+
       # upload the wheels as an artifact (adds a `dev-` prefix for PRs)
       - name: Upload wheels
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse/*.whl
-      # show sccache stats (non-Ubuntu only)
-      - if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        name: Show sccache stats
+
+      - name: Show sccache stats
+        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
         run: sccache --show-stats

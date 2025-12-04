@@ -26,6 +26,14 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      setup-mlir:
+        description: "Whether to set up MLIR"
+        default: false
+        type: boolean
+      setup-mlir-tag:
+        description: "The setup-mlir release tag"
+        default: 2025.11.25
+        type: string
 
 jobs:
   lint:
@@ -33,33 +41,41 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # check out the repository (including submodules and all history)
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           submodules: recursive
           fetch-depth: 0
-      # optionally set up Z3
-      - if: ${{ inputs.setup-z3 }}
-        name: Setup Z3
+
+      - name: Set up Z3
+        if: ${{ inputs.setup-z3 }}
         uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
         with:
           version: ${{ inputs.z3-version }}
-      # set up uv for faster Python package management
+
+      - name: Set up MLIR
+        if: ${{ inputs.setup-mlir }}
+        uses: munich-quantum-software/setup-mlir@2f40b6e56a9bda0f539d7a251dfc6de2dbfeeb14 # 2025.11.25
+        with:
+          tag: ${{ inputs.setup-mlir-tag }}
+
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7.1.4
         with:
           enable-cache: true
           save-cache: ${{ github.ref == 'refs/heads/main' }}
+
       # run mypy for static type checking
       - name: Run mypy
         if: ${{ inputs.enable-mypy }}
         run: uvx prek run -a mypy
+
       # run ty for type checking
       - name: Run ty
         if: ${{ inputs.enable-ty }}
         run: |
           uv sync --no-install-project
           uv run --no-sync ty check
+
       # run check-sdist to ensure the package sdist is correct
       - name: Run check-sdist
         run: uvx check-sdist --inject-junk

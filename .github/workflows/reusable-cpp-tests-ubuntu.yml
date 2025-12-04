@@ -45,6 +45,14 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      setup-mlir:
+        description: "Whether to set up MLIR"
+        default: false
+        type: boolean
+      setup-mlir-tag:
+        description: "The setup-mlir release tag"
+        default: 2025.11.25
+        type: string
 
 jobs:
   cpp-tests-ubuntu:
@@ -55,32 +63,37 @@ jobs:
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
     steps:
-      # check out the repository (including submodules and all history)
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           submodules: recursive
           fetch-depth: 0
-      # optionally set up Z3
-      - if: ${{ inputs.setup-z3 }}
-        name: Setup Z3
+
+      - name: Set up Z3
+        if: ${{ inputs.setup-z3 }}
         uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
         with:
           version: ${{ inputs.z3-version }}
-      # set up mold as linker for faster C++ builds
+
+      - name: Set up MLIR
+        if: ${{ inputs.setup-mlir }}
+        uses: munich-quantum-software/setup-mlir@2f40b6e56a9bda0f539d7a251dfc6de2dbfeeb14 # 2025.11.25
+        with:
+          tag: ${{ inputs.setup-mlir-tag }}
+
       - name: Set up mold as linker
         uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
-      # make sure ninja is installed
+
       - name: Install Ninja
         run: pipx install ninja
-      # set up default system Clang
-      - if: ${{ inputs.compiler == 'clang' }}
-        name: Set up default system Clang
+
+      - name: Set up default system Clang
+        if: ${{ inputs.compiler == 'clang' }}
         run: |
           echo "CC=clang" >> $GITHUB_ENV
           echo "CXX=clang++" >> $GITHUB_ENV
-      # set up Clang with a specific version (including MLIR)
-      - if: ${{ startsWith(inputs.compiler, 'clang-') }}
-        name: Set up Clang
+
+      - name: Set up Clang
+        if: ${{ startsWith(inputs.compiler, 'clang-') }}
         env:
           COMPILER: ${{ inputs.compiler }}
           TEMP_DIR: ${{ runner.temp }}
@@ -96,11 +109,9 @@ jobs:
           wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
           chmod +x "$TEMP_DIR/llvm_install.sh"
           if sudo "$TEMP_DIR/llvm_install.sh" "$version"; then
-            sudo apt-get install -y libmlir-$version-dev \
-                                    mlir-$version-tools \
-                                    clang-$version \
+            sudo apt-get install -y clang-$version \
                                     clang-tools-$version \
-             || exit 1
+            || exit 1
           else
             echo "Installation from script failed."
             exit 1
@@ -108,20 +119,18 @@ jobs:
           # Safe environment variable assignment (version is safe due to above check)
           echo "CC=clang-$version" >> $GITHUB_ENV
           echo "CXX=clang++-$version" >> $GITHUB_ENV
-          echo "MLIR_DIR=/usr/lib/llvm-$version/lib/cmake/mlir" >> $GITHUB_ENV
-          echo "LLVM_DIR=/usr/lib/llvm-$version/lib/cmake/llvm" >> $GITHUB_ENV
-      # configure CMake in the specified mode, optionally with additional arguments
+
       - name: Configure CMake
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
         run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS
-      # build the project in the specified mode
+
       - name: Build
         env:
           CONFIG: ${{ inputs.config }}
         run: cmake --build build --config $CONFIG
-      # run the tests
+
       - name: Test
         env:
           CONFIG: ${{ inputs.config }}

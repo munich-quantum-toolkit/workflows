@@ -43,6 +43,14 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      setup-mlir:
+        description: "Whether to set up MLIR"
+        default: false
+        type: boolean
+      setup-mlir-tag:
+        description: "The setup-mlir release tag"
+        default: 2025.11.25
+        type: string
 
 defaults:
   run:
@@ -57,18 +65,23 @@ jobs:
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
     steps:
-      # check out the repository (including submodules and all history)
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           submodules: recursive
           fetch-depth: 0
-      # optionally set up Z3
-      - if: ${{ inputs.setup-z3 }}
-        name: Setup Z3
+
+      - name: Set up Z3
+        if: ${{ inputs.setup-z3 }}
         uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
         with:
           version: ${{ inputs.z3-version }}
-      # configure CMake in the specified mode, optionally with additional arguments
+
+      - name: Set up MLIR
+        if: ${{ inputs.setup-mlir }}
+        uses: munich-quantum-software/setup-mlir@2f40b6e56a9bda0f539d7a251dfc6de2dbfeeb14 # 2025.11.25
+        with:
+          tag: ${{ inputs.setup-mlir-tag }}
+
       - name: Configure CMake
         env:
           CONFIG: ${{ inputs.config }}
@@ -80,7 +93,7 @@ jobs:
             cmake_args="$cmake_args -T ClangCL"
           fi
           cmake -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $cmake_args
-      # build the project in the specified mode with retries
+
       - name: Build
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2 # Windows builds with MSVC are flaky and frequently run out of heap space
         env:
@@ -91,7 +104,7 @@ jobs:
           shell: bash
           retry_on: error
           command: cmake --build build --config $CONFIG
-      # run the tests
+
       - name: Test
         env:
           CONFIG: ${{ inputs.config }}
