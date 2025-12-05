@@ -30,9 +30,9 @@ on:
         description: "Whether to set up MLIR"
         default: false
         type: boolean
-      setup-mlir-tag:
+      llvm-version:
         description: "The setup-mlir release tag"
-        default: 2025.11.25
+        default: 21.1.7
         type: string
 
 jobs:
@@ -54,9 +54,9 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir }}
-        uses: munich-quantum-software/setup-mlir@2f40b6e56a9bda0f539d7a251dfc6de2dbfeeb14 # 2025.11.25
+        uses: munich-quantum-software/setup-mlir@6b8d4ef561ca19268764609adf9fa12f53015e1f # 2025.12.05
         with:
-          tag: ${{ inputs.setup-mlir-tag }}
+          llvm-version: ${{ inputs.llvm-version }}
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7.1.4
