@@ -112,7 +112,6 @@ jobs:
             .github/workflows/reusable-python-tests.yml
             .github/workflows/reusable-python-ci.yml
             .github/workflows/ci.yml
-            .pre-commit-config.yaml
       - name: Set a flag for running the Python tests
         if: >-
           github.event_name != 'pull_request'
