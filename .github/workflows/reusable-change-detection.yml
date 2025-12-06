@@ -48,7 +48,6 @@ jobs:
         uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
         with:
           filter: |
-            bindings/**
             include/**
             src/**
             test/**
@@ -113,7 +112,6 @@ jobs:
             .github/workflows/reusable-python-tests.yml
             .github/workflows/reusable-python-ci.yml
             .github/workflows/ci.yml
-            .pre-commit-config.yaml
       - name: Set a flag for running the Python tests
         if: >-
           github.event_name != 'pull_request'
