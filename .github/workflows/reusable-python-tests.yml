@@ -53,7 +53,7 @@ jobs:
           Remove-Item -Recurse -Force "C:\Program Files\dotnet" -ErrorAction SilentlyContinue
           Remove-Item -Recurse -Force "C:\Program Files\ghc" -ErrorAction SilentlyContinue
       # check out the repository (including submodules and all history)
-      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           submodules: recursive
           fetch-depth: 0
