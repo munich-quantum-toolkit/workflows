@@ -9,6 +9,11 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- 🔧 Do not run Python tests on changes to pre-commit ([#276]) ([**@burgholzer**])
+- 🔧 Do not run C++ tests on changes to bindings ([#276]) ([**@burgholzer**])
+
 ## [1.17.4] - 2025-12-05
 
 ### Changed
@@ -203,6 +208,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#276]: https://github.com/munich-quantum-toolkit/workflows/pull/276
 [#271]: https://github.com/munich-quantum-toolkit/workflows/pull/271
 [#257]: https://github.com/munich-quantum-toolkit/workflows/pull/257
 [#255]: https://github.com/munich-quantum-toolkit/workflows/pull/255
