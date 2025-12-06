@@ -28,7 +28,7 @@ on:
         default: false
         type: boolean
       llvm-version:
-        description: "The version of LLVM version to set up (formatted as 'major.minor.patch')"
+        description: "The version of LLVM to set up (formatted as 'major.minor.patch')"
         default: "21.1.7"
         type: string
 
