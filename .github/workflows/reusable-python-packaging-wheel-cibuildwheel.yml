@@ -28,8 +28,8 @@ on:
         default: false
         type: boolean
       llvm-version:
-        description: "The setup-mlir release tag"
-        default: 21.1.7
+        description: "The version of LLVM version to set up (formatted as 'major.minor.patch')"
+        default: "21.1.7"
         type: string
 
 jobs:
@@ -61,7 +61,7 @@ jobs:
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
       # set up sccache for faster builds (non-Ubuntu only)
-      - name: Setup sccache
+      - name: Install sccache
         if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
         run: uv tool install sccache
 
