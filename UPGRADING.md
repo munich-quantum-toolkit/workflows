@@ -12,7 +12,7 @@ A specific version of MLIR can be specified by setting the `llvm-version` option
 For example, the following configuration enables MLIR support with LLVM version 21.1.7 in the C++ linter workflow:
 
 ```yaml
-uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-cpp-linter.yml@v1.18.0
+uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-cpp-linter.yml@v1.17.4
 with:
   setup-mlir: true
   llvm-version: 21.1.7
