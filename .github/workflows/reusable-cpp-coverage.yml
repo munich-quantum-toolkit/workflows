@@ -22,6 +22,14 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      setup-mlir:
+        description: "Whether to set up MLIR"
+        default: false
+        type: boolean
+      llvm-version:
+        description: "The version of LLVM to set up (formatted as 'major.minor.patch')"
+        default: "21.1.7"
+        type: string
 
 jobs:
   coverage:
@@ -39,28 +47,43 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-      - if: ${{ inputs.setup-z3 }}
-        name: Setup Z3
+
+      - name: Set up Z3
+        if: ${{ inputs.setup-z3 }}
         uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
         with:
           version: ${{ inputs.z3-version }}
-      - name: Setup ccache
+
+      - name: Set up MLIR
+        if: ${{ inputs.setup-mlir }}
+        uses: munich-quantum-software/setup-mlir@6b8d4ef561ca19268764609adf9fa12f53015e1f # 2025.12.05
+        with:
+          llvm-version: ${{ inputs.llvm-version }}
+
+      # set up ccache for faster builds
+      - name: Set up ccache
         uses: Chocobo1/setup-ccache-action@85ed78428a2cf784edc1d4cb9c784af4bc9baaab # v1.5.1
         with:
           prepend_symlinks_to_path: false
           override_cache_key: c++-coverage
+
       - name: Set up mold as linker
         uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
+
       - name: Install Ninja
         run: pipx install ninja
+
       - name: Configure CMake
         env:
           CMAKE_ARGS: ${{ inputs.cmake-args }}
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS
+
       - name: Build
         run: cmake --build build --config Debug
+
       - name: Test
         run: ctest -C Debug --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         with:

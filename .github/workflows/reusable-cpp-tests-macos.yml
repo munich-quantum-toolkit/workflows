@@ -45,6 +45,14 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      setup-mlir:
+        description: "Whether to set up MLIR"
+        default: false
+        type: boolean
+      llvm-version:
+        description: "The version of LLVM to set up (formatted as 'major.minor.patch')"
+        default: "21.1.7"
+        type: string
 
 jobs:
   cpp-tests-macos:
@@ -55,23 +63,28 @@ jobs:
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
     steps:
-      # check out the repository (including submodules and all history)
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           submodules: recursive
           fetch-depth: 0
-      # optionally set up Z3
-      - if: ${{ inputs.setup-z3 }}
-        name: Setup Z3
+
+      - name: Set up Z3
+        if: ${{ inputs.setup-z3 }}
         uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
         with:
           version: ${{ inputs.z3-version }}
-      # make sure ninja is installed
+
+      - name: Set up MLIR
+        if: ${{ inputs.setup-mlir }}
+        uses: munich-quantum-software/setup-mlir@6b8d4ef561ca19268764609adf9fa12f53015e1f # 2025.12.05
+        with:
+          llvm-version: ${{ inputs.llvm-version }}
+
       - name: Install Ninja
         run: brew install ninja
-      # set up gcc if specified
-      - if: ${{ startsWith(inputs.compiler, 'gcc-') }}
-        name: Set up GCC
+
+      - name: Set up GCC
+        if: ${{ startsWith(inputs.compiler, 'gcc-') }}
         env:
           COMPILER: ${{ inputs.compiler }}
         run: |
@@ -85,9 +98,9 @@ jobs:
             echo "Invalid compiler specified: $COMPILER" >&2
             exit 1
           fi
-      # set up clang if specified
-      - if: ${{ startsWith(inputs.compiler, 'clang-') }}
-        name: Set up Clang
+
+      - name: Set up Clang
+        if: ${{ startsWith(inputs.compiler, 'clang-') }}
         env:
           COMPILER: ${{ inputs.compiler }}
         run: |
@@ -102,25 +115,22 @@ jobs:
             echo "CXX=$LLVM_PREFIX/bin/clang++" >> $GITHUB_ENV
             # Link against Homebrew Clang's libc++ and unwind library to resolve symbol conflicts
             echo "LDFLAGS=$LDFLAGS -L$LLVM_PREFIX/lib/c++ -L$LLVM_PREFIX/lib/unwind -lunwind" >> $GITHUB_ENV
-            echo "LLVM_DIR=$LLVM_PREFIX/lib/cmake/llvm" >> $GITHUB_ENV
-            echo "MLIR_DIR=$LLVM_PREFIX/lib/cmake/mlir" >> $GITHUB_ENV
-            echo "$LLVM_PREFIX/bin" >> $GITHUB_PATH
           else
             echo "Invalid compiler specified: $COMPILER" >&2
             exit 1
           fi
-      # configure CMake in the specified mode, optionally with additional arguments
+
       - name: Configure CMake
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
         run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS
-      # build the project in the specified mode
+
       - name: Build
         env:
           CONFIG: ${{ inputs.config }}
         run: cmake --build build --config $CONFIG
-      # run the tests
+
       - name: Test
         env:
           CONFIG: ${{ inputs.config }}

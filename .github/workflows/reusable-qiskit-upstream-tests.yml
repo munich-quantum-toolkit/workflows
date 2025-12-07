@@ -22,6 +22,14 @@ on:
         description: "The version of Z3 to set up"
         default: "4.13.4"
         type: string
+      setup-mlir:
+        description: "Whether to set up MLIR"
+        default: false
+        type: boolean
+      llvm-version:
+        description: "The version of LLVM to set up (formatted as 'major.minor.patch')"
+        default: "21.1.7"
+        type: string
 
 jobs:
   qiskit-upstream:
@@ -31,31 +39,33 @@ jobs:
       FORCE_COLOR: 3
       GITHUB_TOKEN: ${{ github.token }}
     steps:
-      # Check out the repository
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           submodules: recursive
           fetch-depth: 0
 
-      # Optionally set up Z3
-      - if: ${{ inputs.setup-z3 }}
-        name: Setup Z3
+      - name: Set up Z3
+        if: ${{ inputs.setup-z3 }}
         uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
         with:
           version: ${{ inputs.z3-version }}
 
-      # Set up mold as linker for faster C++ builds (Linux only)
+      - name: Set up MLIR
+        if: ${{ inputs.setup-mlir }}
+        uses: munich-quantum-software/setup-mlir@6b8d4ef561ca19268764609adf9fa12f53015e1f # 2025.12.05
+        with:
+          llvm-version: ${{ inputs.llvm-version }}
+
       - name: Set up mold as linker
         uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
 
-      # Set up uv for faster Python package management
       - name: Install uv
         uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7.1.4
         with:
           enable-cache: true
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
-      # Set up sccache for faster C++ builds
+      # Set up sccache for faster builds
       - name: Install sccache
         run: uv tool install sccache
 
@@ -63,6 +73,5 @@ jobs:
       - name: Test against latest Qiskit
         run: uvx nox -s qiskit --verbose
 
-      # Show sccache stats
       - name: Show sccache stats
         run: sccache --show-stats

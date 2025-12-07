@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Added
+
+- ✨ Add optional `setup-mlir` input to allow setting up MLIR in the C++ and Python workflows ([#270]) ([**@denialhaag**], [**@burgholzer**])
+
 ### Changed
 
 - 🔧 Do not run Python tests on changes to pre-commit ([#276]) ([**@burgholzer**])
@@ -210,6 +214,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 [#276]: https://github.com/munich-quantum-toolkit/workflows/pull/276
 [#271]: https://github.com/munich-quantum-toolkit/workflows/pull/271
+[#270]: https://github.com/munich-quantum-toolkit/workflows/pull/270
 [#257]: https://github.com/munich-quantum-toolkit/workflows/pull/257
 [#255]: https://github.com/munich-quantum-toolkit/workflows/pull/255
 [#254]: https://github.com/munich-quantum-toolkit/workflows/pull/254
