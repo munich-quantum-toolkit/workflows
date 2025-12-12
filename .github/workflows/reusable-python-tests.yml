@@ -27,7 +27,7 @@ on:
         default: false
         type: boolean
       llvm-version:
-        description: "The version of LLVM to set up (formatted as 'major.minor.patch')"
+        description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (7 or 40 characters, e.g., 'a832a52')"
         default: "21.1.7"
         type: string
 
@@ -74,7 +74,7 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir }}
-        uses: munich-quantum-software/setup-mlir@a55b2f85c1975e18e723c6a4c45b137762c48547 # 2025.12.06
+        uses: munich-quantum-software/setup-mlir@447a87756d29f9b7a82a8e3239ef1654658d2b83 # 2025.12.12
         with:
           llvm-version: ${{ inputs.llvm-version }}
 
