@@ -28,7 +28,7 @@ on:
         default: false
         type: boolean
       llvm-version:
-        description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (7 or 40 characters, e.g., 'a832a52')"
+        description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.7"
         type: string
 
