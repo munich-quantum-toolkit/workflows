@@ -50,19 +50,19 @@ jobs:
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
-        uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
+        uses: cda-tum/setup-z3@8156b32632230f11cf9c5a50becb33d73e2fb4e5 # v1.7.1
         with:
           version: ${{ inputs.z3-version }}
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir }}
-        uses: munich-quantum-software/setup-mlir@a55b2f85c1975e18e723c6a4c45b137762c48547 # 2025.12.06
+        uses: munich-quantum-software/setup-mlir@447a87756d29f9b7a82a8e3239ef1654658d2b83 # 2025.12.12
         with:
           llvm-version: ${{ inputs.llvm-version }}
 
       # set up ccache for faster builds
       - name: Set up ccache
-        uses: Chocobo1/setup-ccache-action@85ed78428a2cf784edc1d4cb9c784af4bc9baaab # v1.5.1
+        uses: Chocobo1/setup-ccache-action@82d1328f966f98dcd2df44e757ae08076d3c9a6b # v1.5.2
         with:
           prepend_symlinks_to_path: false
           override_cache_key: c++-coverage
@@ -85,7 +85,7 @@ jobs:
         run: ctest -C Debug --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
           fail_ci_if_error: true
           flags: cpp
