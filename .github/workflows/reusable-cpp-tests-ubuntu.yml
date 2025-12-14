@@ -70,13 +70,13 @@ jobs:
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
-        uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
+        uses: cda-tum/setup-z3@8156b32632230f11cf9c5a50becb33d73e2fb4e5 # v1.7.1
         with:
           version: ${{ inputs.z3-version }}
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir }}
-        uses: munich-quantum-software/setup-mlir@2211d1e355abab81c3dc5cd692c0eb828a0d528a # 2025.12.12
+        uses: munich-quantum-software/setup-mlir@78e8f61380c7823641ccf70c513b26bfb7602f47 # 2025.12.13
         with:
           llvm-version: ${{ inputs.llvm-version }}
 

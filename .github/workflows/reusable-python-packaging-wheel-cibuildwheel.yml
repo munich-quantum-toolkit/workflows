@@ -44,18 +44,18 @@ jobs:
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
-        uses: cda-tum/setup-z3@edb99468071192a5a4e2c4dbdb15f74a9df11d09 # v1.7.0
+        uses: cda-tum/setup-z3@8156b32632230f11cf9c5a50becb33d73e2fb4e5 # v1.7.1
         with:
           version: ${{ inputs.z3-version }}
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir && !startsWith(inputs.runs-on, 'ubuntu') }}
-        uses: munich-quantum-software/setup-mlir@2211d1e355abab81c3dc5cd692c0eb828a0d528a # 2025.12.12
+        uses: munich-quantum-software/setup-mlir@78e8f61380c7823641ccf70c513b26bfb7602f47 # 2025.12.13
         with:
           llvm-version: ${{ inputs.llvm-version }}
 
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7.1.5
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
         with:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
@@ -74,7 +74,7 @@ jobs:
 
       # upload the wheels as an artifact (adds a `dev-` prefix for PRs)
       - name: Upload wheels
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse/*.whl
