@@ -9,13 +9,18 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.5] - 2025-12-19
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1175)._
+
 ### Added
 
+- ✨ Add step for checking if Python stub files are up to date ([#286]) ([**@denialhaag**])
 - ✨ Add optional `setup-mlir` input to allow setting up MLIR in the C++ and Python workflows ([#270]) ([**@denialhaag**], [**@burgholzer**])
 
 ### Changed
 
-- 🔧 Do not run Python tests on changes to pre-commit ([#276]) ([**@burgholzer**])
+- 🔧 Do not run Python tests on changes to `.pre-commit-config.yaml` ([#276]) ([**@burgholzer**])
 - 🔧 Do not run C++ tests on changes to bindings ([#276]) ([**@burgholzer**])
 
 ## [1.17.4] - 2025-12-05
@@ -191,7 +196,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.4...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.5...HEAD
+[1.17.5]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.5
 [1.17.4]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.4
 [1.17.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.3
 [1.17.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.2
@@ -212,6 +218,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#286]: https://github.com/munich-quantum-toolkit/workflows/pull/286
 [#276]: https://github.com/munich-quantum-toolkit/workflows/pull/276
 [#271]: https://github.com/munich-quantum-toolkit/workflows/pull/271
 [#270]: https://github.com/munich-quantum-toolkit/workflows/pull/270
