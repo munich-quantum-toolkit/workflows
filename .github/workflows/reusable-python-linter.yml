@@ -74,6 +74,7 @@ jobs:
           ./bindings/generate-stubs.sh || true
           if [[ $(git status --porcelain python) ]]; then
             echo "Stub files are not up to date. Please run './bindings/generate-stubs.sh' and commit the changes."
+            git --no-pager diff python
             exit 1
           fi
 
