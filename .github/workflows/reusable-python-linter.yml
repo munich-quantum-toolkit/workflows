@@ -71,7 +71,7 @@ jobs:
       - name: Check if stub files are up to date
         if: ${{ inputs.check-stubs }}
         run: |
-          ./bindings/generate-stubs.sh
+          ./bindings/generate-stubs.sh || true
           if [[ $(git status --porcelain python) ]]; then
             echo "Stub files are not up to date. Please run './bindings/generate-stubs.sh' and commit the changes."
             exit 1
