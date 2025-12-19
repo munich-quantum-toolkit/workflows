@@ -197,7 +197,7 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 <!-- Version links -->
 
 [unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.5...HEAD
-[1.17.5]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.0...v1.17.5
+[1.17.5]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...v1.17.5
 [1.17.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.0...v1.17.3
 [1.17.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.0...v1.17.0
 [1.16.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.15.0...v1.16.0
