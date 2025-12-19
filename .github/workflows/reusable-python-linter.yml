@@ -72,7 +72,7 @@ jobs:
         if: ${{ inputs.check-stubs }}
         run: |
           if [[ ! -f ./bindings/generate-stubs.sh ]]; then
-            echo "Error: ./bindings/generate-stubs.sh not found. Please disable the check-stubs input or create a stub-generation script."
+            echo "'./bindings/generate-stubs.sh' not found. Please disable the 'check-stubs' input or create a stub-generation script."
             exit 1
           fi
           ./bindings/generate-stubs.sh || true
