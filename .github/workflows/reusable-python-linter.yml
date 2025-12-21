@@ -73,7 +73,7 @@ jobs:
         run: |
           uvx nox -s stubs
           if [[ $(git status --porcelain python) ]]; then
-            echo "Stub files are not up to date or fail to pass ruff. Please run 'nox -s stubs' and commit the changes."
+            echo "Stub files are not up to date. Please run 'nox -s stubs' and commit the changes."
             git --no-pager diff python
             exit 1
           fi

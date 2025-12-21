@@ -12,6 +12,10 @@ The optional Python linter workflow for checking Python stub files has been rede
 An example of such a session would be:
 
 ```python
+import nox
+import shutil
+from pathlib import Path
+
 @nox.session(reuse_venv=True, venv_backend="uv")
 def stubs(session: nox.Session) -> None:
     """Generate type stubs for Python bindings using nanobind."""
