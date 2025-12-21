@@ -35,7 +35,7 @@ on:
         default: "21.1.7"
         type: string
       check-stubs:
-        description: "Whether to check if the stub files are up to date. Requires 'bindings/generate-stubs.sh' to exist"
+        description: "Whether to check if the stub files are up to date. Requires a nox session called `stubs` to exist."
         default: false
         type: boolean
 
