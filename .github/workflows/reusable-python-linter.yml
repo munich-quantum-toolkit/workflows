@@ -35,7 +35,7 @@ on:
         default: "21.1.7"
         type: string
       check-stubs:
-        description: "Whether to check if the stub files are up to date. Requires 'bindings/generate-stubs.sh' to exist"
+        description: "Whether to check if the stub files are up to date. Requires a nox session called `stubs` to exist."
         default: false
         type: boolean
 
@@ -71,13 +71,9 @@ jobs:
       - name: Check if stub files are up to date
         if: ${{ inputs.check-stubs }}
         run: |
-          if [[ ! -f ./bindings/generate-stubs.sh ]]; then
-            echo "'./bindings/generate-stubs.sh' not found. Please disable the 'check-stubs' input or create a stub-generation script."
-            exit 1
-          fi
-          ./bindings/generate-stubs.sh || true
+          uvx nox -s stubs
           if [[ $(git status --porcelain python) ]]; then
-            echo "Stub files are not up to date. Please run './bindings/generate-stubs.sh' and commit the changes."
+            echo "Stub files are not up to date. Please run 'nox -s stubs' and commit the changes."
             git --no-pager diff python
             exit 1
           fi
