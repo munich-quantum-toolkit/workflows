@@ -4,6 +4,60 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.17.6]
+
+### Checking Python stub files
+
+The optional Python linter workflow for checking Python stub files has been redesigned to rely on the presence of a nox session called `stubs`, that shall generate the stub files.
+An example of such a session would be:
+
+```python
+@nox.session(reuse_venv=True, venv_backend="uv")
+def stubs(session: nox.Session) -> None:
+    """Generate type stubs for Python bindings using nanobind."""
+    env = {"UV_PROJECT_ENVIRONMENT": session.virtualenv.location}
+    session.run(
+        "uv",
+        "sync",
+        env=env,
+    )
+
+    from nanobind.stubgen import main as nanobind_main  # type: ignore[import-not-found]
+
+    package_root = Path(__file__).parent / "python" / "mqt" / "core"
+    pattern_file = Path(__file__).parent / "bindings" / "core_patterns.txt"
+
+    args = [
+        "--recursive",
+        "--include-private",
+        "--output-dir",
+        str(package_root),
+        "--pattern-file",
+        str(pattern_file),
+        "--module",
+        "mqt.core.ir",
+        "--module",
+        "mqt.core.dd",
+        "--module",
+        "mqt.core.fomac",
+        "--module",
+        "mqt.core.na",
+    ]
+
+    nanobind_main(args)
+
+    pyi_files = list(package_root.glob("**/*.pyi"))
+
+    if shutil.which("prek") is None:
+        session.install("prek")
+
+    success_codes = [0, 1]
+    session.run("prek", "run", "license-tools", "--files", *pyi_files, external=True, success_codes=success_codes)
+    session.run("prek", "run", "ruff-check", "--files", *pyi_files, external=True, success_codes=success_codes)
+    session.run("prek", "run", "ruff-format", "--files", *pyi_files, external=True, success_codes=success_codes)
+    session.run("prek", "run", "ruff-check", "--files", *pyi_files, external=True)
+```
+
 ## [1.17.5]
 
 ### MLIR support
@@ -196,7 +250,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.5...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.6...HEAD
+[1.17.6]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.6
 [1.17.5]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...v1.17.5
 [1.17.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.0...v1.17.3
 [1.17.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.0...v1.17.0

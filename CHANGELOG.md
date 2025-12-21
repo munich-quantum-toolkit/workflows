@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.6] - 2025-12-21
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1176)._
+
+### Changed
+
+- 🚸 change to `nox -s stubs` for driving stub generation ([#288]) ([**@burgholzer**])
+
 ## [1.17.5] - 2025-12-19
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1175)._
@@ -196,7 +204,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.5...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.6...HEAD
+[1.17.6]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.6
 [1.17.5]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.5
 [1.17.4]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.4
 [1.17.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.3
@@ -218,6 +227,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#288]: https://github.com/munich-quantum-toolkit/workflows/pull/288
 [#286]: https://github.com/munich-quantum-toolkit/workflows/pull/286
 [#276]: https://github.com/munich-quantum-toolkit/workflows/pull/276
 [#271]: https://github.com/munich-quantum-toolkit/workflows/pull/271
