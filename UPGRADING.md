@@ -71,16 +71,16 @@ def stubs(session: nox.Session) -> None:
 
 ### MLIR support
 
-This release adds support for setting up MLIR in the C++ and Python workflows based on the newly-created [`setup-mlir` action](https://github.com/munich-quantum-software/setup-mlir).
+This release adds support for setting up MLIR in the C++ and Python workflows based on the newly created [`setup-mlir` action](https://github.com/munich-quantum-software/setup-mlir).
 To enable MLIR support, you can set the `setup-mlir` option to `true` in the workflow configuration of all relevant workflows.
-A specific version of MLIR can be specified by setting the `llvm-version` option, which needs to be a valid LLVM version string (e.g., `21.1.7`) that is available via the GitHub action.
-For example, the following configuration enables MLIR support with LLVM version 21.1.7 in the C++ linter workflow:
+A specific version of MLIR can be specified by setting the `llvm-version` option, which needs to be a valid LLVM version string (e.g., `21.1.8`) that is available via the GitHub action.
+For example, the following configuration enables MLIR support with LLVM version 21.1.8 in the C++ linter workflow:
 
 ```yaml
-uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-cpp-linter.yml@v1.17.4
+uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-cpp-linter.yml@v1.17.5
 with:
   setup-mlir: true
-  llvm-version: 21.1.7
+  llvm-version: 21.1.8
 ```
 
 ## [1.17.3]
