@@ -14,7 +14,7 @@ on:
 jobs:
   build-sdist:
     name: 📦 SDist
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1

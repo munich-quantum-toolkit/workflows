@@ -22,7 +22,7 @@ jobs:
     permissions:
       contents: read
       issues: write # Needed to create/update issues
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Get latest Qiskit commit
         id: qiskit-commit

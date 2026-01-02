@@ -25,7 +25,7 @@ on:
 jobs:
   update-mqt-core:
     name: ⬆️ Update MQT Core
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: write
       pull-requests: write

@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- 👷 Use new `ubuntu-slim` runners for light workflows ([#XXX]) ([**@burgholzer**])
+
 ## [1.17.7] - 2025-12-23
 
 ### Changed
