@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Changed
 
-- 👷 Use new `ubuntu-slim` runners for light workflows ([#XXX]) ([**@burgholzer**])
+- 👷 Use new `ubuntu-slim` runners for light workflows ([#292]) ([**@burgholzer**])
 
 ## [1.17.7] - 2025-12-23
 
@@ -238,6 +238,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#292]: https://github.com/munich-quantum-toolkit/workflows/pull/292
 [#290]: https://github.com/munich-quantum-toolkit/workflows/pull/290
 [#288]: https://github.com/munich-quantum-toolkit/workflows/pull/288
 [#286]: https://github.com/munich-quantum-toolkit/workflows/pull/286
