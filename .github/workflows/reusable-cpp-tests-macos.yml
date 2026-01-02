@@ -80,8 +80,20 @@ jobs:
         with:
           llvm-version: ${{ inputs.llvm-version }}
 
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        with:
+          python-version: 3.13
+          activate-environment: true
+          enable-cache: true
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
+
       - name: Install Ninja
-        run: brew install ninja
+        run: uv tool install ninja
+
+      - name: Install lit
+        if: ${{ inputs.setup-mlir }}
+        run: uv pip install lit
 
       - name: Set up GCC
         if: ${{ startsWith(inputs.compiler, 'gcc-') }}
@@ -124,7 +136,7 @@ jobs:
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
-        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS ${{ inputs.setup-mlir && '-DLLVM_EXTERNAL_LIT=$(which lit)' }}
 
       - name: Build
         env:

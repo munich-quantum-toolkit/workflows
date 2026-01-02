@@ -82,17 +82,31 @@ jobs:
         with:
           llvm-version: ${{ inputs.llvm-version }}
 
+      - name: Install the latest version of uv
+        if: ${{ inputs.setup-mlir }}
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        with:
+          python-version: 3.13
+          activate-environment: true
+          enable-cache: true
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Install lit
+        if: ${{ inputs.setup-mlir }}
+        run: uv pip install lit
+
       - name: Configure CMake
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
           COMPILER: ${{ inputs.compiler }}
+          WORKSPACE: ${{ github.workspace }}
         run: |
           cmake_args=$CMAKE_ARGS
           if [ "$COMPILER" == "clang" ]; then
             cmake_args="$cmake_args -T ClangCL"
           fi
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $cmake_args
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $cmake_args ${{ inputs.setup-mlir && '-DLLVM_EXTERNAL_LIT=$WORKSPACE/.venv/Scripts/lit.exe' }}
 
       - name: Build
         uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2 # Windows builds with MSVC are flaky and frequently run out of heap space

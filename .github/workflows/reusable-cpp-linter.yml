@@ -95,8 +95,16 @@ jobs:
         if: ${{ inputs.build-project }}
         uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
 
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        with:
+          python-version: 3.13
+          activate-environment: true
+          enable-cache: true
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
+
       - name: Install Ninja
-        run: pipx install ninja
+        run: uv tool install ninja
 
       - name: Set up Clang ${{ inputs.clang-version }}
         env:
@@ -123,15 +131,6 @@ jobs:
           fi
           echo "CC=clang-$clang_version" >> $GITHUB_ENV
           echo "CXX=clang++-$clang_version" >> $GITHUB_ENV
-
-      - name: Install the latest version of uv
-        if: ${{ inputs.setup-python }}
-        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
-        with:
-          python-version: 3.13
-          activate-environment: true
-          enable-cache: true
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Validate package list and install given packages
         if: ${{ inputs.setup-python }}
