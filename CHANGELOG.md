@@ -16,6 +16,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 - 🔧 Update CI workflows to use `uv` for installing dependencies and add `lit` installation step ([#295]) ([**@burgholzer**])
 - 👷 Use new `ubuntu-slim` runners for light workflows ([#292]) ([**@burgholzer**])
 
+### Fixed
+
+- 🔒 Fix all warnings reported by zizmor ([#296]) ([**@burgholzer**])
+
 ## [1.17.7] - 2025-12-23
 
 ### Changed
@@ -242,6 +246,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#296]: https://github.com/munich-quantum-toolkit/workflows/pull/296
 [#295]: https://github.com/munich-quantum-toolkit/workflows/pull/295
 [#292]: https://github.com/munich-quantum-toolkit/workflows/pull/292
 [#290]: https://github.com/munich-quantum-toolkit/workflows/pull/290

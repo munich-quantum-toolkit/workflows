@@ -13,13 +13,20 @@ on:
       - ".github/workflows/templating.yml"
   workflow_dispatch: # Allow manual triggering
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   render-template:
     name: Render template
     runs-on: ubuntu-slim
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # Needed to push changes to the repository
+      pull-requests: write # Needed to create a PR
     steps:
       - id: create-token
         uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1

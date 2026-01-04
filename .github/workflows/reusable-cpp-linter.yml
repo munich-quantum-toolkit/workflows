@@ -59,10 +59,20 @@ on:
         default: "21.1.8"
         type: string
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: 🚨 Lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # Needed to fetch code
+      pull-requests: write # Needed to post PR comments
     env:
       CLANG_VERSION: ${{ inputs.clang-version }}
     steps:
@@ -70,6 +80,7 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}

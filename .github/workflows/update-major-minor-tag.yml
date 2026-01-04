@@ -17,17 +17,26 @@ on:
         description: "Tag name that the major.minor tag will point to"
         required: true
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.run_id }}
+  cancel-in-progress: true
+
 env:
   TAG_NAME: ${{ github.event.inputs.TAG_NAME || github.event.release.tag_name }}
+
+permissions:
+  contents: read
 
 jobs:
   update_tag:
     name: Update the major.minor tag to include the ${{ github.event.inputs.TAG_NAME || github.event.release.tag_name }} changes
     runs-on: ubuntu-slim
     permissions:
-      contents: write
+      contents: write # Needed to push tags to the repository
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: Update the ${{ env.TAG_NAME }} tag
         id: update-major-minor-tag
