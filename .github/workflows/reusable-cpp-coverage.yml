@@ -88,7 +88,8 @@ jobs:
       - name: Configure CMake
         env:
           CMAKE_ARGS: ${{ inputs.cmake-args }}
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS ${{ inputs.setup-mlir && '-DLLVM_EXTERNAL_LIT=$(which lit)' }}
+          LIT_ARG: ${{ inputs.setup-mlir && '-DLLVM_EXTERNAL_LIT=$(which lit)' || '' }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS $LIT_ARG
 
       - name: Build
         run: cmake --build build --config Debug
