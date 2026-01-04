@@ -22,13 +22,21 @@ on:
       APP_PRIVATE_KEY:
         description: Private key of the GitHub App with permission to create and update pull requests
         required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   update-mqt-core:
     name: ⬆️ Update MQT Core
     runs-on: ubuntu-slim
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # Needed to push changes to the repository
+      pull-requests: write # Needed to create pull requests.
     steps:
       # Create a GitHub App token
       - id: create-token
@@ -40,6 +48,7 @@ jobs:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
       # Parse the MQT Core version and the revision from the `cmake/ExternalDependencies.cmake` file.
       # The relevant portions of the file have the format:
       # ```cmake

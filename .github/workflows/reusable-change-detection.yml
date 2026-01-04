@@ -29,6 +29,13 @@ on:
         description: Whether to run the MLIR tests
         value: ${{ jobs.change-detection.outputs.run-mlir || false }}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   change-detection:
     name: 🕵️ Check
@@ -42,6 +49,8 @@ jobs:
       run-mlir: ${{ steps.mlir-changes.outputs.run-mlir || false }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
       - name: Get a list of the changed files relevant for the C++ tests
         if: github.event_name == 'pull_request'
         id: changed-cpp-testable-files
