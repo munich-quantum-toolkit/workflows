@@ -70,13 +70,26 @@ jobs:
       - name: Set up mold as linker
         uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
 
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        with:
+          python-version: 3.13
+          activate-environment: true
+          enable-cache: true
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
+
       - name: Install Ninja
-        run: pipx install ninja
+        run: uv tool install ninja
+
+      - name: Install lit
+        if: ${{ inputs.setup-mlir }}
+        run: uv pip install lit
 
       - name: Configure CMake
         env:
           CMAKE_ARGS: ${{ inputs.cmake-args }}
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS
+          LIT_ARG: ${{ inputs.setup-mlir && '-DLLVM_EXTERNAL_LIT=$(which lit)' || '' }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS $LIT_ARG
 
       - name: Build
         run: cmake --build build --config Debug
