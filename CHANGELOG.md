@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.10] - 2026-01-04
+
+### Fixed
+
+- 🐛 Fix `LIT_ARG` handling for Linux and macOS C++ jobs ([#298]) ([**@burgholzer**])
+
 ## [1.17.9] - 2026-01-04
 
 ### Fixed
@@ -227,7 +233,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.9...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.10...HEAD
+[1.17.10]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.10
 [1.17.9]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.9
 [1.17.8]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.8
 [1.17.7]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.7
@@ -253,6 +260,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#298]: https://github.com/munich-quantum-toolkit/workflows/pull/298
 [#297]: https://github.com/munich-quantum-toolkit/workflows/pull/297
 [#296]: https://github.com/munich-quantum-toolkit/workflows/pull/296
 [#295]: https://github.com/munich-quantum-toolkit/workflows/pull/295

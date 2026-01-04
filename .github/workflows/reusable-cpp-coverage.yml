@@ -96,8 +96,13 @@ jobs:
       - name: Configure CMake
         env:
           CMAKE_ARGS: ${{ inputs.cmake-args }}
-          LIT_ARG: ${{ inputs.setup-mlir && '-DLLVM_EXTERNAL_LIT=$(which lit)' || '' }}
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS $LIT_ARG
+          SETUP_MLIR: ${{ inputs.setup-mlir }}
+        run: |
+          LIT_ARG=""
+          if [ "$SETUP_MLIR" = "true" ]; then
+            LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
+          fi
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS $LIT_ARG
 
       - name: Build
         run: cmake --build build --config Debug
