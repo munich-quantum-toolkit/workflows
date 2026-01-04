@@ -83,7 +83,6 @@ jobs:
           llvm-version: ${{ inputs.llvm-version }}
 
       - name: Install the latest version of uv
-        if: ${{ inputs.setup-mlir }}
         uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
         with:
           python-version: 3.13
