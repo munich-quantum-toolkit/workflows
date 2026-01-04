@@ -99,7 +99,6 @@ jobs:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
           COMPILER: ${{ inputs.compiler }}
-          WORKSPACE: ${{ github.workspace }}
           LIT_ARG: ${{ inputs.setup-mlir && format('-DLLVM_EXTERNAL_LIT={0}/.venv/Scripts/lit.exe', github.workspace) || '' }}
         run: |
           cmake_args=$CMAKE_ARGS
