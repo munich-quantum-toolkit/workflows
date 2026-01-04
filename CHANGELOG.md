@@ -9,8 +9,11 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.8] - 2026-01-04
+
 ### Changed
 
+- 🔧 Update CI workflows to use `uv` for installing dependencies and add `lit` installation step ([#295]) ([**@burgholzer**])
 - 👷 Use new `ubuntu-slim` runners for light workflows ([#292]) ([**@burgholzer**])
 
 ## [1.17.7] - 2025-12-23
@@ -214,7 +217,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.7...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.8...HEAD
+[1.17.8]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.8
 [1.17.7]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.7
 [1.17.6]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.6
 [1.17.5]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.5
@@ -238,6 +242,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#295]: https://github.com/munich-quantum-toolkit/workflows/pull/295
 [#292]: https://github.com/munich-quantum-toolkit/workflows/pull/292
 [#290]: https://github.com/munich-quantum-toolkit/workflows/pull/290
 [#288]: https://github.com/munich-quantum-toolkit/workflows/pull/288
