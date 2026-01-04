@@ -16,7 +16,7 @@ on:
         type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-qiskit-upstream-issue
   cancel-in-progress: true
 
 permissions:
