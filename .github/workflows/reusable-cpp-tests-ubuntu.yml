@@ -144,8 +144,13 @@ jobs:
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
-          LIT_ARG: ${{ inputs.setup-mlir && '-DLLVM_EXTERNAL_LIT=$(which lit)' || '' }}
-        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS $LIT_ARG
+          SETUP_MLIR: ${{ inputs.setup-mlir }}
+        run: |
+          LIT_ARG=""
+          if [ "$SETUP_MLIR" = "true" ]; then
+            LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
+          fi
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS "$LIT_ARG"
 
       - name: Build
         env:
