@@ -12,7 +12,7 @@ on:
   workflow_call:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-python-packaging-wheel
   cancel-in-progress: true
 
 permissions:
