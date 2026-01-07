@@ -25,9 +25,6 @@ on:
       run-cd:
         description: Whether to run the continuous deployment job
         value: ${{ jobs.change-detection.outputs.run-cd || false }}
-      run-mlir:
-        description: Whether to run the MLIR tests
-        value: ${{ jobs.change-detection.outputs.run-mlir || false }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-change-detection
@@ -46,7 +43,6 @@ jobs:
       run-cpp-linter: ${{ steps.cpp-linter-changes.outputs.run-cpp-linter || false }}
       run-python-tests: ${{ steps.python-tests-changes.outputs.run-python-tests || false }}
       run-cd: ${{ steps.cd-changes.outputs.run-cd || false }}
-      run-mlir: ${{ steps.mlir-changes.outputs.run-mlir || false }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
@@ -58,6 +54,7 @@ jobs:
         with:
           filter: |
             include/**
+            mlir/**
             src/**
             test/**
             !test/python/**
@@ -85,10 +82,10 @@ jobs:
           filter: |
             bindings/**
             include/**
+            mlir/**
             src/**
             test/**
             !test/python/**
-            mlir/**
             .clang-tidy
             .github/workflows/reusable-cpp-linter.yml
             .github/workflows/ci.yml
@@ -142,20 +139,3 @@ jobs:
         id: cd-changes
         run: >-
           echo "run-cd=true" >> "${GITHUB_OUTPUT}"
-      - name: Get a list of the changed files relevant for the MLIR tests
-        if: github.event_name == 'pull_request'
-        id: changed-mlir-testable-files
-        uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
-        with:
-          filter: |
-            mlir/**
-            .github/workflows/reusable-mlir-tests.yml
-            plugins/catalyst/**
-            .github/workflows/reusable-mlir-catalyst-plugin-tests.yml
-      - name: Set a flag for running the MLIR tests
-        if: >-
-          github.event_name != 'pull_request'
-          || steps.changed-mlir-testable-files.outputs.added_modified_renamed != ''
-        id: mlir-changes
-        run: >-
-          echo "run-mlir=true" >> "${GITHUB_OUTPUT}"

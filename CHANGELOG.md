@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- 🔧 Include `mlir/**` in C++ change detection ([#300]) ([**@burgholzer**])
+
+### Removed
+
+- 🔥 remove dedicated `run-mlir` MLIR output for reusable-change-detection.yml ([#300]) ([**@burgholzer**])
+
 ## [1.17.10] - 2026-01-04
 
 ### Fixed
@@ -260,6 +268,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#300]: https://github.com/munich-quantum-toolkit/workflows/pull/300
 [#298]: https://github.com/munich-quantum-toolkit/workflows/pull/298
 [#297]: https://github.com/munich-quantum-toolkit/workflows/pull/297
 [#296]: https://github.com/munich-quantum-toolkit/workflows/pull/296
