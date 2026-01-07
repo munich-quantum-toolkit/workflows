@@ -4,6 +4,13 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+### Removal of `run-mlir` output from change-detection
+
+This release removes the `run-mlir` output from the change-detection step of the `reusable-cpp-linter.yml` workflow.
+The output was only used in MQT Core, where MLIR will be enabled by default with the next release.
+Hence, this update includes `mlir/**` in the regular C++ file filter instead.
+Since this is only affecting the MQT Core repository, this is only flagged as a patch release.
+
 ## [1.17.6]
 
 ### Checking Python stub files
