@@ -25,9 +25,6 @@ on:
       run-cd:
         description: Whether to run the continuous deployment job
         value: ${{ jobs.change-detection.outputs.run-cd || false }}
-      run-mlir:
-        description: Whether to run the MLIR tests
-        value: ${{ jobs.change-detection.outputs.run-mlir || false }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-change-detection
@@ -89,7 +86,6 @@ jobs:
             src/**
             test/**
             !test/python/**
-            mlir/**
             .clang-tidy
             .github/workflows/reusable-cpp-linter.yml
             .github/workflows/ci.yml
