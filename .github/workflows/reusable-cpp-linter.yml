@@ -69,7 +69,7 @@ permissions:
 jobs:
   lint:
     name: 🚨 Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read # Needed to fetch code
       pull-requests: write # Needed to post PR comments

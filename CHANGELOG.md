@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.11] - 2026-01-07
+
+### Added
+
+- ✨ Download debug builds of LLVM for C++ tests on Windows ([#305]) ([**@burgholzer**])
+
 ### Changed
 
 - 🔧 Include `mlir/**` in C++ change detection ([#300]) ([**@burgholzer**])
@@ -241,7 +247,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.10...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.11...HEAD
+[1.17.11]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.11
 [1.17.10]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.10
 [1.17.9]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.9
 [1.17.8]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.8
@@ -268,6 +275,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#305]: https://github.com/munich-quantum-toolkit/workflows/pull/305
 [#300]: https://github.com/munich-quantum-toolkit/workflows/pull/300
 [#298]: https://github.com/munich-quantum-toolkit/workflows/pull/298
 [#297]: https://github.com/munich-quantum-toolkit/workflows/pull/297

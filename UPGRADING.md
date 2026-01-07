@@ -4,12 +4,20 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.17.11]
+
 ### Removal of `run-mlir` output from change-detection
 
 This release removes the `run-mlir` output from the change-detection step of the `reusable-cpp-linter.yml` workflow.
 The output was only used in MQT Core, where MLIR will be enabled by default with the next release.
 Hence, this update includes `mlir/**` in the regular C++ file filter instead.
 Since this is only affecting the MQT Core repository, this is only flagged as a patch release.
+
+### Addition of debug build for LLVM on Windows
+
+With this release, the C++ testing workflows on Windows will now download a debug build of LLVM instead of the release build.
+This is made possible by the latest release of the [portable-mlir-toolchain] (`2026.01.07`) and the [setup-mlir] action (`v1.1.0`).
+This enables debug builds of libraries depending on the LLVM distributions, such as MQT Core, in debug mode on Windows without running into ABI issues.
 
 ## [1.17.6]
 
@@ -266,7 +274,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.6...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.11...HEAD
+[1.17.11]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.11
 [1.17.6]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.6
 [1.17.5]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...v1.17.5
 [1.17.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.0...v1.17.3
@@ -279,3 +288,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 [1.11.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.8.1...v1.9.0
+
+<!-- General links -->
+
+[portable-mlir-toolchain]: https://github.com/munich-quantum-software/portable-mlir-toolchain
+[setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
