@@ -47,8 +47,8 @@ repos:
       - id: rst-inline-touching-normal
 
   # Check for spelling
-  - repo: https://github.com/crate-ci/typos
-    rev: v1.41.0
+  - repo: https://github.com/adhtruong/mirrors-typos
+    rev: v1.42.0
     hooks:
       - id: typos
 
