@@ -6,15 +6,15 @@
 #
 # Licensed under the MIT License
 
-name: 🇨 • Tests • ubuntu
+name: 🇨 • Tests • Ubuntu
 on:
   workflow_call:
     inputs:
       runs-on:
         description: >
-          The ubuntu runner image to use. Defaults to 'ubuntu-latest'.
-          This can be any valid ubuntu runner image, such as 'ubuntu-22.04', 'ubuntu-24.04', or their ARM variants 'ubuntu-22.04-arm', 'ubuntu-24.04-arm'.
-        default: "ubuntu-latest"
+          The Ubuntu runner image to use. Defaults to 'ubuntu-24.04'.
+          This can be any valid Ubuntu runner image, such as 'ubuntu-24.04' or its ARM variant 'ubuntu-24.04-arm'.
+        default: "ubuntu-24.04"
         type: string
       config:
         description: >
@@ -28,7 +28,7 @@ on:
           This can be 'gcc', 'clang', or 'clang-XX'.
           If 'gcc' is selected, this will use the default GCC compiler.
           If 'clang' is selected, the default Clang compiler will be used.
-          A specific version of Clang, including MLIR, can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
+          A specific version of Clang can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
         default: "gcc"
         type: string
       cmake-args:
