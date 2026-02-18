@@ -117,15 +117,9 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $cmake_args $LIT_ARG
 
       - name: Build
-        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2 # Windows builds with MSVC are flaky and frequently run out of heap space
         env:
           CONFIG: ${{ inputs.config }}
-        with:
-          timeout_minutes: 15
-          max_attempts: 5
-          shell: bash
-          retry_on: error
-          command: cmake --build build --config $CONFIG
+        run: cmake --build build --config $CONFIG
 
       - name: Test
         env:

@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Removed
+
+- 🔥 Remove the `nick-fields/retry` action on Windows builds, which put an artificial 15min limit on the build time ([#321]) ([**@burgholzer**])
+
 ## [1.17.11] - 2026-01-07
 
 ### Added
@@ -275,6 +279,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#321]: https://github.com/munich-quantum-toolkit/workflows/pull/321
 [#305]: https://github.com/munich-quantum-toolkit/workflows/pull/305
 [#300]: https://github.com/munich-quantum-toolkit/workflows/pull/300
 [#298]: https://github.com/munich-quantum-toolkit/workflows/pull/298
