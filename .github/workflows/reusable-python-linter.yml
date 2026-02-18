@@ -94,9 +94,7 @@ jobs:
       # run ty for type checking
       - name: Run ty
         if: ${{ inputs.enable-ty }}
-        run: |
-          uv sync --no-install-project
-          uv run --no-sync ty check
+        run: uvx prek run -a ty-check
 
       # run check-sdist to ensure the package sdist is correct
       - name: Run check-sdist
