@@ -9,6 +9,8 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.12] - 2026-02-18
+
 ### Changed
 
 - 🔧 Run `ty check` through `uvx prek run -a ty-check` ([#323]) ([**@burgholzer**])
@@ -255,7 +257,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.11...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.12...HEAD
+[1.17.12]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.12
 [1.17.11]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.11
 [1.17.10]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.10
 [1.17.9]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.9

@@ -13,7 +13,7 @@ The output was only used in MQT Core, where MLIR will be enabled by default with
 Hence, this update includes `mlir/**` in the regular C++ file filter instead.
 Since this is only affecting the MQT Core repository, this is only flagged as a patch release.
 
-### Addition of debug build for LLVM on Windows
+### Addition of debug builds for LLVM on Windows
 
 With this release, the C++ testing workflows on Windows will now download a debug build of LLVM instead of the release build.
 This is made possible by the latest release of the [portable-mlir-toolchain] (`2026.01.07`) and the [setup-mlir] action (`v1.1.0`).
@@ -274,7 +274,7 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.11...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.12...HEAD
 [1.17.11]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.11
 [1.17.6]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.6
 [1.17.5]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...v1.17.5
