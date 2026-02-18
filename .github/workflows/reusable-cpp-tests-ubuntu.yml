@@ -102,10 +102,6 @@ jobs:
       - name: Install Ninja
         run: uv tool install ninja
 
-      - name: Install lit
-        if: ${{ inputs.setup-mlir }}
-        run: uv pip install lit
-
       - name: Set up default Clang
         if: ${{ inputs.compiler == 'clang' }}
         run: |
@@ -144,13 +140,7 @@ jobs:
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
-          SETUP_MLIR: ${{ inputs.setup-mlir }}
-        run: |
-          LIT_ARG=""
-          if [ "$SETUP_MLIR" = "true" ]; then
-            LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
-          fi
-          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS "$LIT_ARG"
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS
 
       - name: Build
         env:
