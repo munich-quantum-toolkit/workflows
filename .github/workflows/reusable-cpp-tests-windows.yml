@@ -117,6 +117,7 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $cmake_args $LIT_ARG
 
       - name: Build
+        timeout-minutes: 60
         env:
           CONFIG: ${{ inputs.config }}
         run: cmake --build build --config $CONFIG
