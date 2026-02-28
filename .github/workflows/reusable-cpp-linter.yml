@@ -97,7 +97,7 @@ jobs:
       # set up ccache for faster builds
       - name: Set up ccache
         if: ${{ inputs.build-project }}
-        uses: Chocobo1/setup-ccache-action@37c3347f8a7738e82aab7a06f276f7a12e3008fb # v1.5.3
+        uses: Chocobo1/setup-ccache-action@f433cb1e0b3ed576864d7fc361ce43b23b181e67 # v1.5.4
         with:
           prepend_symlinks_to_path: false
           override_cache_key: c++-lint
@@ -107,7 +107,7 @@ jobs:
         uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
 
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b # v7.3.0
+        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
         with:
           python-version: 3.13
           activate-environment: true
