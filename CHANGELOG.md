@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.13] - 2026-03-01
+
+### Changed
+
+- ⬆️ Update `setup-mlir` to `v1.2.0`, which brings support for LLVM 22 ([#329]) ([**@burgholzer**])
+
 ## [1.17.12] - 2026-02-18
 
 ### Changed
@@ -286,6 +292,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#329]: https://github.com/munich-quantum-toolkit/workflows/pull/329
 [#323]: https://github.com/munich-quantum-toolkit/workflows/pull/323
 [#321]: https://github.com/munich-quantum-toolkit/workflows/pull/321
 [#305]: https://github.com/munich-quantum-toolkit/workflows/pull/305

@@ -86,10 +86,9 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir }}
-        uses: munich-quantum-software/setup-mlir@97da765dfa9dc8e055611ca934fe51bcade8140c # v1.1.0
+        uses: munich-quantum-software/setup-mlir@9c88cbce13a941c08ec087a10fd48f6a48576c05 # v1.2.0
         with:
           llvm-version: ${{ inputs.llvm-version }}
-          debug: ${{ inputs.config == 'Debug' }}
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
