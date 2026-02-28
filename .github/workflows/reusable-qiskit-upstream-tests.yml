@@ -60,7 +60,7 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir }}
-        uses: munich-quantum-software/setup-mlir@97da765dfa9dc8e055611ca934fe51bcade8140c # v1.1.0
+        uses: munich-quantum-software/setup-mlir@9c88cbce13a941c08ec087a10fd48f6a48576c05 # v1.2.0
         with:
           llvm-version: ${{ inputs.llvm-version }}
 
