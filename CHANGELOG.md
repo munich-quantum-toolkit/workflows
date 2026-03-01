@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.14] - 2026-03-01
+
+### Fixed
+
+- 🐛 Update `setup-mlir` to `v1.2.1` to fix a bug preventing the action to run ([#330])
+
 ## [1.17.13] - 2026-03-01
 
 ### Changed
@@ -263,7 +269,9 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.12...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.14...HEAD
+[1.17.14]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.14
+[1.17.13]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.13
 [1.17.12]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.12
 [1.17.11]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.11
 [1.17.10]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.10
@@ -292,6 +300,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#330]: https://github.com/munich-quantum-toolkit/workflows/pull/330
 [#329]: https://github.com/munich-quantum-toolkit/workflows/pull/329
 [#323]: https://github.com/munich-quantum-toolkit/workflows/pull/323
 [#321]: https://github.com/munich-quantum-toolkit/workflows/pull/321
