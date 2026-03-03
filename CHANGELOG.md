@@ -47,7 +47,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Removed
 
-- 🔥 Remove dedicated `run-mlir` MLIR output for ``reusable-change-detection.yml ([#300]) ([**@burgholzer**])
+- 🔥 Remove dedicated `run-mlir` MLIR output for `reusable-change-detection.yml` ([#300]) ([**@burgholzer**])
 
 ## [1.17.10] - 2026-01-04
 
@@ -304,6 +304,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#332]: https://github.com/munich-quantum-toolkit/workflows/pull/332
 [#330]: https://github.com/munich-quantum-toolkit/workflows/pull/330
 [#329]: https://github.com/munich-quantum-toolkit/workflows/pull/329
 [#323]: https://github.com/munich-quantum-toolkit/workflows/pull/323
