@@ -46,3 +46,4 @@ jobs:
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-sdist
           path: dist/*.tar.gz
+          archive: false

@@ -117,6 +117,7 @@ jobs:
         with:
           name: coverage-${{ inputs.runs-on }}
           path: coverage-*
+          archive: false
 
       - name: Show sccache stats
         run: sccache --show-stats
