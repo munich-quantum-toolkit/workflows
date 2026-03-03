@@ -9,17 +9,21 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- 📦️ Selectively disable archiving when uploading artifacts ([#332]) ([**@denialhaag**])
+
 ## [1.17.14] - 2026-03-01
 
 ### Fixed
 
-- 🐛 Update `setup-mlir` to `v1.2.1` to fix a bug preventing the action to run ([#330])
+- 🐛 Update [munich-quantum-software/setup-mlir] to `v1.2.1` to fix a bug preventing the action to run ([#330])
 
 ## [1.17.13] - 2026-03-01
 
 ### Changed
 
-- ⬆️ Update `setup-mlir` to `v1.2.0`, which brings support for LLVM 22 ([#329]) ([**@burgholzer**])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.2.0`, which brings support for LLVM 22 ([#329]) ([**@burgholzer**])
 
 ## [1.17.12] - 2026-02-18
 
@@ -29,7 +33,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Removed
 
-- 🔥 Remove the `nick-fields/retry` action on Windows builds, which put an artificial 15min limit on the build time ([#321]) ([**@burgholzer**])
+- 🔥 Remove the `nick-fields/retry` action on Windows builds, which put an artificial 15-minute limit on the build time ([#321]) ([**@burgholzer**])
 
 ## [1.17.11] - 2026-01-07
 
@@ -43,7 +47,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Removed
 
-- 🔥 remove dedicated `run-mlir` MLIR output for reusable-change-detection.yml ([#300]) ([**@burgholzer**])
+- 🔥 Remove dedicated `run-mlir` MLIR output for ``reusable-change-detection.yml ([#300]) ([**@burgholzer**])
 
 ## [1.17.10] - 2026-01-04
 
@@ -89,7 +93,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1175)._
 ### Added
 
 - ✨ Add step for checking if Python stub files are up to date ([#286]) ([**@denialhaag**])
-- ✨ Add optional `setup-mlir` input to allow setting up MLIR in the C++ and Python workflows ([#270]) ([**@denialhaag**], [**@burgholzer**])
+- ✨ Add optional [munich-quantum-software/setup-mlir] input to allow setting up MLIR in the C++ and Python workflows ([#270]) ([**@denialhaag**], [**@burgholzer**])
 
 ### Changed
 
