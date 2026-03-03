@@ -8,6 +8,9 @@
 
 name: Templating
 on:
+  push:
+    branches:
+      - main
   pull_request:
     paths:
       - ".github/workflows/templating.yml"
