@@ -9,9 +9,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.17.15] - 2026-03-11
+
 ### Changed
 
 - 📦️ Selectively disable archiving when uploading artifacts ([#332]) ([**@denialhaag**])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.3.0`, which brings full support for LLVM 22 including Windows debug builds ([#335]) ([**@burgholzer**])
 
 ## [1.17.14] - 2026-03-01
 
@@ -273,7 +276,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.14...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.15...HEAD
+[1.17.15]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.15
 [1.17.14]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.14
 [1.17.13]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.13
 [1.17.12]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.12
