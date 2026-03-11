@@ -13,9 +13,9 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Changed
 
-- 📦️ Selectively disable archiving when uploading artifacts ([#332]) ([**@denialhaag**])
-- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.3.0`, which brings full support for LLVM 22 including Windows debug builds ([#335]) ([**@burgholzer**])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.3.0`, which improves support for LLVM 22 by re-adding Windows Debug builds ([#335]) ([**@burgholzer**])
 - ⬆️ Update `cibuildwheel` to `v3.4.0` ([#335]) ([**@denialhaag**])
+- 📦️ Selectively disable archiving when uploading artifacts ([#332]) ([**@denialhaag**])
 
 ## [1.17.14] - 2026-03-01
 
@@ -27,7 +27,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Changed
 
-- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.2.0`, which brings support for LLVM 22 ([#329]) ([**@burgholzer**])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.2.0`, which adds support for LLVM 22 ([#329]) ([**@burgholzer**])
 
 ## [1.17.12] - 2026-02-18
 
@@ -43,7 +43,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Added
 
-- ✨ Download debug builds of LLVM for C++ tests on Windows ([#305]) ([**@burgholzer**])
+- ✨ Download Debug builds of LLVM for C++ tests on Windows ([#305]) ([**@burgholzer**])
 
 ### Changed
 
