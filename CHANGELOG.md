@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 - 📦️ Selectively disable archiving when uploading artifacts ([#332]) ([**@denialhaag**])
 - ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.3.0`, which brings full support for LLVM 22 including Windows debug builds ([#335]) ([**@burgholzer**])
+- ⬆️ Update `cibuildwheel` to `v3.4.0` ([#335]) ([**@denialhaag**])
 
 ## [1.17.14] - 2026-03-01
 
@@ -168,7 +169,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1160)._
 
 ### Changed
 
-- ⬆️ Update `cibuildwheel` to `v3.1` ([#157]) ([**@denialhaag**])
+- ⬆️ Update `cibuildwheel` to `v3.1.1` ([#157]) ([**@denialhaag**])
 
 ## [1.15.1] - 2025-07-29
 
@@ -242,7 +243,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1110)._
 
 ### Changed
 
-- ⬆️ Update `cibuildwheel` to `v3` ([#126]) ([**@burgholzer**])
+- ⬆️ Update `cibuildwheel` to `v3.0.0` ([#126]) ([**@burgholzer**])
 - 💚 Adapt file filter for the change detection to the new project structure regarding the Python bindings ([#119]) ([**@ystade**])
 
 ## [1.10.0] - 2025-05-23
@@ -308,6 +309,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#335]: https://github.com/munich-quantum-toolkit/workflows/pull/335
 [#332]: https://github.com/munich-quantum-toolkit/workflows/pull/332
 [#330]: https://github.com/munich-quantum-toolkit/workflows/pull/330
 [#329]: https://github.com/munich-quantum-toolkit/workflows/pull/329
