@@ -70,7 +70,6 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@e06108dd0aef18192324c70427afc47652e63a82 # v7.5.0
         with:
-          enable-cache: true
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
       # Set up sccache for faster builds
