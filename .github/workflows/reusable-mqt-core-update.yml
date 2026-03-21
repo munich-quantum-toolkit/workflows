@@ -187,18 +187,35 @@ jobs:
           git diff
       # Create a pull request to merge the changes into the main branch.
       - name: Create pull request
-        id: create-pull-request
         if: steps.compare-versions.outputs.update == 'true'
-        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
-        with:
-          token: ${{ steps.create-token.outputs.token }}
-          commit-message: "⬆️ Update `munich-quantum-toolkit/core`"
-          title: "⬆️ Update `munich-quantum-toolkit/core`"
-          body: |
-            This pull request updates the [munich-quantum-toolkit/core](https://github.com/munich-quantum-toolkit/core) dependency from munich-quantum-toolkit/core@${{ steps.get-used-version.outputs.revision }} (version v${{ steps.get-used-version.outputs.version }}) to munich-quantum-toolkit/core@${{ steps.determine-new-version-and-revision.outputs.new_revision }} (version v${{ steps.determine-new-version-and-revision.outputs.new_version }}).
+        env:
+          GH_TOKEN: ${{ steps.create-token.outputs.token }}
+          APP_ID: ${{ secrets.APP_ID }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          USED_VERSION: ${{ steps.get-used-version.outputs.version }}
+          USED_REVISION: ${{ steps.get-used-version.outputs.revision }}
+          NEW_VERSION: ${{ steps.determine-new-version-and-revision.outputs.new_version }}
+          NEW_REVISION: ${{ steps.determine-new-version-and-revision.outputs.new_revision }}
+        run: |
+          git config --global user.name "mqt-app[bot]"
+          git config --global user.email "${APP_ID}+mqt-app[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
-            **Full Changelog**: https://github.com/munich-quantum-toolkit/core/compare/${{ steps.get-used-version.outputs.revision }}...${{ steps.determine-new-version-and-revision.outputs.new_revision }}
-          branch: "update-mqt-core-${{ steps.determine-new-version-and-revision.outputs.new_revision }}"
-          labels: "dependencies,c++"
-          base: "main"
-          sign-commits: "true"
+          BRANCH_NAME="update-mqt-core-${NEW_REVISION}"
+          git checkout -b "$BRANCH_NAME"
+          git commit -a -m "⬆️ Update \`munich-quantum-toolkit/core\` from v${USED_VERSION} to v${NEW_VERSION}"
+          git push origin "$BRANCH_NAME" --force
+
+          cat <<EOF > pr_body.md
+          This pull request updates the [munich-quantum-toolkit/core](https://github.com/munich-quantum-toolkit/core) dependency from munich-quantum-toolkit/core@${USED_REVISION} (version v${USED_VERSION}) to munich-quantum-toolkit/core@${NEW_REVISION} (version v${NEW_VERSION}).
+
+          **Full Changelog**: https://github.com/munich-quantum-toolkit/core/compare/${USED_REVISION}...${NEW_REVISION}
+          EOF
+
+          gh pr create \
+            --title "⬆️ Update \`munich-quantum-toolkit/core\` from v${USED_VERSION} to v${NEW_VERSION}" \
+            --body-file pr_body.md \
+            --base "main" \
+            --label "dependencies,c++" \
+            --head "$BRANCH_NAME" \
+            || true
