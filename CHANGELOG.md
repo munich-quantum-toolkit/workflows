@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Added
+
+- 🤖 Add zizmor security analysis to CI ([#343]) ([**@burgholzer**])
+
 ### Changed
 
 - 🛂 Scope secrets for `reusable-mqt-core-update.yml` to an `mqt-app` GitHub environment ([#339]) ([**@burgholzer**])
@@ -313,6 +317,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#343]: https://github.com/munich-quantum-toolkit/workflows/pull/343
 [#339]: https://github.com/munich-quantum-toolkit/workflows/pull/339
 [#335]: https://github.com/munich-quantum-toolkit/workflows/pull/335
 [#332]: https://github.com/munich-quantum-toolkit/workflows/pull/332
