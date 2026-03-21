@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Changed
+
+- 🛂 Scope secrets for `reusable-mqt-core-update.yml` to an `mqt-app` GitHub environment ([#339]) ([**@burgholzer**])
+
 ## [1.17.15] - 2026-03-11
 
 ### Changed
@@ -309,6 +313,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#339]: https://github.com/munich-quantum-toolkit/workflows/pull/339
 [#335]: https://github.com/munich-quantum-toolkit/workflows/pull/335
 [#332]: https://github.com/munich-quantum-toolkit/workflows/pull/332
 [#330]: https://github.com/munich-quantum-toolkit/workflows/pull/330

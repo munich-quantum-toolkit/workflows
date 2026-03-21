@@ -34,6 +34,7 @@ jobs:
   update-mqt-core:
     name: ⬆️ Update MQT Core
     runs-on: ubuntu-slim
+    environment: mqt-app
     permissions:
       contents: write # Needed to push changes to the repository
       pull-requests: write # Needed to create pull requests.

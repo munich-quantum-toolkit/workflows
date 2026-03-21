@@ -4,6 +4,12 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+### Rely on MQT App secrets from `mqt-app` GitHub environment
+
+In accordance with the latest guidelines from the [zizmor] linter, the `reusable-mqt-core-update.yml` workflow now relies on the MQT App secrets from a dedicated `mqt-app` GitHub environment.
+This means that the `APP_ID` and `APP_PRIVATE_KEY` secrets are no longer required.
+Instead, the `APP_ID` and `APP_PRIVATE_KEY` secrets are now required in the `mqt-app` GitHub environment, which needs to be created in each of the repositories that use the `reusable-mqt-core-update.yml` workflow.
+
 ## [1.17.11]
 
 ### Removal of `run-mlir` output from change-detection
@@ -293,3 +299,4 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 [portable-mlir-toolchain]: https://github.com/munich-quantum-software/portable-mlir-toolchain
 [setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
+[zizmor]: https://docs.zizmor.sh/
