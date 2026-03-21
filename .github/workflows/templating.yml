@@ -27,6 +27,7 @@ jobs:
   render-template:
     name: Render template
     runs-on: ubuntu-slim
+    environment: mqt-app
     permissions:
       contents: write # Needed to push changes to the repository
       pull-requests: write # Needed to create a PR
