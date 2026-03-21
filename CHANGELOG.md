@@ -17,6 +17,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 - 🛂 Scope secrets for `reusable-mqt-core-update.yml` to an `mqt-app` GitHub environment ([#339]) ([**@burgholzer**])
 
+### Fixed
+
+- 💚 Tweak uv caching so that workflows do not fail on `main` branches due to nothing being cached ([#344]) ([**@burgholzer**])
+
 ## [1.17.15] - 2026-03-11
 
 ### Changed
@@ -317,6 +321,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#344]: https://github.com/munich-quantum-toolkit/workflows/pull/344
 [#343]: https://github.com/munich-quantum-toolkit/workflows/pull/343
 [#339]: https://github.com/munich-quantum-toolkit/workflows/pull/339
 [#335]: https://github.com/munich-quantum-toolkit/workflows/pull/335
