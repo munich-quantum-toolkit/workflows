@@ -4,6 +4,11 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.18.1]
+
+To reduce complications when uploading artifacts during deployment to PyPI, we are reverting changes made in [1.17.15].
+The `pattern` passed to [actions/upload-artifact] can be `cibw-` again.
+
 ## [1.18.0]
 
 ### Rely on MQT App secrets from `mqt-app` GitHub environment
@@ -11,6 +16,13 @@ This document describes breaking changes and how to upgrade. For a complete list
 In accordance with the latest guidelines from the [zizmor] linter, the `reusable-mqt-core-update.yml` workflow now relies on the MQT App secrets from a dedicated `mqt-app` GitHub environment.
 This means that the `APP_ID` and `APP_PRIVATE_KEY` secrets are no longer read from organization-wide secrets.
 Instead, they must now be configured in a dedicated `mqt-app` GitHub environment, which needs to be created in each repository that uses the `reusable-mqt-core-update.yml` workflow.
+
+## [1.17.15]
+
+Thanks to a change in [actions/upload-artifact], it is now possible to not archive artifacts before uploading them.
+We make use of this in `reusable-python-packaging-sdist.yml` and `reusable-python-packaging-wheel-build.yml`.
+As a result, the `pattern` passed to [actions/upload-artifact] has to be adjusted.
+For example, `cibw-` needs to be replaced with `mqt_bench-`.
 
 ## [1.17.11]
 
@@ -282,8 +294,10 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.0...HEAD
-[1.18.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.11...v1.18.0
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.1...HEAD
+[1.18.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.0...v1.18.1
+[1.18.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.15...v1.18.0
+[1.17.15]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.11...v1.17.15
 [1.17.11]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.6...v1.17.11
 [1.17.6]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.5...v1.17.6
 [1.17.5]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...v1.17.5
@@ -300,6 +314,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- General links -->
 
+[actions/download-artifact]: https://github.com/actions/download-artifact
+[actions/upload-artifact]: https://github.com/actions/upload-artifact
 [portable-mlir-toolchain]: https://github.com/munich-quantum-software/portable-mlir-toolchain
 [setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
 [zizmor]: https://docs.zizmor.sh/

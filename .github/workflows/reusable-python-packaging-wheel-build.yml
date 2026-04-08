@@ -45,4 +45,3 @@ jobs:
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheel
           path: dist/*.whl
-          archive: false
