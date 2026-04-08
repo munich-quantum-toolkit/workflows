@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.18.0] - 2026-04-08
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1180)._
+
 ### Added
 
 - 🤖 Add zizmor security analysis to CI ([#343]) ([**@burgholzer**])
@@ -289,7 +293,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.15...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.0...HEAD
+[1.18.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.18.0
 [1.17.15]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.15
 [1.17.14]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.14
 [1.17.13]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.13
