@@ -4,6 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [1.18.0]
+
 ### Rely on MQT App secrets from `mqt-app` GitHub environment
 
 In accordance with the latest guidelines from the [zizmor] linter, the `reusable-mqt-core-update.yml` workflow now relies on the MQT App secrets from a dedicated `mqt-app` GitHub environment.
@@ -280,9 +282,10 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.12...HEAD
-[1.17.11]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.11
-[1.17.6]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.6
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.0...HEAD
+[1.18.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.11...v1.18.0
+[1.17.11]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.6...v1.17.11
+[1.17.6]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.5...v1.17.6
 [1.17.5]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.3...v1.17.5
 [1.17.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.0...v1.17.3
 [1.17.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.16.0...v1.17.0
