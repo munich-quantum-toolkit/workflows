@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [1.18.1] - 2026-04-08
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1181)._
+
+### Changed
+
+- 📦️ Archive packaging-related artifacts again ([#356]) ([**@denialhaag**])
+
 ## [1.18.0] - 2026-04-08
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1180)._
@@ -26,6 +34,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1180)._
 - 💚 Tweak uv caching so that workflows do not fail on `main` branches due to nothing being cached ([#344]) ([**@burgholzer**])
 
 ## [1.17.15] - 2026-03-11
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#11715)._
 
 ### Changed
 
@@ -293,7 +303,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.1...HEAD
+[1.18.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.18.1
 [1.18.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.18.0
 [1.17.15]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.15
 [1.17.14]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.14
@@ -326,6 +337,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#356]: https://github.com/munich-quantum-toolkit/workflows/pull/356
 [#344]: https://github.com/munich-quantum-toolkit/workflows/pull/344
 [#343]: https://github.com/munich-quantum-toolkit/workflows/pull/343
 [#339]: https://github.com/munich-quantum-toolkit/workflows/pull/339
