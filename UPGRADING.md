@@ -9,8 +9,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 ### Rely on MQT App secrets from `mqt-app` GitHub environment
 
 In accordance with the latest guidelines from the [zizmor] linter, the `reusable-mqt-core-update.yml` workflow now relies on the MQT App secrets from a dedicated `mqt-app` GitHub environment.
-This means that the `APP_ID` and `APP_PRIVATE_KEY` secrets are no longer required.
-Instead, the `APP_ID` and `APP_PRIVATE_KEY` secrets are now required in the `mqt-app` GitHub environment, which needs to be created in each of the repositories that use the `reusable-mqt-core-update.yml` workflow.
+This means that the `APP_ID` and `APP_PRIVATE_KEY` secrets are no longer read from organization-wide secrets.
+Instead, they must now be configured in a dedicated `mqt-app` GitHub environment, which needs to be created in each repository that uses the `reusable-mqt-core-update.yml` workflow.
 
 ## [1.17.11]
 
