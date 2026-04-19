@@ -13,7 +13,7 @@ on:
       runs-on:
         description: >
           The macOS runner image to use. Defaults to 'macos-latest'.
-          This can be any valid macOS runner image, such as 'macos-13', 'macos-14', or 'macos-15'.
+          This can be any valid macOS runner image, such as 'macos-15', 'macos-26', or 'macos-26-intel'.
         default: "macos-latest"
         type: string
       config:
