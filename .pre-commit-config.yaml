@@ -14,8 +14,6 @@ ci:
   autofix_commit_msg: "🎨 pre-commit fixes"
 
 repos:
-  # Priority 0: Fast validation and independent fixers
-
   ## Standard hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -25,7 +23,7 @@ repos:
       - id: end-of-file-fixer
         priority: 1
       - id: trailing-whitespace
-        priority: 1
+        priority: 2
 
   ## Check JSON schemata
   - repo: https://github.com/python-jsonschema/check-jsonschema
@@ -34,31 +32,31 @@ repos:
       - id: check-github-workflows
         priority: 0
 
-  ## Catch common capitalization mistakes
+  ## Check for common capitalization mistakes
   - repo: local
     hooks:
       - id: disallow-caps
         name: Disallow improper capitalization
         language: pygrep
-        entry: '\b(?:Numpy|Cmake|CCache|Github|PyTest|Mqt|Tum)\b'
-        exclude: .pre-commit-config.yaml
+        entry: \b(Nanobind|Numpy|Cmake|CCache|Github|PyTest|Mqt|Tum)\b
+        exclude: ^(\.pre-commit-config\.yaml)$
         priority: 0
 
-  ## Check for spelling
+  ## Check for typos
   - repo: https://github.com/adhtruong/mirrors-typos
     rev: v1.45.0
     hooks:
       - id: typos
-        priority: 0
+        priority: 3
 
-  ## Check for license headers
+  ## Check license headers
   - repo: https://github.com/emzeat/mz-lictools
     rev: v2.9.0
     hooks:
       - id: license-tools
-        priority: 0
+        priority: 4
 
-  ## Tidy up BibTeX files
+  ## Format BibTeX files with bibtex-tidy
   - repo: https://github.com/FlamingTempura/bibtex-tidy
     rev: v1.14.0
     hooks:
@@ -75,9 +73,7 @@ repos:
             "--trailing-commas",
             "--remove-empty-fields",
           ]
-        priority: 0
-
-  # Priority 1: Second-pass fixers
+        priority: 5
 
   ## Format configuration files with prettier
   - repo: https://github.com/rbubley/mirrors-prettier
@@ -85,9 +81,7 @@ repos:
     hooks:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json, json5]
-        priority: 1
-
-  # Priority 2+: Final checks and fixers
+        priority: 5
 
   ## Check workflows with zizmor
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
@@ -102,4 +96,4 @@ repos:
             "--persona=pedantic",
             "--fix",
           ]
-        priority: 2
+        priority: 6
