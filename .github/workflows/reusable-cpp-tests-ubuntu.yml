@@ -173,6 +173,7 @@ jobs:
           cmake --preset "$PRESET_NAME" "$LIT_ARG"
 
       - name: Build
+        if: ${{ !inputs.use-cmake-presets }}
         env:
           CONFIG: ${{ inputs.config }}
         run: cmake --build build --config $CONFIG
