@@ -51,6 +51,14 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
         type: string
+      use-cmake-presets:
+        description: "Whether to use CMake presets for configuration and build."
+        default: false
+        type: boolean
+      preset-name:
+        description: "The CMake preset to use for configuration and build."
+        default: ""
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.config }}
@@ -103,6 +111,7 @@ jobs:
         run: uv pip install lit
 
       - name: Configure CMake
+        if: ${{ !inputs.use-cmake-presets }}
         env:
           CONFIG: ${{ inputs.config }}
           CMAKE_ARGS: ${{ inputs.cmake-args }}
@@ -115,11 +124,26 @@ jobs:
           fi
           cmake -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $cmake_args $LIT_ARG
 
+      - name: Configure CMake with cmake-presets
+        if: ${{ inputs.use-cmake-presets }}
+        env:
+          PRESET_NAME: ${{ inputs.preset-name }}
+          LIT_ARG: ${{ inputs.setup-mlir && format('-DLLVM_EXTERNAL_LIT={0}/.venv/Scripts/lit.exe', github.workspace) || '' }}
+        run: cmake --preset "$PRESET_NAME" "$LIT_ARG"
+
       - name: Build
+        if: ${{ !inputs.use-cmake-presets }}
         timeout-minutes: 60
         env:
           CONFIG: ${{ inputs.config }}
         run: cmake --build build --config $CONFIG
+
+      - name: Build with cmake-presets
+        if: ${{ inputs.use-cmake-presets }}
+        timeout-minutes: 60
+        env:
+          PRESET_NAME: ${{ inputs.preset-name }}
+        run: cmake --build --preset "$PRESET_NAME"
 
       - name: Test
         env:
