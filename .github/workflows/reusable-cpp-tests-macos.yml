@@ -185,6 +185,13 @@ jobs:
         run: cmake --build --preset "$PRESET_NAME"
 
       - name: Test
+        if: ${{ !inputs.use-cmake-presets }}
         env:
           CONFIG: ${{ inputs.config }}
         run: ctest -C $CONFIG --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
+
+      - name: Test with cmake-presets
+        if: ${{ inputs.use-cmake-presets }}
+        env:
+          PRESET_NAME: ${{ inputs.preset-name }}
+        run: ctest --preset "$PRESET_NAME"
