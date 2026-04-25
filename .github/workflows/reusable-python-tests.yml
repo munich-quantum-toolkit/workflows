@@ -87,7 +87,7 @@ jobs:
           llvm-version: ${{ inputs.llvm-version }}
 
       - name: Set up mold as linker (Linux only)
-        uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
+        uses: rui314/setup-mold@9c9c13bf4c3f1adef0cc596abc155580bcb04444 # v1
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
