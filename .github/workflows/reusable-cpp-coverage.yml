@@ -74,16 +74,16 @@ jobs:
 
       # set up ccache for faster builds
       - name: Set up ccache
-        uses: Chocobo1/setup-ccache-action@f433cb1e0b3ed576864d7fc361ce43b23b181e67 # v1.5.4
+        uses: Chocobo1/setup-ccache-action@7e813cbdf161f77737576f5c370b2810dbae058c # v1.5.7
         with:
           prepend_symlinks_to_path: false
           override_cache_key: c++-coverage
 
       - name: Set up mold as linker
-        uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
+        uses: rui314/setup-mold@9c9c13bf4c3f1adef0cc596abc155580bcb04444 # v1
 
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           python-version: 3.13
           activate-environment: true
