@@ -31,13 +31,9 @@ on:
         default: "21.1.8"
         type: string
       use-cmake-presets:
-        description: "Whether to use CMake presets for configuration and build."
+        description: "Whether to use cmake-presets. Assumes that a 'coverage' preset is defined"
         default: false
         type: boolean
-      preset-name:
-        description: "The CMake preset to use for configuration and build."
-        default: ""
-        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-coverage
@@ -115,14 +111,13 @@ jobs:
       - name: Configure CMake with cmake-presets
         if: ${{ inputs.use-cmake-presets }}
         env:
-          PRESET_NAME: ${{ inputs.preset-name }}
           SETUP_MLIR: ${{ inputs.setup-mlir }}
         run: |
           LIT_ARG=""
             if [ "$SETUP_MLIR" = "true" ]; then
               LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
             fi
-          cmake --preset "$PRESET_NAME" -DENABLE_COVERAGE=ON "$LIT_ARG"
+          cmake --preset coverage "$LIT_ARG"
 
       - name: Build
         if: ${{ !inputs.use-cmake-presets }}
@@ -130,9 +125,7 @@ jobs:
 
       - name: Build with cmake-presets
         if: ${{ inputs.use-cmake-presets }}
-        env:
-          PRESET_NAME: ${{ inputs.preset-name }}
-        run: cmake --build --preset "$PRESET_NAME"
+        run: cmake --build --preset coverage
 
       - name: Test
         if: ${{ !inputs.use-cmake-presets }}
@@ -140,9 +133,7 @@ jobs:
 
       - name: Test with cmake-presets
         if: ${{ inputs.use-cmake-presets }}
-        env:
-          PRESET_NAME: ${{ inputs.preset-name }}
-        run: ctest --preset "$PRESET_NAME"
+        run: ctest --preset coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0

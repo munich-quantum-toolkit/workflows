@@ -54,7 +54,7 @@ on:
         default: "21.1.8"
         type: string
       use-cmake-presets:
-        description: "Whether to use CMake presets for configuration and build."
+        description: "Whether to use cmake-presets"
         default: false
         type: boolean
       preset-name:
