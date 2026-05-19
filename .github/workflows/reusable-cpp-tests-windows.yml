@@ -110,7 +110,7 @@ jobs:
         if: ${{ inputs.setup-mlir }}
         run: |
           uv pip install lit
-          echo "LIT_BIN=$(which lit)" >> $GITHUB_ENV
+          echo "LIT_BIN=$GITHUB_WORKSPACE/.venv/Scripts/lit.exe" >> $GITHUB_ENV
 
       - name: Configure CMake
         if: ${{ !inputs.use-cmake-presets }}
