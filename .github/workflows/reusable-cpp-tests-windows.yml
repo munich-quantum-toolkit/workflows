@@ -108,7 +108,9 @@ jobs:
 
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
-        run: uv pip install lit
+        run: |
+          uv pip install lit
+          echo "LIT_BIN=$(format('{0}/.venv/Scripts/lit.exe', github.workspace))" >> $GITHUB_ENV
 
       - name: Configure CMake
         if: ${{ !inputs.use-cmake-presets }}
@@ -128,8 +130,7 @@ jobs:
         if: ${{ inputs.use-cmake-presets }}
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
-          LIT_ARG: ${{ inputs.setup-mlir && format('-DLLVM_EXTERNAL_LIT={0}/.venv/Scripts/lit.exe', github.workspace) || '' }}
-        run: cmake --preset "$PRESET_NAME" "$LIT_ARG"
+        run: cmake --preset "$PRESET_NAME"
 
       - name: Build
         if: ${{ !inputs.use-cmake-presets }}

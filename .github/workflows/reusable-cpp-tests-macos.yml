@@ -108,7 +108,9 @@ jobs:
 
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
-        run: uv pip install lit
+        run: |
+          uv pip install lit
+          echo "LIT_BIN=$(which lit)" >> $GITHUB_ENV
 
       - name: Set up GCC
         if: ${{ startsWith(inputs.compiler, 'gcc-') }}
@@ -164,13 +166,7 @@ jobs:
         if: ${{ inputs.use-cmake-presets }}
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
-          SETUP_MLIR: ${{ inputs.setup-mlir }}
-        run: |
-          LIT_ARG=""
-          if [ "$SETUP_MLIR" = "true" ]; then
-            LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
-          fi
-          cmake --preset "$PRESET_NAME" "$LIT_ARG"
+        run: cmake --preset "$PRESET_NAME"
 
       - name: Build
         if: ${{ !inputs.use-cmake-presets }}
