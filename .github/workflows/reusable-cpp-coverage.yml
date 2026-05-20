@@ -10,10 +10,6 @@ name: 🇨 • Coverage
 on:
   workflow_call:
     inputs:
-      cmake-args:
-        description: "Additional arguments to pass to CMake"
-        default: "-G Ninja"
-        type: string
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -30,10 +26,6 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
         type: string
-      use-cmake-presets:
-        description: "Whether to use cmake-presets. Assumes that a 'coverage' preset is defined"
-        default: false
-        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-coverage
@@ -99,35 +91,12 @@ jobs:
           echo "LIT_BIN=$(which lit)" >> $GITHUB_ENV
 
       - name: Configure CMake
-        if: ${{ !inputs.use-cmake-presets }}
-        env:
-          CMAKE_ARGS: ${{ inputs.cmake-args }}
-          SETUP_MLIR: ${{ inputs.setup-mlir }}
-        run: |
-          LIT_ARG=""
-          if [ "$SETUP_MLIR" = "true" ]; then
-            LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
-          fi
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS "$LIT_ARG"
-
-      - name: Configure CMake with cmake-presets
-        if: ${{ inputs.use-cmake-presets }}
         run: cmake --preset coverage
 
       - name: Build
-        if: ${{ !inputs.use-cmake-presets }}
-        run: cmake --build build --config Debug
-
-      - name: Build with cmake-presets
-        if: ${{ inputs.use-cmake-presets }}
         run: cmake --build --preset coverage
 
       - name: Test
-        if: ${{ !inputs.use-cmake-presets }}
-        run: ctest -C Debug --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
-
-      - name: Test with cmake-presets
-        if: ${{ inputs.use-cmake-presets }}
         run: ctest --preset coverage
 
       - name: Upload coverage to Codecov

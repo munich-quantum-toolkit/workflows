@@ -18,10 +18,6 @@ on:
         description: "Whether to only lint files that have changed"
         default: true
         type: boolean
-      cmake-args:
-        description: "Additional arguments to pass to CMake"
-        default: ""
-        type: string
       cpp-linter-extra-args:
         description: "Extra arguments to pass to the cpp-linter"
         default: "-std=c++17"
@@ -58,10 +54,6 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters like 'a832a52')"
         default: "21.1.8"
         type: string
-      use-cmake-presets:
-        description: "Whether to use cmake-presets. Assumes that a 'lint' preset is defined"
-        default: false
-        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-linter
@@ -162,30 +154,10 @@ jobs:
             uv pip install "${pkgs_array[@]}"
           fi
 
-      # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
-        if: ${{ !inputs.use-cmake-presets }}
-        env:
-          CMAKE_ARGS: ${{ inputs.cmake-args }}
-        run: |
-          echo $CC
-          echo $CXX
-          $CC --version
-          $CXX --version
-          echo $MLIR_DIR
-          echo $LLVM_DIR
-          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug $CMAKE_ARGS
-
-      - name: Generate compilation database with cmake-presets
-        if: ${{ inputs.use-cmake-presets }}
         run: cmake --preset lint
 
       - name: Build
-        if: ${{ inputs.build-project && !inputs.use-cmake-presets }}
-        run: cmake --build build --config Debug
-
-      - name: Build with cmake-presets
-        if: ${{ inputs.build-project && inputs.use-cmake-presets }}
         run: cmake --build --preset lint
 
       # runs the cpp-linter action using the generated compilation database and the specified clang version

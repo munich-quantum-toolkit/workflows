@@ -16,12 +16,6 @@ on:
           This can be any valid macOS runner image, such as 'macos-15', 'macos-26', or 'macos-26-intel'.
         default: "macos-latest"
         type: string
-      config:
-        description: >
-          The build type to use. Defaults to 'Release'.
-          This can be any valid CMake build type, such as 'Debug' or 'Release'.
-        default: "Release"
-        type: string
       compiler:
         description: >
           The compiler to use. Defaults to 'clang'.
@@ -30,12 +24,6 @@ on:
           If 'gcc-XX' is selected, this will use `gcc-XX` from Homebrew, where XX is the version number (e.g., 'gcc-14').
           A specific version of Clang can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
         default: "clang"
-        type: string
-      cmake-args:
-        description: >
-          Additional arguments to pass to CMake. Defaults to an empty string.
-          This can be any valid CMake argument, such as '-DBUILD_SHARED_LIBS=ON'.
-        default: ""
         type: string
       setup-z3:
         description: "Whether to set up Z3"
@@ -53,17 +41,13 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
         type: string
-      use-cmake-presets:
-        description: "Whether to use cmake-presets"
-        default: false
-        type: boolean
       preset-name:
         description: "The CMake preset to use for configuration and build."
         default: ""
         type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.use-cmake-presets && inputs.preset-name || inputs.config }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.preset-name }}
   cancel-in-progress: true
 
 permissions:
@@ -71,7 +55,7 @@ permissions:
 
 jobs:
   cpp-tests-macos:
-    name: 🍎 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.use-cmake-presets && inputs.preset-name || inputs.config }}
+    name: 🍎 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.preset-name }}
     runs-on: ${{ inputs.runs-on }}
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
@@ -150,44 +134,16 @@ jobs:
           fi
 
       - name: Configure CMake
-        if: ${{ !inputs.use-cmake-presets }}
-        env:
-          CONFIG: ${{ inputs.config }}
-          CMAKE_ARGS: ${{ inputs.cmake-args }}
-          SETUP_MLIR: ${{ inputs.setup-mlir }}
-        run: |
-          LIT_ARG=""
-          if [ "$SETUP_MLIR" = "true" ]; then
-            LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
-          fi
-          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS "$LIT_ARG"
-
-      - name: Configure CMake with cmake-presets
-        if: ${{ inputs.use-cmake-presets }}
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
         run: cmake --preset "$PRESET_NAME"
 
       - name: Build
-        if: ${{ !inputs.use-cmake-presets }}
-        env:
-          CONFIG: ${{ inputs.config }}
-        run: cmake --build build --config $CONFIG
-
-      - name: Build with cmake-presets
-        if: ${{ inputs.use-cmake-presets }}
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
         run: cmake --build --preset "$PRESET_NAME"
 
       - name: Test
-        if: ${{ !inputs.use-cmake-presets }}
-        env:
-          CONFIG: ${{ inputs.config }}
-        run: ctest -C $CONFIG --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
-
-      - name: Test with cmake-presets
-        if: ${{ inputs.use-cmake-presets }}
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
         run: ctest --preset "$PRESET_NAME"
