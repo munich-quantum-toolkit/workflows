@@ -6,14 +6,12 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [2.0.0]
 
-This release adapts all C++ workflows to require CMake presets.
+This release adapts all C++ workflows to require [CMake presets], providing a standardized and reproducible way to configure builds across different platforms while eliminating scattered configuration with string-based arguments.
 
-In particular, `reusable-cpp-tests-macos.yml`, `reusable-cpp-tests-ubuntu.yml`, and `reusable-cpp-tests-windows.yml` have a new required `preset-name` input.
-The `cmake-args` and `config` inputs are no longer available.
-If a debug build of MLIR is required on Windows, the newly added `debug-mlir` flag may be used.
+The testing workflows for macOS, Ubuntu, and Windows (`reusable-cpp-tests-macos.yml`, `reusable-cpp-tests-ubuntu.yml`, and `reusable-cpp-tests-windows.yml`) now require a `preset-name` input and no longer accept `cmake-args` or `config` inputs.
+On Windows, the new `debug-mlir` flag can be used for debug MLIR builds.
 
-`reusable-cpp-coverage.yml` and `reusable-cpp-linter.yml` require the definition of `coverage` and `lint` presets, respectively.
-They also lose the `cmake-args` input.
+The coverage and linter workflows (`reusable-cpp-coverage.yml` and `reusable-cpp-linter.yml`) require `coverage` and `lint` presets, respectively, and no longer accept `cmake-args`.
 
 An exemplary `CMakePresets.json` can be found below.
 
@@ -487,3 +485,4 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 [portable-mlir-toolchain]: https://github.com/munich-quantum-software/portable-mlir-toolchain
 [setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
 [zizmor]: https://docs.zizmor.sh/
+[CMake presets]: https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html

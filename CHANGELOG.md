@@ -15,7 +15,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#200)._
 
 ### Changed
 
-- 🚸 Adapt C++ workflows to require CMake presets ([#363]) ([**@denialhaag**])
+- 🚸 Adapt C++ workflows to require [CMake presets] ([#363]) ([**@denialhaag**])
 - ♻️ Add `mlir-debug` flag for requesting debug build of MLIR on Windows ([#363]) ([**@denialhaag**])
 
 ## [1.18.1] - 2026-04-09
@@ -408,3 +408,4 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 [GitHub Release Notes]: https://github.com/munich-quantum-toolkit/workflows/releases
 [munich-quantum-software/setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
+[CMake presets]: https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html
