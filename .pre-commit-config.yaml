@@ -85,7 +85,7 @@ repos:
 
   ## Check workflows with zizmor
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: v1.24.1
+    rev: v1.25.0
     hooks:
       - id: zizmor
         args:
