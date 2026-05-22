@@ -16,12 +16,6 @@ on:
           This can be any valid Ubuntu runner image, such as 'ubuntu-24.04' or its ARM variant 'ubuntu-24.04-arm'.
         default: "ubuntu-24.04"
         type: string
-      config:
-        description: >
-          The build type to use. Defaults to 'Release'.
-          This can be any valid CMake build type, such as 'Debug' or 'Release'.
-        default: "Release"
-        type: string
       compiler:
         description: >
           The compiler to use. Defaults to 'gcc'.
@@ -30,12 +24,6 @@ on:
           If 'clang' is selected, the default Clang compiler will be used.
           A specific version of Clang can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
         default: "gcc"
-        type: string
-      cmake-args:
-        description: >
-          Additional arguments to pass to CMake. Defaults to an empty string.
-          This can be any valid CMake argument, such as '-DBUILD_SHARED_LIBS=ON'.
-        default: ""
         type: string
       setup-z3:
         description: "Whether to set up Z3"
@@ -53,9 +41,13 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
         type: string
+      preset-name:
+        description: "The CMake preset to use for configuration and build"
+        required: true
+        type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.config }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.preset-name }}
   cancel-in-progress: true
 
 permissions:
@@ -63,7 +55,7 @@ permissions:
 
 jobs:
   cpp-tests-ubuntu:
-    name: 🐧 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.config }}
+    name: 🐧 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.preset-name }}
     runs-on: ${{ inputs.runs-on }}
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
@@ -103,7 +95,9 @@ jobs:
 
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
-        run: uv pip install lit
+        run: |
+          uv pip install lit
+          echo "LIT_BIN=$(which lit)" >> $GITHUB_ENV
 
       - name: Set up default Clang
         if: ${{ inputs.compiler == 'clang' }}
@@ -141,22 +135,15 @@ jobs:
 
       - name: Configure CMake
         env:
-          CONFIG: ${{ inputs.config }}
-          CMAKE_ARGS: ${{ inputs.cmake-args }}
-          SETUP_MLIR: ${{ inputs.setup-mlir }}
-        run: |
-          LIT_ARG=""
-          if [ "$SETUP_MLIR" = "true" ]; then
-            LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
-          fi
-          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=$CONFIG $CMAKE_ARGS "$LIT_ARG"
+          PRESET_NAME: ${{ inputs.preset-name }}
+        run: cmake --preset "$PRESET_NAME"
 
       - name: Build
         env:
-          CONFIG: ${{ inputs.config }}
-        run: cmake --build build --config $CONFIG
+          PRESET_NAME: ${{ inputs.preset-name }}
+        run: cmake --build --preset "$PRESET_NAME"
 
       - name: Test
         env:
-          CONFIG: ${{ inputs.config }}
-        run: ctest -C $CONFIG --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
+          PRESET_NAME: ${{ inputs.preset-name }}
+        run: ctest --preset "$PRESET_NAME"

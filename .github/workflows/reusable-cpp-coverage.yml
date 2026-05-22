@@ -10,10 +10,6 @@ name: 🇨 • Coverage
 on:
   workflow_call:
     inputs:
-      cmake-args:
-        description: "Additional arguments to pass to CMake"
-        default: "-G Ninja"
-        type: string
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -90,24 +86,18 @@ jobs:
 
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
-        run: uv pip install lit
+        run: |
+          uv pip install lit
+          echo "LIT_BIN=$(which lit)" >> $GITHUB_ENV
 
       - name: Configure CMake
-        env:
-          CMAKE_ARGS: ${{ inputs.cmake-args }}
-          SETUP_MLIR: ${{ inputs.setup-mlir }}
-        run: |
-          LIT_ARG=""
-          if [ "$SETUP_MLIR" = "true" ]; then
-            LIT_ARG="-DLLVM_EXTERNAL_LIT=$(which lit)"
-          fi
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON $CMAKE_ARGS "$LIT_ARG"
+        run: cmake --preset coverage
 
       - name: Build
-        run: cmake --build build --config Debug
+        run: cmake --build --preset coverage
 
       - name: Test
-        run: ctest -C Debug --output-on-failure --test-dir build --repeat until-pass:3 --timeout 600
+        run: ctest --preset coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0

@@ -18,10 +18,6 @@ on:
         description: "Whether to only lint files that have changed"
         default: true
         type: boolean
-      cmake-args:
-        description: "Additional arguments to pass to CMake"
-        default: ""
-        type: string
       cpp-linter-extra-args:
         description: "Extra arguments to pass to the cpp-linter"
         default: "-std=c++17"
@@ -158,22 +154,12 @@ jobs:
             uv pip install "${pkgs_array[@]}"
           fi
 
-      # generate a compilation database (assumes that the CMake project has `CMAKE_EXPORT_COMPILE_COMMANDS` set)
       - name: Generate compilation database
-        env:
-          CMAKE_ARGS: ${{ inputs.cmake-args }}
-        run: |
-          echo $CC
-          echo $CXX
-          $CC --version
-          $CXX --version
-          echo $MLIR_DIR
-          echo $LLVM_DIR
-          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug $CMAKE_ARGS
+        run: cmake --preset lint
 
       - name: Build
         if: ${{ inputs.build-project }}
-        run: cmake --build build --config Debug
+        run: cmake --build --preset lint
 
       # runs the cpp-linter action using the generated compilation database and the specified clang version
       - name: Run cpp-linter
