@@ -10,6 +10,7 @@ This release adapts all C++ workflows to require `cmake-presets`.
 
 In particular, `reusable-cpp-tests-macos.yml`, `reusable-cpp-tests-ubuntu.yml`, and `reusable-cpp-tests-windows.yml` have a new required `preset-name` input.
 The `cmake-args` and `config` inputs are no longer available.
+If a debug build of MLIR is required on Windows, the newly added `debug-mlir` flag may be used.
 
 `reusable-cpp-coverage.yml` and `reusable-cpp-linter.yml` require the definition of `coverage` and `lint` presets, respectively.
 They also lose the `cmake-args` input.

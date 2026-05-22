@@ -42,7 +42,7 @@ on:
         default: "21.1.8"
         type: string
       preset-name:
-        description: "The CMake preset to use for configuration and build."
+        description: "The CMake preset to use for configuration and build"
         required: true
         type: string
 

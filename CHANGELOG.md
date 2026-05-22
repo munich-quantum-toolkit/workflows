@@ -16,6 +16,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#200)._
 ### Changed
 
 - 🚸 Adapt C++ workflows to require `cmake-presets` ([#363]) ([**@denialhaag**])
+- ♻️ Add `mlir-debug` flag for requesting debug build of MLIR on Windows ([#363]) ([**@denialhaag**])
 
 ## [1.18.1] - 2026-04-09
 
