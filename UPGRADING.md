@@ -6,7 +6,7 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [2.0.0]
 
-This release adapts all C++ workflows to require `cmake-presets`.
+This release adapts all C++ workflows to require CMake presets.
 
 In particular, `reusable-cpp-tests-macos.yml`, `reusable-cpp-tests-ubuntu.yml`, and `reusable-cpp-tests-windows.yml` have a new required `preset-name` input.
 The `cmake-args` and `config` inputs are no longer available.
