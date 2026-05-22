@@ -4,6 +4,172 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [2.0.0]
+
+This release adapts all C++ workflows to require `cmake-presets`.
+
+In particular, `reusable-cpp-tests-macos.yml`, `reusable-cpp-tests-ubuntu.yml`, and `reusable-cpp-tests-windows.yml` have a new required `preset-name` input.
+The `cmake-args` and `config` inputs are no longer available.
+
+`reusable-cpp-coverage.yml` and `reusable-cpp-linter.yml` require the definition of `coverage` and `lint` presets, respectively.
+They also lose the `cmake-args` input.
+
+An exemplary `CMakePresets.json` can be found below.
+
+```json
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "MLIR_DIR": "$env{MLIR_DIR}"
+      }
+    },
+    {
+      "name": "base-unix",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "inList",
+        "string": "${hostSystemName}",
+        "list": ["Linux", "Darwin"]
+      },
+      "description": "Default configuration for Linux and macOS builds. Uses the Ninja generator",
+      "generator": "Ninja"
+    },
+    {
+      "name": "base-windows",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "description": "Default configuration for Windows builds. Uses the default generator"
+    },
+    {
+      "name": "debug",
+      "inherits": "base-unix",
+      "displayName": "Debug config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "LLVM_ENABLE_ASSERTIONS": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "inherits": "base-unix",
+      "displayName": "Release config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "coverage",
+      "inherits": "base-unix",
+      "displayName": "Coverage config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "ENABLE_COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "lint",
+      "inherits": "base-unix",
+      "displayName": "Lint config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_MQT_CORE_BENCHMARKS": "ON",
+        "BUILD_MQT_CORE_BINDINGS": "ON"
+      }
+    },
+    {
+      "name": "debug-windows",
+      "inherits": "base-windows",
+      "displayName": "Windows Debug config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "LLVM_ENABLE_ASSERTIONS": "ON"
+      }
+    },
+    {
+      "name": "release-windows",
+      "inherits": "base-windows",
+      "displayName": "Windows Release config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "coverage",
+      "configurePreset": "coverage"
+    },
+    {
+      "name": "lint",
+      "configurePreset": "lint"
+    },
+    {
+      "name": "debug-windows",
+      "configurePreset": "debug-windows",
+      "configuration": "Debug"
+    },
+    {
+      "name": "release-windows",
+      "configurePreset": "release-windows",
+      "configuration": "Release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "debug",
+      "inherits": "base",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "inherits": "base",
+      "configurePreset": "release"
+    },
+    {
+      "name": "coverage",
+      "inherits": "base",
+      "configurePreset": "coverage"
+    },
+    {
+      "name": "debug-windows",
+      "inherits": "base",
+      "configurePreset": "debug-windows",
+      "configuration": "Debug"
+    },
+    {
+      "name": "release-windows",
+      "inherits": "base",
+      "configurePreset": "release-windows",
+      "configuration": "Release"
+    }
+  ]
+}
+```
+
 ## [1.18.1]
 
 To reduce complications when uploading artifacts during deployment to PyPI, we are reverting changes made in [1.17.15].
@@ -294,7 +460,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.1...v2.0.0
 [1.18.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.0...v1.18.1
 [1.18.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.15...v1.18.0
 [1.17.15]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.11...v1.17.15

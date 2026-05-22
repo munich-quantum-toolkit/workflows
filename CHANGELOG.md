@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-05-22
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#200)._
+
+### Changed
+
+- 🚸 Adapt C++ workflows to require `cmake-presets` ([#363]) ([**@denialhaag**])
+
 ## [1.18.1] - 2026-04-09
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1181)._
@@ -303,7 +311,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.0
 [1.18.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.18.1
 [1.18.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.18.0
 [1.17.15]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.17.15
@@ -337,6 +346,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#363]: https://github.com/munich-quantum-toolkit/workflows/pull/363
 [#356]: https://github.com/munich-quantum-toolkit/workflows/pull/356
 [#344]: https://github.com/munich-quantum-toolkit/workflows/pull/344
 [#343]: https://github.com/munich-quantum-toolkit/workflows/pull/343
