@@ -9,7 +9,7 @@ This document describes breaking changes and how to upgrade. For a complete list
 This release adapts all C++ workflows to require [CMake presets], providing a standardized and reproducible way to configure builds across different platforms while eliminating scattered configuration with string-based arguments.
 
 The testing workflows for macOS, Ubuntu, and Windows (`reusable-cpp-tests-macos.yml`, `reusable-cpp-tests-ubuntu.yml`, and `reusable-cpp-tests-windows.yml`) now require a `preset-name` input and no longer accept `cmake-args` or `config` inputs.
-On Windows, the new `debug-mlir` flag can be used for debug MLIR builds.
+On Windows, the new `mlir-debug` flag can be used for debug MLIR builds.
 
 The coverage and linter workflows (`reusable-cpp-coverage.yml` and `reusable-cpp-linter.yml`) require `coverage` and `lint` presets, respectively, and no longer accept `cmake-args`.
 
