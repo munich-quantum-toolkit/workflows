@@ -155,11 +155,11 @@ jobs:
           fi
 
       - name: Generate compilation database
-        run: cmake --preset lint
+        run: cmake -B build --preset lint
 
       - name: Build
         if: ${{ inputs.build-project }}
-        run: cmake --build --preset lint
+        run: cmake --build build
 
       # runs the cpp-linter action using the generated compilation database and the specified clang version
       - name: Run cpp-linter
