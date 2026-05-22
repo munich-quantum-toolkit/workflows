@@ -158,6 +158,7 @@ jobs:
         run: cmake --preset lint
 
       - name: Build
+        if: ${{ inputs.build-project }}
         run: cmake --build --preset lint
 
       # runs the cpp-linter action using the generated compilation database and the specified clang version

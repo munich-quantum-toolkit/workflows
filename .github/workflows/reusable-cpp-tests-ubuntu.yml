@@ -43,7 +43,7 @@ on:
         type: string
       preset-name:
         description: "The CMake preset to use for configuration and build."
-        default: ""
+        required: true
         type: string
 
 concurrency:
