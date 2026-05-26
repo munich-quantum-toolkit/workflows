@@ -22,10 +22,7 @@ An exemplary `CMakePresets.json` can be found below.
     {
       "name": "base",
       "hidden": true,
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "cacheVariables": {
-        "MLIR_DIR": "$env{MLIR_DIR}"
-      }
+      "binaryDir": "${sourceDir}/build/${presetName}"
     },
     {
       "name": "base-unix",
@@ -55,8 +52,7 @@ An exemplary `CMakePresets.json` can be found below.
       "inherits": "base-unix",
       "displayName": "Debug config",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "LLVM_ENABLE_ASSERTIONS": "ON"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -82,8 +78,7 @@ An exemplary `CMakePresets.json` can be found below.
       "displayName": "Lint config",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "BUILD_MQT_CORE_BENCHMARKS": "ON",
-        "BUILD_MQT_CORE_BINDINGS": "ON"
+        "BUILD_MQT_QMAP_BINDINGS": "ON"
       }
     },
     {
@@ -91,8 +86,7 @@ An exemplary `CMakePresets.json` can be found below.
       "inherits": "base-windows",
       "displayName": "Windows Debug config",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "LLVM_ENABLE_ASSERTIONS": "ON"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -136,7 +130,11 @@ An exemplary `CMakePresets.json` can be found below.
     {
       "name": "base",
       "hidden": true,
-      "output": { "outputOnFailure": true }
+      "output": { "outputOnFailure": true },
+      "execution": {
+        "repeat": { "mode": "until-pass", "count": 3 },
+        "timeout": 600
+      }
     },
     {
       "name": "debug",
