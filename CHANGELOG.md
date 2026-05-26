@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+### Fixed
+
+🐛 Ensure `reusable-mqt-core-update.yml` runs against `main` ([#380]) ([**@denialhaag**])
+
 ## [2.0.1] - 2026-05-22
 
 ### Fixed
@@ -22,7 +26,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#200)._
 ### Changed
 
 - 🚸 Adapt C++ workflows to require [CMake presets] ([#363]) ([**@denialhaag**])
-- ♻️ Add `mlir-debug` flag to the `reusable-cpp-tests-windows` workflow for requesting a debug build of MLIR ([#363]) ([**@denialhaag**])
+- ♻️ Add `mlir-debug` flag to `reusable-cpp-tests-windows.yml` for requesting a debug build of MLIR ([#363]) ([**@denialhaag**])
 
 ## [1.18.1] - 2026-04-09
 
@@ -354,6 +358,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#380]: https://github.com/munich-quantum-toolkit/workflows/pull/380
 [#377]: https://github.com/munich-quantum-toolkit/workflows/pull/377
 [#363]: https://github.com/munich-quantum-toolkit/workflows/pull/363
 [#356]: https://github.com/munich-quantum-toolkit/workflows/pull/356
