@@ -25,6 +25,11 @@ jobs:
     permissions:
       contents: read # Required for the `actions/checkout` action
       id-token: write # Required for the `codecov/codecov-action` action
+    env:
+      IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       # check out the repository (mostly for the codecov config)
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

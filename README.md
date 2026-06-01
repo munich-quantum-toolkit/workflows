@@ -29,6 +29,20 @@ Overall, these enable modern CI/CD for
 
 If you have any questions, feel free to create a [discussion](https://github.com/munich-quantum-toolkit/workflows/discussions) or an [issue](https://github.com/munich-quantum-toolkit/workflows/issues) on [GitHub](https://github.com/munich-quantum-toolkit/workflows).
 
+## Passing Project-Specific Secrets to Reusable Workflows
+
+Most reusable build, test, lint, and packaging workflows expose a fixed whitelist of inherited secrets as environment variables.
+In the calling workflow, use `secrets: inherit` and define the corresponding repository or environment secrets with the same names.
+
+The currently supported variables are
+
+- `IQM_TOKEN`,
+- `AWS_S3_BUCKET`,
+- `AWS_ACCESS_KEY_ID`, and
+- `AWS_SECRET_ACCESS_KEY`.
+
+If one of these secrets is not defined by the calling repository or environment, GitHub Actions leaves the corresponding environment variable empty.
+
 ## Contributors and Supporters
 
 The _[Munich Quantum Toolkit (MQT)](https://mqt.readthedocs.io)_ is developed by the [Chair for Design Automation](https://www.cda.cit.tum.de/) at the [Technical University of Munich](https://www.tum.de/) and supported by the [Munich Quantum Software Company (MQSC)](https://munichquantum.software).

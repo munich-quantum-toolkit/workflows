@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-06-01
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#202)._
+
+### Added
+
+- 🔐 Expose the inherited secrets `IQM_TOKEN`, `AWS_S3_BUCKET`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` as environment variables in most reusable build, test, lint, and packaging workflows ([#383]) ([**@burgholzer**])
+
 ### Fixed
 
 🐛 Ensure `reusable-mqt-core-update.yml` runs against `main` ([#380]) ([**@denialhaag**])
@@ -322,7 +330,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.2
 [2.0.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.1
 [2.0.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.0
 [1.18.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.18.1
@@ -358,6 +367,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#383]: https://github.com/munich-quantum-toolkit/workflows/pull/383
 [#380]: https://github.com/munich-quantum-toolkit/workflows/pull/380
 [#377]: https://github.com/munich-quantum-toolkit/workflows/pull/377
 [#363]: https://github.com/munich-quantum-toolkit/workflows/pull/363

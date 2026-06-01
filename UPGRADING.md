@@ -4,6 +4,37 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [2.0.2]
+
+### Inheriting project-specific secrets in reusable workflows
+
+Most reusable build, test, lint, and packaging workflows now expose a fixed whitelist of inherited secrets as environment variables.
+This is intended for projects that need to make project-specific credentials available to their CI steps without requiring workflow-specific configuration for every consuming repository.
+
+To use this feature, the calling workflow needs to pass `secrets: inherit` to the reusable workflow invocation.
+In addition, the calling repository or environment needs to define the corresponding secrets under the exact same names.
+
+The supported names are:
+
+- `IQM_TOKEN`
+- `AWS_S3_BUCKET`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+
+If a project needs one of these values, define the matching repository or environment secret and inherit secrets in the calling workflow.
+For example:
+
+```yaml
+python-tests:
+  uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-python-tests.yml@v2.0.2
+  with:
+    runs-on: ubuntu-24.04
+  secrets: inherit
+```
+
+Once inherited, the reusable workflow exposes the secret values as environment variables with the same names.
+If one of the listed secrets is not defined by the calling repository or environment, the corresponding environment variable is left empty.
+
 ## [2.0.0]
 
 This release adapts all C++ workflows to require [CMake presets], providing a standardized and reproducible way to configure builds across different platforms while eliminating scattered configuration with string-based arguments.
@@ -457,7 +488,9 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.1...v2.0.0
 [1.18.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.0...v1.18.1
 [1.18.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.17.15...v1.18.0
