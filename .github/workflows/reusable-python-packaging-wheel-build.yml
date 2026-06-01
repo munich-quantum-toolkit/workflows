@@ -22,6 +22,12 @@ jobs:
   build-wheel:
     name: 🛞 Wheel
     runs-on: ubuntu-latest
+    env:
+      IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
+      IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       # check out the repository (including submodules and all history)
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

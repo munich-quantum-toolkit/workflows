@@ -45,6 +45,11 @@ jobs:
     env:
       FORCE_COLOR: 3
       GITHUB_TOKEN: ${{ github.token }}
+      IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
+      IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       # free up space on the runners
       # the nox environments can get quite large, especially if torch is installed
