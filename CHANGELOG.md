@@ -15,7 +15,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#202)._
 
 ### Added
 
-- 🔐 Expose the inherited secrets `IQM_TOKEN`, `AWS_S3_BUCKET`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` as environment variables in most reusable build, test, lint, and packaging workflows ([#383]) ([**@burgholzer**])
+- 🔐 Expose the inherited secrets `IQM_TOKEN`, `IQM_QC_ALIAS`, `AWS_S3_BUCKET`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` as environment variables in most reusable build, test, lint, and packaging workflows ([#383]) ([**@burgholzer**])
 
 ### Fixed
 

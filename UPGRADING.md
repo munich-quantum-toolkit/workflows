@@ -17,6 +17,7 @@ In addition, the calling repository or environment needs to define the correspon
 The supported names are:
 
 - `IQM_TOKEN`
+- `IQM_QC_ALIAS`
 - `AWS_S3_BUCKET`
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`

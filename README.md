@@ -37,6 +37,7 @@ In the calling workflow, use `secrets: inherit` and define the corresponding rep
 The currently supported variables are
 
 - `IQM_TOKEN`,
+- `IQM_QC_ALIAS`,
 - `AWS_S3_BUCKET`,
 - `AWS_ACCESS_KEY_ID`, and
 - `AWS_SECRET_ACCESS_KEY`.
