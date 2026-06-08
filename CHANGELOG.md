@@ -13,12 +13,12 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ### Added
 
-- ⬆️ Update `codecov/codecov-action` to `v7.0.0` ([#388]) ([**@denialhaag**])
-- ⬆️ Update `cibuildwheel` to `v4.0.0` ([#389]) ([**@denialhaag**])
+- ✨ Add `additional-cpp-files`, `additional-python-files`, and `additional-cd-files` inputs to `reusable-change-detection.yml` ([#390]) ([**@denialhaag**])
 
 ### Changed
 
-- ✨ Add `additional-cpp-files`, `additional-python-files`, and `additional-cd-files` inputs to `reusable-change-detection.yml` ([#390]) ([**@denialhaag**])
+- ⬆️ Update `codecov/codecov-action` to `v7.0.0` ([#388]) ([**@denialhaag**])
+- ⬆️ Update `cibuildwheel` to `v4.0.0` ([#389]) ([**@denialhaag**])
 
 ## [2.0.2] - 2026-06-01
 
