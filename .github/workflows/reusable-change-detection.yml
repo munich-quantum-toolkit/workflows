@@ -22,7 +22,7 @@ on:
         type: string
         default: ""
       additional-cd-files:
-        description: Additional files to check for changes for CD-related changes
+        description: Additional files to check for CD-related changes
         type: string
         default: ""
     outputs:
