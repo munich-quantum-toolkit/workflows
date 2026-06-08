@@ -4,6 +4,11 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [2.0.3]
+
+This release adds `additional-cpp-files`, `additional-python-files`, and `additional-cd-files` inputs to `reusable-change-detection.yml` to extend the change detection.
+If provided, the specified files are checked in addition to the default ones.
+
 ## [2.0.2]
 
 ### Inheriting project-specific secrets in reusable workflows
@@ -489,7 +494,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.2...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v1.18.1...v2.0.0

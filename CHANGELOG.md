@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [2.0.3] - 2026-06-08
 
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#203)._
+
 ### Added
 
 - ✨ Add `additional-cpp-files`, `additional-python-files`, and `additional-cd-files` inputs to `reusable-change-detection.yml` ([#390]) ([**@denialhaag**])
