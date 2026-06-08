@@ -9,6 +9,19 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [2.0.3] - 2026-06-08
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#203)._
+
+### Added
+
+- ✨ Add `additional-cpp-files`, `additional-python-files`, and `additional-cd-files` inputs to `reusable-change-detection.yml` ([#390]) ([**@denialhaag**])
+
+### Changed
+
+- ⬆️ Update `codecov/codecov-action` to `v7.0.0` ([#388]) ([**@denialhaag**])
+- ⬆️ Update `cibuildwheel` to `v4.0.0` ([#389]) ([**@denialhaag**])
+
 ## [2.0.2] - 2026-06-01
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#202)._
@@ -25,7 +38,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#202)._
 
 ### Fixed
 
-🐛 Hardcode build directory in `reusable-cpp-linter.yml` ([#377]) ([**@denialhaag**])
+- 🐛 Hardcode build directory in `reusable-cpp-linter.yml` ([#377]) ([**@denialhaag**])
 
 ## [2.0.0] - 2026-05-22
 
@@ -330,7 +343,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.2...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.3
 [2.0.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.2
 [2.0.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.1
 [2.0.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.0
@@ -367,6 +381,9 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#390]: https://github.com/munich-quantum-toolkit/workflows/pull/390
+[#389]: https://github.com/munich-quantum-toolkit/workflows/pull/389
+[#388]: https://github.com/munich-quantum-toolkit/workflows/pull/388
 [#383]: https://github.com/munich-quantum-toolkit/workflows/pull/383
 [#380]: https://github.com/munich-quantum-toolkit/workflows/pull/380
 [#377]: https://github.com/munich-quantum-toolkit/workflows/pull/377

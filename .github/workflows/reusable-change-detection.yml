@@ -12,6 +12,19 @@
 name: ❓ • Change Detection
 on:
   workflow_call:
+    inputs:
+      additional-cpp-files:
+        description: Additional files to check for C++-related changes
+        type: string
+        default: ""
+      additional-python-files:
+        description: Additional files to check for Python-related changes
+        type: string
+        default: ""
+      additional-cd-files:
+        description: Additional files to check for CD-related changes
+        type: string
+        default: ""
     outputs:
       run-cpp-tests:
         description: Whether to run the C++ tests
@@ -50,6 +63,8 @@ jobs:
       - name: Get a list of the changed files relevant for the C++ tests
         if: github.event_name == 'pull_request'
         id: changed-cpp-testable-files
+        env:
+          ADDITIONAL_CPP_FILES: ${{ inputs.additional-cpp-files }}
         uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
         with:
           filter: |
@@ -67,6 +82,7 @@ jobs:
             .github/workflows/reusable-cpp-coverage.yml
             .github/workflows/reusable-cpp-ci.yml
             .github/workflows/ci.yml
+            ${{ env.ADDITIONAL_CPP_FILES }}
       - name: Set a flag for running the C++ tests
         if: >-
           github.event_name != 'pull_request'
@@ -77,6 +93,8 @@ jobs:
       - name: Get a list of the changed files relevant for the C++ linter
         if: github.event_name == 'pull_request'
         id: changed-cpp-linter-files
+        env:
+          ADDITIONAL_CPP_FILES: ${{ inputs.additional-cpp-files }}
         uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
         with:
           filter: |
@@ -89,6 +107,7 @@ jobs:
             .clang-tidy
             .github/workflows/reusable-cpp-linter.yml
             .github/workflows/ci.yml
+            ${{ env.ADDITIONAL_CPP_FILES }}
       - name: Set a flag for running the C++ linter
         if: >-
           github.event_name != 'pull_request'
@@ -99,6 +118,8 @@ jobs:
       - name: Get a list of the changed files relevant for the Python tests
         if: github.event_name == 'pull_request'
         id: changed-python-testable-files
+        env:
+          ADDITIONAL_PYTHON_FILES: ${{ inputs.additional-python-files }}
         uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
         with:
           filter: |
@@ -118,6 +139,7 @@ jobs:
             .github/workflows/reusable-python-tests.yml
             .github/workflows/reusable-python-ci.yml
             .github/workflows/ci.yml
+            ${{ env.ADDITIONAL_PYTHON_FILES }}
       - name: Set a flag for running the Python tests
         if: >-
           github.event_name != 'pull_request'
@@ -128,10 +150,13 @@ jobs:
       - name: Get a list of the changed files relevant for the continuous deployment job
         if: github.event_name == 'pull_request'
         id: changed-cd-files
+        env:
+          ADDITIONAL_CD_FILES: ${{ inputs.additional-cd-files }}
         uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
         with:
           filter: |
             .github/workflows/cd.yml
+            ${{ env.ADDITIONAL_CD_FILES }}
       - name: Set a flag for running the continuous deployment job
         if: >-
           github.event_name == 'pull_request'
