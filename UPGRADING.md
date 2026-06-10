@@ -4,6 +4,12 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [2.1.0]
+
+This release changes how `ty check` is run in `reusable-python-linter.yml`.
+With the release of [astral-sh/ty-pre-commit], we now rely on the official pre-commit hook and no longer support the custom `ty-check` hook.
+Consuming repositories must switch to [astral-sh/ty-pre-commit].
+
 ## [2.0.3]
 
 This release adds `additional-cpp-files`, `additional-python-files`, and `additional-cd-files` inputs to `reusable-change-detection.yml` to extend the change detection.
@@ -494,7 +500,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.3...v2.1.0
 [2.0.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.0...v2.0.1
@@ -524,3 +531,4 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 [setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
 [zizmor]: https://docs.zizmor.sh/
 [CMake presets]: https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html
+[astral-sh/ty-pre-commit]: https://github.com/astral-sh/ty-pre-commit
