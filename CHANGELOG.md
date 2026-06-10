@@ -9,6 +9,15 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-06-10
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#210)._
+
+### Changed
+
+- 🔧 Run `ty check` through `uvx prek run -a ty` ([#391]) ([**@denialhaag**])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.4.0` ([#392])
+
 ## [2.0.3] - 2026-06-08
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#203)._
@@ -343,7 +352,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.1.0
 [2.0.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.3
 [2.0.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.2
 [2.0.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.1
@@ -381,6 +391,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#392]: https://github.com/munich-quantum-toolkit/workflows/pull/392
+[#391]: https://github.com/munich-quantum-toolkit/workflows/pull/391
 [#390]: https://github.com/munich-quantum-toolkit/workflows/pull/390
 [#389]: https://github.com/munich-quantum-toolkit/workflows/pull/389
 [#388]: https://github.com/munich-quantum-toolkit/workflows/pull/388
