@@ -159,20 +159,13 @@ jobs:
         uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
         with:
           filter: |
-            cmake/**
-            bindings/**
-            include/**
             python/**
-            src/**
             test/**/*.py
             tests/**/*.py
             noxfile.py
             pyproject.toml
             uv.lock
-            CMakeLists.txt
-            .github/codecov.yml
             .github/workflows/reusable-python-linter.yml
-            .github/workflows/reusable-python-tests.yml
             .github/workflows/reusable-python-ci.yml
             .github/workflows/ci.yml
             .pre-commit-config.yaml
