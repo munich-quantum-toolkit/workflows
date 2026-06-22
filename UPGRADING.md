@@ -7,7 +7,7 @@ This document describes breaking changes and how to upgrade. For a complete list
 ## [2.2.0]
 
 This release adds a `run-python-linter` output to `reusable-change-detection.yml`.
-This output is `true` when changes are made to `.pre-commit-config.yaml`.
+This output is `true` when changes are made to `.pre-commit-config.yaml`, among others.
 This allows `reusable-python-linter.yml` to run automatically when the `ty` hook is updated.
 Consuming repositories must update their CI configuration accordingly.
 
