@@ -35,6 +35,9 @@ on:
       run-python-tests:
         description: Whether to run the Python tests
         value: ${{ jobs.change-detection.outputs.run-python-tests || false }}
+      run-python-linter:
+        description: Whether to run the Python linter
+        value: ${{ jobs.change-detection.outputs.run-python-linter || false }}
       run-cd:
         description: Whether to run the continuous deployment job
         value: ${{ jobs.change-detection.outputs.run-cd || false }}
@@ -55,6 +58,7 @@ jobs:
       run-cpp-tests: ${{ steps.cpp-tests-changes.outputs.run-cpp-tests || false }}
       run-cpp-linter: ${{ steps.cpp-linter-changes.outputs.run-cpp-linter || false }}
       run-python-tests: ${{ steps.python-tests-changes.outputs.run-python-tests || false }}
+      run-python-linter: ${{ steps.python-linter-changes.outputs.run-python-linter || false }}
       run-cd: ${{ steps.cd-changes.outputs.run-cd || false }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -147,6 +151,32 @@ jobs:
         id: python-tests-changes
         run: >-
           echo "run-python-tests=true" >> "${GITHUB_OUTPUT}"
+      - name: Get a list of the changed files relevant for the Python linter
+        if: github.event_name == 'pull_request'
+        id: changed-python-linter-files
+        env:
+          ADDITIONAL_PYTHON_FILES: ${{ inputs.additional-python-files }}
+        uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
+        with:
+          filter: |
+            python/**
+            test/**/*.py
+            tests/**/*.py
+            noxfile.py
+            pyproject.toml
+            uv.lock
+            .github/workflows/reusable-python-linter.yml
+            .github/workflows/reusable-python-ci.yml
+            .github/workflows/ci.yml
+            .pre-commit-config.yaml
+            ${{ env.ADDITIONAL_PYTHON_FILES }}
+      - name: Set a flag for running the Python linter
+        if: >-
+          github.event_name != 'pull_request'
+          || steps.changed-python-linter-files.outputs.added_modified_renamed != ''
+        id: python-linter-changes
+        run: >-
+          echo "run-python-linter=true" >> "${GITHUB_OUTPUT}"
       - name: Get a list of the changed files relevant for the continuous deployment job
         if: github.event_name == 'pull_request'
         id: changed-cd-files

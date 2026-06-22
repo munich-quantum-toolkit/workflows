@@ -4,6 +4,13 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## [Unreleased]
 
+## [2.2.0]
+
+This release adds a `run-python-linter` output to `reusable-change-detection.yml`.
+This output is `true` when changes are made to `.pre-commit-config.yaml`, among others.
+This allows `reusable-python-linter.yml` to run automatically when the `ty` hook is updated.
+Consuming repositories must update their CI configuration accordingly.
+
 ## [2.1.0]
 
 This release changes how `ty check` is run in `reusable-python-linter.yml`.
@@ -500,7 +507,8 @@ Consider removing any `-G Ninja` flags from your CMake invocations under Windows
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.1.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.3...v2.1.0
 [2.0.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.1...v2.0.2

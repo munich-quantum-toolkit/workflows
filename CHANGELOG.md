@@ -9,7 +9,17 @@ This project adheres to [Semantic Versioning], with the exception that minor rel
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-06-22
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#220)._
+
+### Added
+
+- ✨ Add `run-python-linter` output to `reusable-change-detection.yml` ([#400]) ([**@denialhaag**])
+
 ## [2.1.1] - 2026-06-11
+
+### Changed
 
 - ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.4.1` to ensure compatibility with Visual Studio 2022 and 2026 ([#395])
 
@@ -356,7 +366,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.1.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.0
 [2.1.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.1.1
 [2.1.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.1.0
 [2.0.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.0.3
@@ -396,6 +407,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#400]: https://github.com/munich-quantum-toolkit/workflows/pull/400
 [#395]: https://github.com/munich-quantum-toolkit/workflows/pull/395
 [#392]: https://github.com/munich-quantum-toolkit/workflows/pull/392
 [#391]: https://github.com/munich-quantum-toolkit/workflows/pull/391
