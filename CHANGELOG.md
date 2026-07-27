@@ -5,7 +5,8 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on a mixture of [Keep a Changelog] and [Common Changelog].
-This project adheres to [Semantic Versioning], with the exception that minor releases may include breaking changes.
+This project adheres to [Semantic Versioning], with the exception that minor
+releases may include breaking changes.
 
 ## [Unreleased]
 
@@ -15,13 +16,15 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#220)._
 
 ### Added
 
-- ✨ Add `run-python-linter` output to `reusable-change-detection.yml` ([#400]) ([**@denialhaag**])
+- ✨ Add `run-python-linter` output to `reusable-change-detection.yml` ([#400])
+  ([**@denialhaag**])
 
 ## [2.1.1] - 2026-06-11
 
 ### Changed
 
-- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.4.1` to ensure compatibility with Visual Studio 2022 and 2026 ([#395])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.4.1` to ensure
+  compatibility with Visual Studio 2022 and 2026 ([#395])
 
 ## [2.1.0] - 2026-06-11
 
@@ -30,7 +33,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#210)._
 ### Changed
 
 - 🔧 Run `ty check` through `uvx prek run -a ty` ([#391]) ([**@denialhaag**])
-- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.4.0` to add support for more LLVM versions ([#392])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.4.0` to add support for
+  more LLVM versions ([#392])
 
 ## [2.0.3] - 2026-06-08
 
@@ -38,7 +42,9 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#203)._
 
 ### Added
 
-- ✨ Add `additional-cpp-files`, `additional-python-files`, and `additional-cd-files` inputs to `reusable-change-detection.yml` ([#390]) ([**@denialhaag**])
+- ✨ Add `additional-cpp-files`, `additional-python-files`, and
+  `additional-cd-files` inputs to `reusable-change-detection.yml` ([#390])
+  ([**@denialhaag**])
 
 ### Changed
 
@@ -51,17 +57,22 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#202)._
 
 ### Added
 
-- 🔐 Expose the inherited secrets `IQM_TOKEN`, `IQM_QC_ALIAS`, `AWS_S3_BUCKET`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` as environment variables in most reusable build, test, lint, and packaging workflows ([#383]) ([**@burgholzer**])
+- 🔐 Expose the inherited secrets `IQM_TOKEN`, `IQM_QC_ALIAS`, `AWS_S3_BUCKET`,
+  `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` as environment variables in
+  most reusable build, test, lint, and packaging workflows ([#383])
+  ([**@burgholzer**])
 
 ### Fixed
 
-🐛 Ensure `reusable-mqt-core-update.yml` runs against `main` ([#380]) ([**@denialhaag**])
+🐛 Ensure `reusable-mqt-core-update.yml` runs against `main` ([#380])
+([**@denialhaag**])
 
 ## [2.0.1] - 2026-05-22
 
 ### Fixed
 
-- 🐛 Hardcode build directory in `reusable-cpp-linter.yml` ([#377]) ([**@denialhaag**])
+- 🐛 Hardcode build directory in `reusable-cpp-linter.yml` ([#377])
+  ([**@denialhaag**])
 
 ## [2.0.0] - 2026-05-22
 
@@ -70,7 +81,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#200)._
 ### Changed
 
 - 🚸 Adapt C++ workflows to require [CMake presets] ([#363]) ([**@denialhaag**])
-- ♻️ Add `mlir-debug` flag to `reusable-cpp-tests-windows.yml` for requesting a debug build of MLIR ([#363]) ([**@denialhaag**])
+- ♻️ Add `mlir-debug` flag to `reusable-cpp-tests-windows.yml` for requesting a
+  debug build of MLIR ([#363]) ([**@denialhaag**])
 
 ## [1.18.1] - 2026-04-09
 
@@ -90,11 +102,13 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1180)._
 
 ### Changed
 
-- 🛂 Scope secrets for `reusable-mqt-core-update.yml` to an `mqt-app` GitHub environment ([#339]) ([**@burgholzer**])
+- 🛂 Scope secrets for `reusable-mqt-core-update.yml` to an `mqt-app` GitHub
+  environment ([#339]) ([**@burgholzer**])
 
 ### Fixed
 
-- 💚 Tweak uv caching so that workflows do not fail on `main` branches due to nothing being cached ([#344]) ([**@burgholzer**])
+- 💚 Tweak uv caching so that workflows do not fail on `main` branches due to
+  nothing being cached ([#344]) ([**@burgholzer**])
 
 ## [1.17.15] - 2026-03-11
 
@@ -102,37 +116,45 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#11715)._
 
 ### Changed
 
-- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.3.0`, which improves support for LLVM 22 by re-adding Windows Debug builds ([#335]) ([**@burgholzer**])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.3.0`, which improves
+  support for LLVM 22 by re-adding Windows Debug builds ([#335])
+  ([**@burgholzer**])
 - ⬆️ Update `cibuildwheel` to `v3.4.0` ([#335]) ([**@denialhaag**])
-- 📦️ Selectively disable archiving when uploading artifacts ([#332]) ([**@denialhaag**])
+- 📦️ Selectively disable archiving when uploading artifacts ([#332])
+  ([**@denialhaag**])
 
 ## [1.17.14] - 2026-03-01
 
 ### Fixed
 
-- 🐛 Update [munich-quantum-software/setup-mlir] to `v1.2.1` to fix a bug preventing the action to run ([#330])
+- 🐛 Update [munich-quantum-software/setup-mlir] to `v1.2.1` to fix a bug
+  preventing the action to run ([#330])
 
 ## [1.17.13] - 2026-03-01
 
 ### Changed
 
-- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.2.0`, which adds support for LLVM 22 ([#329]) ([**@burgholzer**])
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.2.0`, which adds support
+  for LLVM 22 ([#329]) ([**@burgholzer**])
 
 ## [1.17.12] - 2026-02-18
 
 ### Changed
 
-- 🔧 Run `ty check` through `uvx prek run -a ty-check` ([#323]) ([**@burgholzer**])
+- 🔧 Run `ty check` through `uvx prek run -a ty-check` ([#323])
+  ([**@burgholzer**])
 
 ### Removed
 
-- 🔥 Remove the `nick-fields/retry` action on Windows builds, which put an artificial 15-minute limit on the build time ([#321]) ([**@burgholzer**])
+- 🔥 Remove the `nick-fields/retry` action on Windows builds, which put an
+  artificial 15-minute limit on the build time ([#321]) ([**@burgholzer**])
 
 ## [1.17.11] - 2026-01-07
 
 ### Added
 
-- ✨ Download Debug builds of LLVM for C++ tests on Windows ([#305]) ([**@burgholzer**])
+- ✨ Download Debug builds of LLVM for C++ tests on Windows ([#305])
+  ([**@burgholzer**])
 
 ### Changed
 
@@ -140,26 +162,31 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#11715)._
 
 ### Removed
 
-- 🔥 Remove dedicated `run-mlir` MLIR output for `reusable-change-detection.yml` ([#300]) ([**@burgholzer**])
+- 🔥 Remove dedicated `run-mlir` MLIR output for `reusable-change-detection.yml`
+  ([#300]) ([**@burgholzer**])
 
 ## [1.17.10] - 2026-01-04
 
 ### Fixed
 
-- 🐛 Fix `LIT_ARG` handling for Linux and macOS C++ jobs ([#298]) ([**@burgholzer**])
+- 🐛 Fix `LIT_ARG` handling for Linux and macOS C++ jobs ([#298])
+  ([**@burgholzer**])
 
 ## [1.17.9] - 2026-01-04
 
 ### Fixed
 
-- 🐛 Fix concurrency group overlap in GitHub Actions ([#297]) ([**@burgholzer**])
+- 🐛 Fix concurrency group overlap in GitHub Actions ([#297])
+  ([**@burgholzer**])
 
 ## [1.17.8] - 2026-01-04
 
 ### Changed
 
-- 🔧 Update CI workflows to use `uv` for installing dependencies and add `lit` installation step ([#295]) ([**@burgholzer**])
-- 👷 Use new `ubuntu-slim` runners for light workflows ([#292]) ([**@burgholzer**])
+- 🔧 Update CI workflows to use `uv` for installing dependencies and add `lit`
+  installation step ([#295]) ([**@burgholzer**])
+- 👷 Use new `ubuntu-slim` runners for light workflows ([#292])
+  ([**@burgholzer**])
 
 ### Fixed
 
@@ -169,7 +196,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#11715)._
 
 ### Changed
 
-- 🔧 Update [munich-quantum-software/setup-mlir] to `v1.0.0` ([#290]) ([**@denialhaag**])
+- 🔧 Update [munich-quantum-software/setup-mlir] to `v1.0.0` ([#290])
+  ([**@denialhaag**])
 
 ## [1.17.6] - 2025-12-21
 
@@ -177,7 +205,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1176)._
 
 ### Changed
 
-- 🚸 Change to `nox -s stubs` for driving stub generation ([#288]) ([**@burgholzer**])
+- 🚸 Change to `nox -s stubs` for driving stub generation ([#288])
+  ([**@burgholzer**])
 
 ## [1.17.5] - 2025-12-19
 
@@ -185,19 +214,24 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1175)._
 
 ### Added
 
-- ✨ Add step for checking if Python stub files are up to date ([#286]) ([**@denialhaag**])
-- ✨ Add optional [munich-quantum-software/setup-mlir] input to allow setting up MLIR in the C++ and Python workflows ([#270]) ([**@denialhaag**], [**@burgholzer**])
+- ✨ Add step for checking if Python stub files are up to date ([#286])
+  ([**@denialhaag**])
+- ✨ Add optional [munich-quantum-software/setup-mlir] input to allow setting up
+  MLIR in the C++ and Python workflows ([#270]) ([**@denialhaag**],
+  [**@burgholzer**])
 
 ### Changed
 
-- 🔧 Do not run Python tests on changes to `.pre-commit-config.yaml` ([#276]) ([**@burgholzer**])
+- 🔧 Do not run Python tests on changes to `.pre-commit-config.yaml` ([#276])
+  ([**@burgholzer**])
 - 🔧 Do not run C++ tests on changes to bindings ([#276]) ([**@burgholzer**])
 
 ## [1.17.4] - 2025-12-05
 
 ### Changed
 
-- 🔧 Specify `LDFLAGS` and `SDKROOT` to fix macOS builds with Homebrew Clang ([#271]) ([**@denialhaag**])
+- 🔧 Specify `LDFLAGS` and `SDKROOT` to fix macOS builds with Homebrew Clang
+  ([#271]) ([**@denialhaag**])
 - 👨‍💻 Simplify the workflow for running `ty` ([#257]) ([**@burgholzer**])
 
 ## [1.17.3] - 2025-11-26
@@ -206,21 +240,25 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1173)._
 
 ### Added
 
-- ✨ Add optional `cpp-linter-ignore-extra` input to allow ignoring additional files in C++ linter ([#241]) ([**@flowerthrower**])
+- ✨ Add optional `cpp-linter-ignore-extra` input to allow ignoring additional
+  files in C++ linter ([#241]) ([**@flowerthrower**])
 
 ### Fixed
 
-- 🐍🚨 Ensure a locked version of `ty` is used when enabled to guarantee stability ([#255]) ([**@burgholzer**])
+- 🐍🚨 Ensure a locked version of `ty` is used when enabled to guarantee
+  stability ([#255]) ([**@burgholzer**])
 
 ## [1.17.2] - 2025-11-24
 
 ### Changed
 
-- 🐍🚨 Use `prek` instead of `pre-commit` for running `mypy` ([#254]) ([**@burgholzer**])
+- 🐍🚨 Use `prek` instead of `pre-commit` for running `mypy` ([#254])
+  ([**@burgholzer**])
 
 ### Fixed
 
-- 🐍🚨 Ensure project dependencies are installed when running `ty` ([#254]) ([**@burgholzer**])
+- 🐍🚨 Ensure project dependencies are installed when running `ty` ([#254])
+  ([**@burgholzer**])
 
 ## [1.17.1] - 2025-11-20
 
@@ -244,7 +282,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1170)._
 
 ### Changed
 
-- ♻️ Only use workflow-local compiler caching in Python CI and CD ([#188]) ([**@burgholzer**])
+- ♻️ Only use workflow-local compiler caching in Python CI and CD ([#188])
+  ([**@burgholzer**])
 
 ## [1.16.1] - 2025-08-21
 
@@ -272,11 +311,13 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1150)._
 
 ### Added
 
-- 👷 Add `reusable-qiskit-upstream-issue.yml` workflow for creating an issue if the Qiskit upstream tests fail ([#151]) ([**@denialhaag**])
+- 👷 Add `reusable-qiskit-upstream-issue.yml` workflow for creating an issue if
+  the Qiskit upstream tests fail ([#151]) ([**@denialhaag**])
 
 ### Changed
 
-- ♻️ Rename `reusable-qiskit-upstream.yml` to `reusable-qiskit-upstream-tests.yml` ([#151]) ([**@denialhaag**])
+- ♻️ Rename `reusable-qiskit-upstream.yml` to
+  `reusable-qiskit-upstream-tests.yml` ([#151]) ([**@denialhaag**])
 
 ## [1.14.0] - 2025-07-17
 
@@ -284,10 +325,14 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1140)._
 
 ### Added
 
-- 👷 Add `reusable-python-coverage.yml` workflow for uploading Python coverage ([#150]) ([**@denialhaag**])
-- 👷 Add `reusable-python-packaging-sdist.yml` workflow for building source distributions ([#150]) ([**@denialhaag**])
-- 👷 Add `reusable-python-packaging-wheel-build.yml` workflow for building wheels using `build` ([#150]) ([**@denialhaag**])
-- 👷 Add `reusable-python-packaging-wheel-cibuildwheel.yml` workflow for building wheels using `cibuildwheel` ([#150]) ([**@denialhaag**])
+- 👷 Add `reusable-python-coverage.yml` workflow for uploading Python coverage
+  ([#150]) ([**@denialhaag**])
+- 👷 Add `reusable-python-packaging-sdist.yml` workflow for building source
+  distributions ([#150]) ([**@denialhaag**])
+- 👷 Add `reusable-python-packaging-wheel-build.yml` workflow for building
+  wheels using `build` ([#150]) ([**@denialhaag**])
+- 👷 Add `reusable-python-packaging-wheel-cibuildwheel.yml` workflow for
+  building wheels using `cibuildwheel` ([#150]) ([**@denialhaag**])
 
 ### Changed
 
@@ -297,7 +342,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1140)._
 
 - 🔥 Remove `reusable-cpp-ci.yml` workflow ([#150]) ([**@denialhaag**])
 - 🔥 Remove `reusable-python-ci.yml` workflow ([#150]) ([**@denialhaag**])
-- 🔥 Remove `reusable-python-packaging.yml` workflow ([#150]) ([**@denialhaag**])
+- 🔥 Remove `reusable-python-packaging.yml` workflow ([#150])
+  ([**@denialhaag**])
 
 ## [1.13.0] - 2025-07-16
 
@@ -305,13 +351,17 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1130)._
 
 ### Added
 
-- 👷🐧 Allow configuring Clang version in Ubuntu C++ testing workflow ([#146]) ([**@burgholzer**])
-- 👷🍎 Allow configuring GCC and Clang version in macOS C++ testing workflow ([#146]) ([**@burgholzer**])
-- ✨🐉 Add MLIR configuration when specifying `clang-XX` as the `compiler` in the C++ testing workflows on Linux and macOS ([#146]) ([**@burgholzer**])
+- 👷🐧 Allow configuring Clang version in Ubuntu C++ testing workflow ([#146])
+  ([**@burgholzer**])
+- 👷🍎 Allow configuring GCC and Clang version in macOS C++ testing workflow
+  ([#146]) ([**@burgholzer**])
+- ✨🐉 Add MLIR configuration when specifying `clang-XX` as the `compiler` in
+  the C++ testing workflows on Linux and macOS ([#146]) ([**@burgholzer**])
 
 ### Changed
 
-- ♻️ Streamline runner and compiler configuration in C++ as well as Python workflows ([#146]) ([**@burgholzer**])
+- ♻️ Streamline runner and compiler configuration in C++ as well as Python
+  workflows ([#146]) ([**@burgholzer**])
 
 ## [1.12.0] - 2025-07-08
 
@@ -319,12 +369,15 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1120)._
 
 ### Added
 
-- 🐍🚨 Add support for running Astral's `ty` type checker as part of the `reusable-python-linter.yml` workflow ([#128]) ([**@burgholzer**])
+- 🐍🚨 Add support for running Astral's `ty` type checker as part of the
+  `reusable-python-linter.yml` workflow ([#128]) ([**@burgholzer**])
 
 ### Changed
 
-- 👷 Use GitHub App token for workflow that updates MQT Core ([#142]) ([**@denialhaag**])
-- 🐍🚨 Update `reusable-python-linter.yml` to allow disabling the `mypy` type checker ([#128]) ([**@burgholzer**])
+- 👷 Use GitHub App token for workflow that updates MQT Core ([#142])
+  ([**@denialhaag**])
+- 🐍🚨 Update `reusable-python-linter.yml` to allow disabling the `mypy` type
+  checker ([#128]) ([**@burgholzer**])
 
 ## [1.11.0] - 2025-06-15
 
@@ -333,7 +386,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1110)._
 ### Changed
 
 - ⬆️ Update `cibuildwheel` to `v3.0.0` ([#126]) ([**@burgholzer**])
-- 💚 Adapt file filter for the change detection to the new project structure regarding the Python bindings ([#119]) ([**@ystade**])
+- 💚 Adapt file filter for the change detection to the new project structure
+  regarding the Python bindings ([#119]) ([**@ystade**])
 
 ## [1.10.0] - 2025-05-23
 
@@ -341,7 +395,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#1100)._
 
 ### Changed
 
-- 🚨 Add support for linting Python bindings with clang-tidy ([#114]) ([**@ystade**])
+- 🚨 Add support for linting Python bindings with clang-tidy ([#114])
+  ([**@ystade**])
 
 ## [1.9.0] - 2025-04-26
 
@@ -349,12 +404,15 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#190)._
 
 ### Added
 
-- 👷 Add support for Windows 11 ARM runners ([#95], [#96]. [#100]) ([**@burgholzer**])
+- 👷 Add support for Windows 11 ARM runners ([#95], [#96]. [#100])
+  ([**@burgholzer**])
 
 ### Changed
 
-- 🚸 Allow configuring the runners enabled for Python packaging ([#96]) ([**@burgholzer**])
-- 🔧 Use MSVC generator for Windows builds over Ninja ([#102]) ([**@burgholzer**])
+- 🚸 Allow configuring the runners enabled for Python packaging ([#96])
+  ([**@burgholzer**])
+- 🔧 Use MSVC generator for Windows builds over Ninja ([#102])
+  ([**@burgholzer**])
 
 ### Removed
 
