@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Changed
+
+- 📝 Document the cibuildwheel v4 configuration cleanup for consumers ([#424])
+  ([**@burgholzer**])
+
 ## [2.2.1] - 2026-07-29
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#221)._
@@ -475,6 +480,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#424]: https://github.com/munich-quantum-toolkit/workflows/pull/424
 [#417]: https://github.com/munich-quantum-toolkit/workflows/pull/417
 [#400]: https://github.com/munich-quantum-toolkit/workflows/pull/400
 [#395]: https://github.com/munich-quantum-toolkit/workflows/pull/395

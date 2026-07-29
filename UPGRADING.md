@@ -6,6 +6,20 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+The reusable Python packaging workflow uses cibuildwheel v4. Consumers can
+simplify their cibuildwheel configuration:
+
+- Remove `cp313t-*` skip selectors. cibuildwheel v4 no longer supports CPython
+  3.13 free-threaded builds, while CPython 3.14 free-threaded builds remain
+  supported.
+- Remove overrides that append `uvx abi3audit --strict --report {wheel}` to the
+  repair command. cibuildwheel v4 audits ABI3 wheels by default.
+- Remove explicit `manylinux_2_28` image settings when the project does not need
+  a custom image. This is cibuildwheel v4's default.
+
+Generic free-threaded test skips such as `cp3??t-*` may still be needed when
+test dependencies do not provide free-threaded wheels.
+
 ## [2.2.1]
 
 On Windows, `reusable-python-tests.yml` now initializes native MSVC and uses
