@@ -10,6 +10,15 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.2.1] - 2026-07-29
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#221)._
+
+### Changed
+
+- ⚡️ Initialize native MSVC and use Ninja to activate job-local `sccache` in
+  Windows Python test jobs ([#417]) ([**@burgholzer**])
+
 ## [2.2.0] - 2026-06-22
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#220)._
@@ -424,7 +433,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...HEAD
+[2.2.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.1
 [2.2.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.0
 [2.1.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.1.1
 [2.1.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.1.0
@@ -465,6 +475,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#417]: https://github.com/munich-quantum-toolkit/workflows/pull/417
 [#400]: https://github.com/munich-quantum-toolkit/workflows/pull/400
 [#395]: https://github.com/munich-quantum-toolkit/workflows/pull/395
 [#392]: https://github.com/munich-quantum-toolkit/workflows/pull/392
