@@ -6,6 +6,23 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.2.1]
+
+On Windows, `reusable-python-tests.yml` now initializes native MSVC and uses
+Ninja so the installed, job-local `sccache` can reuse compiler results between
+Python sessions. Compiler results are not stored between jobs or workflow runs.
+Linux and macOS setup is unchanged.
+
+To reuse a native build tree between nox sessions, projects may configure a
+shared directory in `pyproject.toml`, for example:
+
+```toml
+[tool.scikit-build]
+build-dir = "build/python/{build_type}"
+```
+
+Keep this directory separate from CMake preset build directories.
+
 ## [2.2.0]
 
 This release adds a `run-python-linter` output to
@@ -594,7 +611,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...HEAD
+[2.2.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.3...v2.1.0
 [2.0.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.2...v2.0.3
