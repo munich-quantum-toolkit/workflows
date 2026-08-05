@@ -6,19 +6,12 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
-The reusable Python packaging workflow uses cibuildwheel v4. Consumers can
-simplify their cibuildwheel configuration:
+## [2.2.2]
 
-- Remove `cp313t-*` skip selectors. cibuildwheel v4 no longer supports CPython
-  3.13 free-threaded builds, while CPython 3.14 free-threaded builds remain
-  supported.
-- Remove overrides that append `uvx abi3audit --strict --report {wheel}` to the
-  repair command. cibuildwheel v4 audits ABI3 wheels by default.
-- Remove explicit `manylinux_2_28` image settings when the project does not need
-  a custom image. This is cibuildwheel v4's default.
-
-Generic free-threaded test skips such as `cp3??t-*` may still be needed when
-test dependencies do not provide free-threaded wheels.
+This release updates [pypa/cibuildwheel] to `v4.2.0`. As a result, CPython 3.15
+wheels are built by default. Consumers may need to skips tests for `cp315-*` in
+their `cibuildwheel` configuration if any dependency does not support Python
+3.15 yet.
 
 ## [2.2.1]
 
@@ -54,10 +47,30 @@ must switch to [astral-sh/ty-pre-commit].
 
 ## [2.0.3]
 
+### Additional file inputs for change detection
+
 This release adds `additional-cpp-files`, `additional-python-files`, and
 `additional-cd-files` inputs to `reusable-change-detection.yml` to extend the
 change detection. If provided, the specified files are checked in addition to
 the default ones.
+
+### Update to `cibuildwheel` v4
+
+This release updates [pypa/cibuildwheel] to `v4.0.0`. Consumers can simplify
+their `cibuildwheel` configuration:
+
+- Remove `cp313t-*` skip selectors. `cibuildwheel` v4 no longer supports CPython
+  3.13 free-threaded builds, while CPython 3.14 free-threaded builds remain
+  supported.
+- Remove overrides that append `uvx abi3audit --strict --report {wheel}` to the
+  repair command. `cibuildwheel` v4 audits ABI3 wheels by default.
+- Remove explicit `manylinux_2_28` image settings when the project does not need
+  a custom image. This is `cibuildwheel` v4's default.
+- Remove explicit `delvewheel` installation on Windows. `cibuildwheel` v4
+  installs it by default.
+
+Generic free-threaded test skips such as `cp3??t-*` may still be needed when
+test dependencies do not provide free-threaded wheels.
 
 ## [2.0.2]
 
@@ -625,7 +638,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.2...HEAD
+[2.2.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.0.3...v2.1.0
@@ -657,3 +671,4 @@ invocations under Windows.
 [zizmor]: https://docs.zizmor.sh/
 [CMake presets]: https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html
 [astral-sh/ty-pre-commit]: https://github.com/astral-sh/ty-pre-commit
+[pypa/cibuildwheel]: https://github.com/pypa/cibuildwheel

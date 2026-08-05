@@ -10,9 +10,14 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.2.2] - 2026-08-05
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#222)._
+
 ### Changed
 
-- 📝 Document the cibuildwheel v4 configuration cleanup for consumers ([#424])
+- ⬆️ Update [pypa/cibuildwheel] to `v4.2.0` ([#430])
+- 📝 Document the `cibuildwheel` v4 configuration cleanup for consumers ([#424])
   ([**@burgholzer**])
 
 ## [2.2.1] - 2026-07-29
@@ -63,7 +68,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#203)._
 ### Changed
 
 - ⬆️ Update `codecov/codecov-action` to `v7.0.0` ([#388]) ([**@denialhaag**])
-- ⬆️ Update `cibuildwheel` to `v4.0.0` ([#389]) ([**@denialhaag**])
+- ⬆️ Update [pypa/cibuildwheel] to `v4.0.0` ([#389]) ([**@denialhaag**])
 
 ## [2.0.2] - 2026-06-01
 
@@ -438,7 +443,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.2...HEAD
+[2.2.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.2
 [2.2.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.1
 [2.2.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.0
 [2.1.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.1.1
@@ -480,6 +486,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#430]: https://github.com/munich-quantum-toolkit/workflows/pull/430
 [#424]: https://github.com/munich-quantum-toolkit/workflows/pull/424
 [#417]: https://github.com/munich-quantum-toolkit/workflows/pull/417
 [#400]: https://github.com/munich-quantum-toolkit/workflows/pull/400
@@ -553,4 +560,5 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 [GitHub Release Notes]: https://github.com/munich-quantum-toolkit/workflows/releases
 [munich-quantum-software/setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
+[pypa/cibuildwheel]: https://github.com/pypa/cibuildwheel
 [CMake presets]: https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html
