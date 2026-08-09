@@ -41,6 +41,17 @@ whitelist of inherited secrets as environment variables. In the calling
 workflow, use `secrets: inherit` and define the corresponding repository or
 environment secrets with the same names.
 
+Secret inheritance is limited to callers in the same organization or enterprise.
+Cross-organization callers of `reusable-python-packaging-wheel-cibuildwheel.yml`
+can instead pass the AWS secrets explicitly:
+
+```yaml
+secrets:
+  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+```
+
 The currently supported variables are
 
 - `IQM_TOKEN`,

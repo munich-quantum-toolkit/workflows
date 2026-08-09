@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Added
+
+- 🔐 Allow cross-organization callers to pass AWS and S3 secrets explicitly to
+  the reusable `cibuildwheel` workflow ([**@burgholzer**])
+
 ## [2.2.2] - 2026-08-05
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#222)._
