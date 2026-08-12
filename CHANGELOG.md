@@ -15,6 +15,11 @@ releases may include breaking changes.
 - 🔐 Allow cross-organization callers to pass AWS and S3 secrets explicitly to
   the reusable `cibuildwheel` workflow ([#432]) ([**@burgholzer**])
 
+### Fixed
+
+- 🐛 Name the Windows coverage report after the platform it was created on
+  ([#433]) ([**@denialhaag**])
+
 ## [2.2.2] - 2026-08-05
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#222)._
@@ -491,6 +496,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#433]: https://github.com/munich-quantum-toolkit/workflows/pull/433
 [#432]: https://github.com/munich-quantum-toolkit/workflows/pull/432
 [#430]: https://github.com/munich-quantum-toolkit/workflows/pull/430
 [#424]: https://github.com/munich-quantum-toolkit/workflows/pull/424
