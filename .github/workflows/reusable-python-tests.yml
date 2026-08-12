@@ -183,12 +183,16 @@ jobs:
 
       # run the nox minimums session (assumes a nox session named "minimums" exists) with coverage
       - name: 🐍 Test with minimal versions
+        # `bash` is required so that `$RUNS_ON` is expanded on Windows, too
+        shell: bash
         env:
           RUNS_ON: ${{ inputs.runs-on }}
         run: uvx nox -s minimums --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
 
       # run the nox tests session (assumes a nox session named "tests" exists) with coverage
       - name: 🐍 Test
+        # `bash` is required so that `$RUNS_ON` is expanded on Windows, too
+        shell: bash
         env:
           RUNS_ON: ${{ inputs.runs-on }}
         run: uvx nox -s tests --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
