@@ -10,10 +10,18 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.2.3] - 2026-08-19
+
 ### Added
 
 - 🔐 Allow cross-organization callers to pass AWS and S3 secrets explicitly to
   the reusable `cibuildwheel` workflow ([#432]) ([**@burgholzer**])
+
+### Changed
+
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.4.2` to add support for
+  LLVM 21.1.8 with binaries that disable runtime type information (RTTI) for the
+  first time ([#434])
 
 ### Fixed
 
@@ -453,7 +461,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.2...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.3...HEAD
+[2.2.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.3
 [2.2.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.2
 [2.2.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.1
 [2.2.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.0
@@ -496,6 +505,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#434]: https://github.com/munich-quantum-toolkit/workflows/pull/434
 [#433]: https://github.com/munich-quantum-toolkit/workflows/pull/433
 [#432]: https://github.com/munich-quantum-toolkit/workflows/pull/432
 [#430]: https://github.com/munich-quantum-toolkit/workflows/pull/430
