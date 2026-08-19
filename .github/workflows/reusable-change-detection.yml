@@ -90,7 +90,7 @@ jobs:
       - name: Set a flag for running the C++ tests
         if: >-
           github.event_name != 'pull_request'
-          || steps.changed-cpp-testable-files.outputs.added_modified_renamed != ''
+          || steps.changed-cpp-testable-files.outputs.all != ''
         id: cpp-tests-changes
         run: >-
           echo "run-cpp-tests=true" >> "${GITHUB_OUTPUT}"
@@ -115,7 +115,7 @@ jobs:
       - name: Set a flag for running the C++ linter
         if: >-
           github.event_name != 'pull_request'
-          || steps.changed-cpp-linter-files.outputs.added_modified_renamed != ''
+          || steps.changed-cpp-linter-files.outputs.all != ''
         id: cpp-linter-changes
         run: >-
           echo "run-cpp-linter=true" >> "${GITHUB_OUTPUT}"
@@ -147,7 +147,7 @@ jobs:
       - name: Set a flag for running the Python tests
         if: >-
           github.event_name != 'pull_request'
-          || steps.changed-python-testable-files.outputs.added_modified_renamed != ''
+          || steps.changed-python-testable-files.outputs.all != ''
         id: python-tests-changes
         run: >-
           echo "run-python-tests=true" >> "${GITHUB_OUTPUT}"
@@ -173,7 +173,7 @@ jobs:
       - name: Set a flag for running the Python linter
         if: >-
           github.event_name != 'pull_request'
-          || steps.changed-python-linter-files.outputs.added_modified_renamed != ''
+          || steps.changed-python-linter-files.outputs.all != ''
         id: python-linter-changes
         run: >-
           echo "run-python-linter=true" >> "${GITHUB_OUTPUT}"
@@ -190,7 +190,7 @@ jobs:
       - name: Set a flag for running the continuous deployment job
         if: >-
           github.event_name == 'pull_request'
-          && steps.changed-cd-files.outputs.added_modified_renamed != ''
+          && steps.changed-cd-files.outputs.all != ''
         id: cd-changes
         run: >-
           echo "run-cd=true" >> "${GITHUB_OUTPUT}"

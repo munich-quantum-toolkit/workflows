@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- 🐛 Consider deleted files in `reusable-change-detection.yml` ([#441])
+  ([**@denialhaag**])
+
 ## [2.2.3] - 2026-08-19
 
 ### Added
@@ -505,6 +510,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#441]: https://github.com/munich-quantum-toolkit/workflows/pull/441
 [#434]: https://github.com/munich-quantum-toolkit/workflows/pull/434
 [#433]: https://github.com/munich-quantum-toolkit/workflows/pull/433
 [#432]: https://github.com/munich-quantum-toolkit/workflows/pull/432
