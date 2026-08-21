@@ -185,7 +185,6 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.determine-new-version-and-revision.outputs.new_version }}
           NEW_REVISION: ${{ steps.determine-new-version-and-revision.outputs.new_revision }}
-          RUN_ID: ${{ github.run_id }}
         run: |
           sed -i "s|set(MQT_CORE_VERSION.*|set(MQT_CORE_VERSION $NEW_VERSION|" cmake/ExternalDependencies.cmake
           sed -i "s|set(MQT_CORE_REV.*|set(MQT_CORE_REV \"$NEW_REVISION\"|" cmake/ExternalDependencies.cmake
@@ -200,6 +199,7 @@ jobs:
           USED_REVISION: ${{ steps.get-used-version.outputs.revision }}
           NEW_VERSION: ${{ steps.determine-new-version-and-revision.outputs.new_version }}
           NEW_REVISION: ${{ steps.determine-new-version-and-revision.outputs.new_revision }}
+          RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
 
