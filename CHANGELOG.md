@@ -12,6 +12,8 @@ releases may include breaking changes.
 
 ### Fixed
 
+- 🐛 Sign and attribute the commits created by `reusable-mqt-core-update.yml`
+  ([#442]) ([**@denialhaag**])
 - 🐛 Consider deleted files in `reusable-change-detection.yml` ([#441])
   ([**@denialhaag**])
 
@@ -510,6 +512,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#442]: https://github.com/munich-quantum-toolkit/workflows/pull/442
 [#441]: https://github.com/munich-quantum-toolkit/workflows/pull/441
 [#434]: https://github.com/munich-quantum-toolkit/workflows/pull/434
 [#433]: https://github.com/munich-quantum-toolkit/workflows/pull/433
