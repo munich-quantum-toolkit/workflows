@@ -195,11 +195,11 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.create-token.outputs.token }}
           REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
           USED_VERSION: ${{ steps.get-used-version.outputs.version }}
           USED_REVISION: ${{ steps.get-used-version.outputs.revision }}
           NEW_VERSION: ${{ steps.determine-new-version-and-revision.outputs.new_version }}
           NEW_REVISION: ${{ steps.determine-new-version-and-revision.outputs.new_revision }}
-          RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
 
