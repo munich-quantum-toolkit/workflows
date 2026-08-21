@@ -211,13 +211,19 @@ jobs:
             exit 0
           fi
 
-          # Point the pull request branch at the current base, so the commit below applies
-          # cleanly whether or not the branch already exists from an earlier run.
+          # Build the commit on a temporary branch, so that an already open pull request
+          # keeps its current commit if anything below fails.
           BASE_OID="$(git rev-parse HEAD)"
+          TEMPORARY_BRANCH="$BRANCH_NAME-tmp"
+          cleanup() {
+            gh api --method DELETE "repos/$REPOSITORY/git/refs/heads/$TEMPORARY_BRANCH" \
+              >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
           gh api "repos/$REPOSITORY/git/refs" \
-            --field "ref=refs/heads/$BRANCH_NAME" \
+            --field "ref=refs/heads/$TEMPORARY_BRANCH" \
             --field "sha=$BASE_OID" >/dev/null 2>&1 ||
-            gh api --method PATCH "repos/$REPOSITORY/git/refs/heads/$BRANCH_NAME" \
+            gh api --method PATCH "repos/$REPOSITORY/git/refs/heads/$TEMPORARY_BRANCH" \
               --field "sha=$BASE_OID" --field "force=true" >/dev/null
 
           # Commit through the GraphQL API so that GitHub signs the commit and attributes it
@@ -232,9 +238,9 @@ jobs:
           DELETIONS="$(git diff --cached --no-renames --name-only --diff-filter=D |
             jq --raw-input '{path: .}' | jq --slurp '.')"
 
-          jq -n \
+          COMMIT_OID="$(jq -n \
             --arg repository "$REPOSITORY" \
-            --arg branch "$BRANCH_NAME" \
+            --arg branch "$TEMPORARY_BRANCH" \
             --arg oid "$BASE_OID" \
             --arg headline "⬆️ Update \`munich-quantum-toolkit/core\` from v${USED_VERSION} to v${NEW_VERSION}" \
             --argjson additions "$ADDITIONS" \
@@ -249,7 +255,15 @@ jobs:
                   fileChanges: {additions: $additions, deletions: $deletions}
                 }
               }
-            }' | gh api graphql --input - >/dev/null
+            }' | gh api graphql --input - \
+            --jq '.data.createCommitOnBranch.commit.oid')"
+
+          # Only now move the pull request branch onto the new commit.
+          gh api "repos/$REPOSITORY/git/refs" \
+            --field "ref=refs/heads/$BRANCH_NAME" \
+            --field "sha=$COMMIT_OID" >/dev/null 2>&1 ||
+            gh api --method PATCH "repos/$REPOSITORY/git/refs/heads/$BRANCH_NAME" \
+              --field "sha=$COMMIT_OID" --field "force=true" >/dev/null
 
           # Open a pull request unless one is already open for this branch.
           if [ -z "$(gh pr list --repo "$REPOSITORY" --head "$BRANCH_NAME" --state open --json number --jq '.[].number')" ]; then
