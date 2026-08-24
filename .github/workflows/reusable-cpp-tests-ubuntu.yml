@@ -16,6 +16,10 @@ on:
           This can be any valid Ubuntu runner image, such as 'ubuntu-24.04' or its ARM variant 'ubuntu-24.04-arm'.
         default: "ubuntu-24.04"
         type: string
+      run-on-draft:
+        description: "Whether to run the tests for draft pull requests"
+        default: true
+        type: boolean
       compiler:
         description: >
           The compiler to use. Defaults to 'gcc'.
@@ -55,6 +59,7 @@ permissions:
 
 jobs:
   cpp-tests-ubuntu:
+    if: ${{ !github.event.pull_request.draft || inputs.run-on-draft }}
     name: 🐧 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.preset-name }}
     runs-on: ${{ inputs.runs-on }}
     env:

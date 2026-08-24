@@ -16,6 +16,10 @@ on:
           This can be any valid Windows runner image, such as 'windows-2022' or 'windows-2025'.
         default: "windows-latest"
         type: string
+      run-on-draft:
+        description: "Whether to run the tests for draft pull requests"
+        default: true
+        type: boolean
       compiler:
         description: >
           The compiler to use. Defaults to 'msvc'.
@@ -61,6 +65,7 @@ defaults:
 
 jobs:
   cpp-tests-windows:
+    if: ${{ !github.event.pull_request.draft || inputs.run-on-draft }}
     name: 🏁 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.preset-name }}
     runs-on: ${{ inputs.runs-on }}
     env:
