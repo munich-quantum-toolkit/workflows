@@ -10,6 +10,15 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-08-24
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#230)._
+
+### Added
+
+- ✨ Allow callers to reduce Python and C++ tests for draft pull requests
+  ([#443]) ([**@denialhaag**])
+
 ### Fixed
 
 - 🐛 Sign and attribute the commits created by `reusable-mqt-core-update.yml`
@@ -468,7 +477,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.3.0
 [2.2.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.3
 [2.2.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.2
 [2.2.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.1

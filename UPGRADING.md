@@ -6,6 +6,72 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.3.0]
+
+The Python test workflow now accepts `sessions` and `draft-sessions` as
+JSON-formatted lists of Nox sessions. `sessions` is used for ready pull requests
+and non-pull-request events and defaults to `["minimums", "tests"]`.
+`draft-sessions` is used for draft pull requests and defaults to
+`["tests-3.14"]`.
+
+For example, the following matrix runs the `tests` session for every supported
+Python version on ready pull requests and other events, but only the Python 3.14
+session on drafts:
+
+```yaml
+python-tests:
+  name: 🐍 Test
+  strategy:
+    fail-fast: false
+    matrix:
+      runs-on:
+        [
+          ubuntu-24.04,
+          ubuntu-24.04-arm,
+          macos-26,
+          macos-26-intel,
+          windows-2025,
+        ]
+  uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-python-tests.yml@v2.3.0
+  with:
+    runs-on: ${{ matrix.runs-on }}
+    sessions: '["tests"]'
+    draft-sessions: '["tests-3.14"]'
+```
+
+The C++ test workflows for Ubuntu, macOS, and Windows now accept a
+`run-on-draft` input. It defaults to `true` for backward compatibility. Set it
+to `false` for jobs that should be skipped entirely on draft pull requests, such
+as release builds or a Linux x86 build already covered by the coverage job. A
+matrix can select this per configuration.
+
+For example, this Linux matrix skips its x86 debug build because it is covered
+by the coverage job and its ARM release build because it is not needed on
+drafts:
+
+```yaml
+cpp-tests-ubuntu:
+  name: 🇨 Test 🐧
+  strategy:
+    fail-fast: false
+    matrix:
+      include:
+        - runs-on: ubuntu-24.04
+          compiler: gcc
+          preset: debug
+          run-on-draft: false
+        - runs-on: ubuntu-24.04-arm
+          compiler: gcc
+          preset: release
+          run-on-draft: false
+  uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-cpp-tests-ubuntu.yml@v2.3.0
+  with:
+    runs-on: ${{ matrix.runs-on }}
+    compiler: ${{ matrix.compiler }}
+    preset-name: ${{ matrix.preset }}
+    run-on-draft: ${{ matrix.run-on-draft }}
+```
+
 ## [2.2.2]
 
 This release updates [pypa/cibuildwheel] to `v4.2.0`. As a result, CPython 3.15
@@ -638,7 +704,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.2...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.3...v2.3.0
 [2.2.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.1.0...v2.2.0

@@ -14,6 +14,14 @@ on:
         description: "The platform to run the tests on"
         required: true
         type: string
+      sessions:
+        description: "The Nox sessions to run for ready pull requests and non-pull-request events, formatted as a JSON array"
+        default: '["minimums", "tests"]'
+        type: string
+      draft-sessions:
+        description: "The Nox sessions to run for draft pull requests, formatted as a JSON array"
+        default: '["tests-3.14"]'
+        type: string
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -181,21 +189,23 @@ jobs:
       - name: Install sccache
         run: uv tool install sccache
 
-      # run the nox minimums session (assumes a nox session named "minimums" exists) with coverage
-      - name: 🐍 Test with minimal versions
-        # `bash` is required so that `$RUNS_ON` is expanded on Windows, too
-        shell: bash
-        env:
-          RUNS_ON: ${{ inputs.runs-on }}
-        run: uvx nox -s minimums --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
-
-      # run the nox tests session (assumes a nox session named "tests" exists) with coverage
       - name: 🐍 Test
+        if: ${{ !github.event.pull_request.draft }}
         # `bash` is required so that `$RUNS_ON` is expanded on Windows, too
         shell: bash
         env:
           RUNS_ON: ${{ inputs.runs-on }}
-        run: uvx nox -s tests --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
+          SESSIONS: ${{ join(fromJSON(inputs.sessions), ' ') }}
+        run: uvx nox -s $SESSIONS --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
+
+      - name: 🐍 Test draft
+        if: ${{ github.event.pull_request.draft }}
+        # `bash` is required so that `$RUNS_ON` is expanded on Windows, too
+        shell: bash
+        env:
+          RUNS_ON: ${{ inputs.runs-on }}
+          SESSIONS: ${{ join(fromJSON(inputs.draft-sessions), ' ') }}
+        run: uvx nox -s $SESSIONS --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
 
       # upload the report as an artifact to GitHub so that it can later be uploaded to Codecov
       - name: Upload 🐍 coverage report for ${{ inputs.runs-on }}
