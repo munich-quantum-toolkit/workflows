@@ -82,8 +82,7 @@ sessions whenever the draft status changes, add `ready_for_review` and
 ```yaml
 on:
   pull_request:
-    types:
-      [opened, reopened, synchronize, converted_to_draft, ready_for_review]
+    types: [opened, reopened, synchronize, ready_for_review]
 ```
 
 ## [2.2.2]
