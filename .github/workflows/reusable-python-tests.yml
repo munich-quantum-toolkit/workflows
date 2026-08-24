@@ -189,8 +189,8 @@ jobs:
       - name: Install sccache
         run: uv tool install sccache
 
-      - name: 🐍 Test
-        if: ${{ !github.event.pull_request.draft }}
+      - if: ${{ !github.event.pull_request.draft }}
+        name: 🐍 Test
         # `bash` is required so that `$RUNS_ON` is expanded on Windows, too
         shell: bash
         env:
@@ -198,8 +198,8 @@ jobs:
           SESSIONS: ${{ join(fromJSON(inputs.sessions), ' ') }}
         run: uvx nox -s $SESSIONS --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
 
-      - name: 🐍 Test draft
-        if: ${{ github.event.pull_request.draft }}
+      - if: ${{ github.event.pull_request.draft }}
+        name: 🐍 Test
         # `bash` is required so that `$RUNS_ON` is expanded on Windows, too
         shell: bash
         env:
