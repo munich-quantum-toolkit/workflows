@@ -72,6 +72,20 @@ cpp-tests-ubuntu:
     run-on-draft: ${{ matrix.run-on-draft }}
 ```
 
+By default, GitHub does not run `pull_request` workflows when a pull request is
+marked ready for review or converted back to a draft. To run the appropriate
+sessions whenever the draft status changes, add `ready_for_review` and
+`converted_to_draft` to the pull request activity types in `ci.yml`. Specifying
+`types` replaces the defaults, so retain `opened`, `reopened`, and
+`synchronize`:
+
+```yaml
+on:
+  pull_request:
+    types:
+      [opened, reopened, synchronize, converted_to_draft, ready_for_review]
+```
+
 ## [2.2.2]
 
 This release updates [pypa/cibuildwheel] to `v4.2.0`. As a result, CPython 3.15
