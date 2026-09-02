@@ -175,7 +175,7 @@ jobs:
         with:
           style: ""
           tidy-checks: ""
-          # Directly point cpp-linter to the LLVM version installed above.
+          # Directly use the installed LLVM version.
           version: ${{ format('/usr/lib/llvm-{0}/bin', inputs.clang-version) }}
           ignore: ${{ format(
             'build|!build/mlir/**|**/include|include{0}{1}',

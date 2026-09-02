@@ -10,9 +10,9 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
-### Fixed
+### Changed
 
-- 🐛 Allow `reusable-cpp-linter.yml` callers to select Clang 23 ([#448])
+- ♻️ Directly pass the LLVM installation directory to `cpp-linter` ([#448])
   ([**@simon1hofmann**])
 
 ## [2.3.0] - 2026-08-24
