@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- 🐛 Allow `reusable-cpp-linter.yml` callers to select Clang 23 ([#448])
+  ([**@simon1hofmann**])
+
 ## [2.3.0] - 2026-08-24
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#230)._
@@ -522,6 +527,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#448]: https://github.com/munich-quantum-toolkit/workflows/pull/448
 [#442]: https://github.com/munich-quantum-toolkit/workflows/pull/442
 [#441]: https://github.com/munich-quantum-toolkit/workflows/pull/441
 [#434]: https://github.com/munich-quantum-toolkit/workflows/pull/434
@@ -593,6 +599,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [**@ystade**]: https://github.com/ystade
 [**@denialhaag**]: https://github.com/denialhaag
 [**@flowerthrower**]: https://github.com/flowerthrower
+[**@simon1hofmann**]: https://github.com/simon1hofmann
 
 <!-- General links -->
 
