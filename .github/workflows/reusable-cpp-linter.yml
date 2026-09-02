@@ -175,8 +175,8 @@ jobs:
         with:
           style: ""
           tidy-checks: ""
-          # cpp-linter-action v2.21.0 accepts versions after 22 only as installed tool paths.
-          version: ${{ inputs.clang-version > 22 && format('/usr/lib/llvm-{0}/bin', inputs.clang-version) || inputs.clang-version }}
+          # Directly point cpp-linter to the LLVM version installed above.
+          version: ${{ format('/usr/lib/llvm-{0}/bin', inputs.clang-version) }}
           ignore: ${{ format(
             'build|!build/mlir/**|**/include|include{0}{1}',
             inputs.cpp-linter-ignore-extra != '' && '|' || '',
