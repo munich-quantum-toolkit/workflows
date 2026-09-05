@@ -39,7 +39,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
-      - uses: munich-quantum-toolkit/templates@f87a5f152d33b64e3cc4fad41c402bf7ce892f5d # v1.4.3
+      - uses: munich-quantum-toolkit/templates@8caeb0bd8d0e2ebf906e7c3a826c06f72844a83b # v1.5.0
         with:
           token: ${{ steps.create-token.outputs.token }}
           name: Reusable Workflows
