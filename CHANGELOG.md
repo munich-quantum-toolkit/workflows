@@ -10,6 +10,13 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.3.1] - 2026-09-05
+
+### Changed
+
+- ♻️ Directly pass the LLVM installation directory to `cpp-linter` ([#448])
+  ([**@simon1hofmann**])
+
 ## [2.3.0] - 2026-08-24
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#230)._
@@ -477,7 +484,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.1...HEAD
+[2.3.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.3.1
 [2.3.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.3.0
 [2.2.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.3
 [2.2.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.2
@@ -522,6 +530,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#448]: https://github.com/munich-quantum-toolkit/workflows/pull/448
 [#442]: https://github.com/munich-quantum-toolkit/workflows/pull/442
 [#441]: https://github.com/munich-quantum-toolkit/workflows/pull/441
 [#434]: https://github.com/munich-quantum-toolkit/workflows/pull/434
@@ -593,6 +602,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [**@ystade**]: https://github.com/ystade
 [**@denialhaag**]: https://github.com/denialhaag
 [**@flowerthrower**]: https://github.com/flowerthrower
+[**@simon1hofmann**]: https://github.com/simon1hofmann
 
 <!-- General links -->
 

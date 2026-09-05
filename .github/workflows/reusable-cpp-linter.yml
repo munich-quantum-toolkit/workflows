@@ -175,7 +175,8 @@ jobs:
         with:
           style: ""
           tidy-checks: ""
-          version: ${{ inputs.clang-version }}
+          # Directly use the installed LLVM version.
+          version: ${{ format('/usr/lib/llvm-{0}/bin', inputs.clang-version) }}
           ignore: ${{ format(
             'build|!build/mlir/**|**/include|include{0}{1}',
             inputs.cpp-linter-ignore-extra != '' && '|' || '',
