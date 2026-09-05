@@ -17,6 +17,11 @@ releases may include breaking changes.
 - ♻️ Directly pass the LLVM installation directory to `cpp-linter` ([#448])
   ([**@simon1hofmann**])
 
+### Fixed
+
+- 🐛 Make pull request zizmor findings fail the workflow directly instead of
+  relying on code scanning merge protection ([#457]) ([**@burgholzer**])
+
 ## [2.3.0] - 2026-08-24
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#230)._
@@ -530,6 +535,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#457]: https://github.com/munich-quantum-toolkit/workflows/pull/457
 [#448]: https://github.com/munich-quantum-toolkit/workflows/pull/448
 [#442]: https://github.com/munich-quantum-toolkit/workflows/pull/442
 [#441]: https://github.com/munich-quantum-toolkit/workflows/pull/441
