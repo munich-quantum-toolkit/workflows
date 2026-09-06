@@ -67,6 +67,7 @@ jobs:
     name: 🚨 Lint
     runs-on: ubuntu-24.04
     permissions:
+      actions: write # Required to replace the preceding ccache entry on main
       contents: read # Needed to fetch code
       pull-requests: write # Needed to post PR comments
     env:
@@ -100,8 +101,11 @@ jobs:
         if: ${{ inputs.build-project }}
         uses: Chocobo1/setup-ccache-action@a4d08616f5b614053bce228ddf881592f69d61d4 # v1.5.9
         with:
+          ccache_options: max_size=500M
           prepend_symlinks_to_path: false
           override_cache_key: c++-lint
+          remove_stale_cache: ${{ github.ref == 'refs/heads/main' }}
+          store_cache: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Set up mold as linker
         if: ${{ inputs.build-project }}

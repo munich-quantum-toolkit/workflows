@@ -38,6 +38,18 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
         type: string
+      free-disk-space:
+        description: "Whether to free disk space before running the tests"
+        default: false
+        type: boolean
+      use-lld:
+        description: "Whether to use LLD for Windows native builds"
+        default: false
+        type: boolean
+      use-sccache-gha:
+        description: "Whether to use the GitHub Actions cache backend for sccache"
+        default: false
+        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-python-tests-${{ inputs.runs-on }}
@@ -53,6 +65,9 @@ jobs:
     env:
       FORCE_COLOR: 3
       GITHUB_TOKEN: ${{ github.token }}
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_GHA_VERSION: ${{ inputs.use-sccache-gha && format('{0}-{1}-llvm-{2}', github.workflow, inputs.runs-on, inputs.llvm-version) || '' }}
+      SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -62,20 +77,20 @@ jobs:
       # free up space on the runners
       # the nox environments can get quite large, especially if torch is installed
       - name: Free up space (Linux)
-        if: runner.os == 'Linux'
+        if: inputs.free-disk-space && runner.os == 'Linux'
         run: |
           sudo rm -rf /opt/ghc || true
           sudo rm -rf /usr/local/lib/android/sdk || true
           sudo rm -rf /usr/share/dotnet || true
           sudo rm -rf /usr/share/swift || true
       - name: Free up space (macOS)
-        if: runner.os == 'macOS'
+        if: inputs.free-disk-space && runner.os == 'macOS'
         run: |
           sudo rm -rf /usr/local/share/android-sdk || true
           sudo rm -rf /usr/local/share/dotnet || true
           sudo rm -rf /usr/share/swift || true
       - name: Free up space (Windows)
-        if: runner.os == 'Windows'
+        if: inputs.free-disk-space && runner.os == 'Windows'
         run: |
           Remove-Item -Recurse -Force "C:\Android\android-sdk" -ErrorAction SilentlyContinue
           Remove-Item -Recurse -Force "C:\Program Files\dotnet" -ErrorAction SilentlyContinue
@@ -160,10 +175,17 @@ jobs:
       - name: Configure Windows native builds
         if: runner.os == 'Windows'
         shell: bash
+        env:
+          USE_LLD: ${{ inputs.use-lld }}
         run: |
-          echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
-          echo "CMAKE_C_COMPILER_LAUNCHER=sccache" >> "$GITHUB_ENV"
-          echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache" >> "$GITHUB_ENV"
+          {
+            echo "CMAKE_GENERATOR=Ninja"
+            echo "CMAKE_C_COMPILER_LAUNCHER=sccache"
+            echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+            if [[ "$USE_LLD" == "true" ]]; then
+              echo "SKBUILD_CMAKE_ARGS=-DLLVM_ENABLE_LLD=ON"
+            fi
+          } >> "$GITHUB_ENV"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
@@ -185,9 +207,10 @@ jobs:
         with:
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
-      # set up sccache for faster builds
-      - name: Install sccache
-        run: uv tool install sccache
+      - name: Set up sccache
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
+        with:
+          version: v0.17.0
 
       - if: ${{ !github.event.pull_request.draft }}
         name: 🐍 Test
@@ -215,5 +238,8 @@ jobs:
           path: coverage-*
           archive: false
 
-      - name: Show sccache stats
-        run: sccache --show-stats
+      - name: Verify sccache use
+        if: ${{ inputs.use-sccache-gha }}
+        run: |
+          "$SCCACHE_PATH" --show-stats --stats-format json |
+            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'

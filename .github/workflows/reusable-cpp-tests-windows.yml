@@ -51,6 +51,14 @@ on:
         description: "The CMake preset to use for configuration and build"
         required: true
         type: string
+      use-lld:
+        description: "Whether to enable LLD"
+        default: false
+        type: boolean
+      use-sccache-gha:
+        description: "Whether to use sccache with the GitHub Actions cache backend"
+        default: false
+        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.preset-name }}
@@ -72,6 +80,9 @@ jobs:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_GHA_VERSION: ${{ inputs.use-sccache-gha && format('{0}-{1}-{2}-llvm-{3}', github.workflow, inputs.runs-on, inputs.compiler, inputs.llvm-version) || '' }}
+      SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -83,6 +94,75 @@ jobs:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Set up MSVC
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $vsArch = switch ($env:RUNNER_ARCH) {
+            'X64' { 'amd64' }
+            'ARM64' { 'arm64' }
+            default { throw "Unsupported Windows runner architecture: $env:RUNNER_ARCH" }
+          }
+          $component = switch ($env:RUNNER_ARCH) {
+            'X64' { 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64' }
+            'ARM64' { 'Microsoft.VisualStudio.Component.VC.Tools.ARM64' }
+          }
+
+          $candidates = @(
+            if (${env:ProgramFiles(x86)}) {
+              Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+            }
+            if ($env:ProgramFiles) {
+              Join-Path $env:ProgramFiles 'Microsoft Visual Studio\Installer\vswhere.exe'
+            }
+            Get-Command vswhere.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+          )
+          $vswhere = $candidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+          if (-not $vswhere) {
+            throw 'vswhere.exe not found'
+          }
+
+          $vsPath = (& $vswhere -latest -products '*' -prerelease -requires $component -property installationPath | Select-Object -First 1)
+          if (-not $vsPath) {
+            throw "Visual Studio with $component not found"
+          }
+          $devShell = Join-Path $vsPath 'Common7\Tools\Launch-VsDevShell.ps1'
+          if (-not (Test-Path $devShell)) {
+            throw "Developer shell not found: $devShell"
+          }
+
+          $before = @{}
+          Get-ChildItem Env: | ForEach-Object { $before[$_.Name] = $_.Value }
+          $devShellArguments = @{
+            Arch = $vsArch
+            SkipAutomaticLocation = $true
+          }
+          if ($env:RUNNER_ARCH -eq 'X64') {
+            $devShellArguments.HostArch = 'amd64'
+          }
+          & $devShell @devShellArguments
+
+          $compiler = (Get-Command cl.exe -ErrorAction Stop).Source
+          $expected = if ($env:RUNNER_ARCH -eq 'ARM64') { '\Hostarm64\arm64\' } else { '\Hostx64\x64\' }
+          if ($compiler -notmatch [regex]::Escape($expected)) {
+            throw "Unexpected MSVC compiler for $($env:RUNNER_ARCH): $compiler"
+          }
+          Write-Host "Using $compiler"
+
+          Get-ChildItem Env: | ForEach-Object {
+            if (
+              (!$before.ContainsKey($_.Name) -or $before[$_.Name] -cne $_.Value) -and
+              $_.Name -notmatch '^(GITHUB_|RUNNER_)' -and
+              $_.Name -ne 'NODE_OPTIONS'
+            ) {
+              $delimiter = "ghadelimiter_$([guid]::NewGuid().ToString('N'))"
+              Add-Content -Path $env:GITHUB_ENV -Value "$($_.Name)<<$delimiter" -Encoding utf8
+              Add-Content -Path $env:GITHUB_ENV -Value $_.Value -Encoding utf8
+              Add-Content -Path $env:GITHUB_ENV -Value $delimiter -Encoding utf8
+            }
+          }
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
@@ -104,6 +184,15 @@ jobs:
           activate-environment: true
           enable-cache: false
 
+      - name: Install Ninja
+        run: uv tool install ninja==1.13.0
+
+      - name: Set up sccache
+        if: ${{ inputs.use-sccache-gha }}
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
+        with:
+          version: v0.17.0
+
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
         run: |
@@ -113,7 +202,17 @@ jobs:
       - name: Configure CMake
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
-        run: cmake --preset "$PRESET_NAME"
+          USE_LLD: ${{ inputs.use-lld }}
+          USE_SCCACHE_GHA: ${{ inputs.use-sccache-gha }}
+        run: |
+          args=()
+          if [[ "$USE_LLD" == "true" ]]; then
+            args+=(-DLLVM_ENABLE_LLD=ON)
+          fi
+          if [[ "$USE_SCCACHE_GHA" == "true" ]]; then
+            args+=(-DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache)
+          fi
+          cmake --preset "$PRESET_NAME" "${args[@]}"
 
       - name: Build
         timeout-minutes: 60
@@ -125,3 +224,9 @@ jobs:
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
         run: ctest --preset "$PRESET_NAME"
+
+      - name: Verify sccache use
+        if: ${{ inputs.use-sccache-gha }}
+        run: |
+          "$SCCACHE_PATH" --show-stats --stats-format json |
+            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'

@@ -39,6 +39,7 @@ jobs:
     name: 📈 Coverage
     runs-on: ubuntu-24.04
     permissions:
+      actions: write # Required to replace the preceding ccache entry on main
       contents: read # Required for the `actions/checkout` action
       id-token: write # Required for the `codecov/codecov-action` action
     env:
@@ -73,8 +74,11 @@ jobs:
       - name: Set up ccache
         uses: Chocobo1/setup-ccache-action@a4d08616f5b614053bce228ddf881592f69d61d4 # v1.5.9
         with:
+          ccache_options: max_size=500M
           prepend_symlinks_to_path: false
           override_cache_key: c++-coverage
+          remove_stale_cache: ${{ github.ref == 'refs/heads/main' }}
+          store_cache: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Set up mold as linker
         uses: rui314/setup-mold@7e4f20ad28a2e8ca6fd0892ccf72e2abb706b9c3 # v1
