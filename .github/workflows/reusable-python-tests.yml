@@ -38,6 +38,18 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
         type: string
+      free-disk-space:
+        description: "Whether to free disk space before running the tests"
+        default: true
+        type: boolean
+      use-lld:
+        description: "Whether to use LLD for Windows native builds"
+        default: false
+        type: boolean
+      use-sccache-gha:
+        description: "Whether to use the GitHub Actions cache backend for sccache"
+        default: false
+        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-python-tests-${{ inputs.runs-on }}
@@ -62,20 +74,20 @@ jobs:
       # free up space on the runners
       # the nox environments can get quite large, especially if torch is installed
       - name: Free up space (Linux)
-        if: runner.os == 'Linux'
+        if: inputs.free-disk-space && runner.os == 'Linux'
         run: |
           sudo rm -rf /opt/ghc || true
           sudo rm -rf /usr/local/lib/android/sdk || true
           sudo rm -rf /usr/share/dotnet || true
           sudo rm -rf /usr/share/swift || true
       - name: Free up space (macOS)
-        if: runner.os == 'macOS'
+        if: inputs.free-disk-space && runner.os == 'macOS'
         run: |
           sudo rm -rf /usr/local/share/android-sdk || true
           sudo rm -rf /usr/local/share/dotnet || true
           sudo rm -rf /usr/share/swift || true
       - name: Free up space (Windows)
-        if: runner.os == 'Windows'
+        if: inputs.free-disk-space && runner.os == 'Windows'
         run: |
           Remove-Item -Recurse -Force "C:\Android\android-sdk" -ErrorAction SilentlyContinue
           Remove-Item -Recurse -Force "C:\Program Files\dotnet" -ErrorAction SilentlyContinue
@@ -160,10 +172,17 @@ jobs:
       - name: Configure Windows native builds
         if: runner.os == 'Windows'
         shell: bash
+        env:
+          USE_LLD: ${{ inputs.use-lld }}
         run: |
-          echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
-          echo "CMAKE_C_COMPILER_LAUNCHER=sccache" >> "$GITHUB_ENV"
-          echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache" >> "$GITHUB_ENV"
+          {
+            echo "CMAKE_GENERATOR=Ninja"
+            echo "CMAKE_C_COMPILER_LAUNCHER=sccache"
+            echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+            if [[ "$USE_LLD" == "true" ]]; then
+              echo "SKBUILD_CMAKE_ARGS=-DLLVM_ENABLE_LLD=ON"
+            fi
+          } >> "$GITHUB_ENV"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
@@ -188,6 +207,21 @@ jobs:
       # set up sccache for faster builds
       - name: Install sccache
         run: uv tool install sccache
+
+      - name: Configure sccache GitHub Actions cache
+        if: ${{ inputs.use-sccache-gha }}
+        continue-on-error: true
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          SCCACHE_GHA_VERSION: ${{ runner.os }}-${{ runner.arch }}-llvm-${{ inputs.llvm-version }}
+          SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
+        with:
+          script: |
+            core.exportVariable('ACTIONS_RESULTS_URL', process.env.ACTIONS_RESULTS_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+            core.exportVariable('SCCACHE_GHA_ENABLED', 'on');
+            core.exportVariable('SCCACHE_GHA_VERSION', process.env.SCCACHE_GHA_VERSION);
+            core.exportVariable('SCCACHE_GHA_RW_MODE', process.env.SCCACHE_GHA_RW_MODE);
 
       - if: ${{ !github.event.pull_request.draft }}
         name: 🐍 Test
@@ -216,4 +250,5 @@ jobs:
           archive: false
 
       - name: Show sccache stats
+        continue-on-error: true
         run: sccache --show-stats

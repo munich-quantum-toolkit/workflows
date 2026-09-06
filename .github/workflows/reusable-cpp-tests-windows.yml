@@ -51,6 +51,18 @@ on:
         description: "The CMake preset to use for configuration and build"
         required: true
         type: string
+      use-ninja:
+        description: "Whether to use Ninja instead of the preset's default generator"
+        default: false
+        type: boolean
+      use-lld:
+        description: "Whether to enable LLD"
+        default: false
+        type: boolean
+      use-sccache-gha:
+        description: "Whether to use sccache with the GitHub Actions cache backend"
+        default: false
+        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.preset-name }}
@@ -84,6 +96,75 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Set up MSVC
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $vsArch = switch ($env:RUNNER_ARCH) {
+            'X64' { 'amd64' }
+            'ARM64' { 'arm64' }
+            default { throw "Unsupported Windows runner architecture: $env:RUNNER_ARCH" }
+          }
+          $component = switch ($env:RUNNER_ARCH) {
+            'X64' { 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64' }
+            'ARM64' { 'Microsoft.VisualStudio.Component.VC.Tools.ARM64' }
+          }
+
+          $candidates = @(
+            if (${env:ProgramFiles(x86)}) {
+              Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+            }
+            if ($env:ProgramFiles) {
+              Join-Path $env:ProgramFiles 'Microsoft Visual Studio\Installer\vswhere.exe'
+            }
+            Get-Command vswhere.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+          )
+          $vswhere = $candidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+          if (-not $vswhere) {
+            throw 'vswhere.exe not found'
+          }
+
+          $vsPath = (& $vswhere -latest -products '*' -prerelease -requires $component -property installationPath | Select-Object -First 1)
+          if (-not $vsPath) {
+            throw "Visual Studio with $component not found"
+          }
+          $devShell = Join-Path $vsPath 'Common7\Tools\Launch-VsDevShell.ps1'
+          if (-not (Test-Path $devShell)) {
+            throw "Developer shell not found: $devShell"
+          }
+
+          $before = @{}
+          Get-ChildItem Env: | ForEach-Object { $before[$_.Name] = $_.Value }
+          $devShellArguments = @{
+            Arch = $vsArch
+            SkipAutomaticLocation = $true
+          }
+          if ($env:RUNNER_ARCH -eq 'X64') {
+            $devShellArguments.HostArch = 'amd64'
+          }
+          & $devShell @devShellArguments
+
+          $compiler = (Get-Command cl.exe -ErrorAction Stop).Source
+          $expected = if ($env:RUNNER_ARCH -eq 'ARM64') { '\Hostarm64\arm64\' } else { '\Hostx64\x64\' }
+          if ($compiler -notmatch [regex]::Escape($expected)) {
+            throw "Unexpected MSVC compiler for $($env:RUNNER_ARCH): $compiler"
+          }
+          Write-Host "Using $compiler"
+
+          Get-ChildItem Env: | ForEach-Object {
+            if (
+              (!$before.ContainsKey($_.Name) -or $before[$_.Name] -cne $_.Value) -and
+              $_.Name -notmatch '^(GITHUB_|RUNNER_)' -and
+              $_.Name -ne 'NODE_OPTIONS'
+            ) {
+              $delimiter = "ghadelimiter_$([guid]::NewGuid().ToString('N'))"
+              Add-Content -Path $env:GITHUB_ENV -Value "$($_.Name)<<$delimiter" -Encoding utf8
+              Add-Content -Path $env:GITHUB_ENV -Value $_.Value -Encoding utf8
+              Add-Content -Path $env:GITHUB_ENV -Value $delimiter -Encoding utf8
+            }
+          }
+
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
         uses: cda-tum/setup-z3@0401375ea1e34d77ef35bbeb634f6203f3bcde60 # v1.7.3
@@ -104,6 +185,29 @@ jobs:
           activate-environment: true
           enable-cache: false
 
+      - name: Install Ninja
+        if: ${{ inputs.use-ninja }}
+        run: uv tool install ninja==1.13.0
+
+      - name: Install sccache
+        if: ${{ inputs.use-sccache-gha }}
+        run: uv tool install sccache
+
+      - name: Configure sccache GitHub Actions cache
+        if: ${{ inputs.use-sccache-gha }}
+        continue-on-error: true
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          SCCACHE_GHA_VERSION: ${{ runner.os }}-${{ runner.arch }}-llvm-${{ inputs.llvm-version }}
+          SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
+        with:
+          script: |
+            core.exportVariable('ACTIONS_RESULTS_URL', process.env.ACTIONS_RESULTS_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+            core.exportVariable('SCCACHE_GHA_ENABLED', 'on');
+            core.exportVariable('SCCACHE_GHA_VERSION', process.env.SCCACHE_GHA_VERSION);
+            core.exportVariable('SCCACHE_GHA_RW_MODE', process.env.SCCACHE_GHA_RW_MODE);
+
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
         run: |
@@ -113,7 +217,21 @@ jobs:
       - name: Configure CMake
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
-        run: cmake --preset "$PRESET_NAME"
+          USE_LLD: ${{ inputs.use-lld }}
+          USE_NINJA: ${{ inputs.use-ninja }}
+          USE_SCCACHE_GHA: ${{ inputs.use-sccache-gha }}
+        run: |
+          args=()
+          if [[ "$USE_NINJA" == "true" ]]; then
+            args+=(-G Ninja)
+          fi
+          if [[ "$USE_LLD" == "true" ]]; then
+            args+=(-DLLVM_ENABLE_LLD=ON)
+          fi
+          if [[ "$USE_SCCACHE_GHA" == "true" ]]; then
+            args+=(-DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache)
+          fi
+          cmake --preset "$PRESET_NAME" "${args[@]}"
 
       - name: Build
         timeout-minutes: 60
@@ -125,3 +243,8 @@ jobs:
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
         run: ctest --preset "$PRESET_NAME"
+
+      - name: Show sccache stats
+        if: ${{ inputs.use-sccache-gha }}
+        continue-on-error: true
+        run: sccache --show-stats
