@@ -51,10 +51,6 @@ on:
         description: "The CMake preset to use for configuration and build"
         required: true
         type: string
-      use-ninja:
-        description: "Whether to use Ninja instead of the preset's default generator"
-        default: false
-        type: boolean
       use-lld:
         description: "Whether to enable LLD"
         default: false
@@ -84,6 +80,9 @@ jobs:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_GHA_VERSION: ${{ inputs.use-sccache-gha && format('{0}-{1}-{2}-llvm-{3}', github.workflow, inputs.runs-on, inputs.compiler, inputs.llvm-version) || '' }}
+      SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -186,27 +185,13 @@ jobs:
           enable-cache: false
 
       - name: Install Ninja
-        if: ${{ inputs.use-ninja }}
         run: uv tool install ninja==1.13.0
 
-      - name: Install sccache
+      - name: Set up sccache
         if: ${{ inputs.use-sccache-gha }}
-        run: uv tool install sccache
-
-      - name: Configure sccache GitHub Actions cache
-        if: ${{ inputs.use-sccache-gha }}
-        continue-on-error: true
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          SCCACHE_GHA_VERSION: ${{ runner.os }}-${{ runner.arch }}-llvm-${{ inputs.llvm-version }}
-          SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
         with:
-          script: |
-            core.exportVariable('ACTIONS_RESULTS_URL', process.env.ACTIONS_RESULTS_URL || '');
-            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
-            core.exportVariable('SCCACHE_GHA_ENABLED', 'on');
-            core.exportVariable('SCCACHE_GHA_VERSION', process.env.SCCACHE_GHA_VERSION);
-            core.exportVariable('SCCACHE_GHA_RW_MODE', process.env.SCCACHE_GHA_RW_MODE);
+          version: v0.17.0
 
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
@@ -218,13 +203,9 @@ jobs:
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
           USE_LLD: ${{ inputs.use-lld }}
-          USE_NINJA: ${{ inputs.use-ninja }}
           USE_SCCACHE_GHA: ${{ inputs.use-sccache-gha }}
         run: |
           args=()
-          if [[ "$USE_NINJA" == "true" ]]; then
-            args+=(-G Ninja)
-          fi
           if [[ "$USE_LLD" == "true" ]]; then
             args+=(-DLLVM_ENABLE_LLD=ON)
           fi
@@ -244,7 +225,8 @@ jobs:
           PRESET_NAME: ${{ inputs.preset-name }}
         run: ctest --preset "$PRESET_NAME"
 
-      - name: Show sccache stats
+      - name: Verify sccache use
         if: ${{ inputs.use-sccache-gha }}
-        continue-on-error: true
-        run: sccache --show-stats
+        run: |
+          "$SCCACHE_PATH" --show-stats --stats-format json |
+            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
