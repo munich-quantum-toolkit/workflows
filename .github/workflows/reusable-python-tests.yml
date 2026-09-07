@@ -178,13 +178,13 @@ jobs:
         env:
           USE_LLD: ${{ inputs.use-lld }}
         run: |
+          skbuild_cmake_args="-DCMAKE_C_COMPILER_LAUNCHER=sccache;-DCMAKE_CXX_COMPILER_LAUNCHER=sccache"
+          if [[ "$USE_LLD" == "true" ]]; then
+            skbuild_cmake_args+=";-DLLVM_ENABLE_LLD=ON"
+          fi
           {
             echo "CMAKE_GENERATOR=Ninja"
-            echo "CMAKE_C_COMPILER_LAUNCHER=sccache"
-            echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
-            if [[ "$USE_LLD" == "true" ]]; then
-              echo "SKBUILD_CMAKE_ARGS=-DLLVM_ENABLE_LLD=ON"
-            fi
+            echo "SKBUILD_CMAKE_ARGS=$skbuild_cmake_args"
           } >> "$GITHUB_ENV"
 
       - name: Set up Z3
