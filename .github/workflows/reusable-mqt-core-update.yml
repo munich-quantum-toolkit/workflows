@@ -15,6 +15,11 @@ on:
         default: false
         type: boolean
         required: false
+      max-major-version:
+        description: Maximum supported MQT Core major version (leave empty for unrestricted updates; cannot be combined with update-to-head)
+        default: ""
+        type: string
+        required: false
     secrets:
       APP_ID:
         description: ID of the GitHub App with permission to create and update pull requests
@@ -39,6 +44,20 @@ jobs:
       contents: write # Needed to push changes to the repository
       pull-requests: write # Needed to create pull requests.
     steps:
+      - name: Validate inputs
+        id: validate-inputs
+        env:
+          MAX_MAJOR_VERSION: ${{ inputs.max-major-version }}
+          UPDATE_TO_HEAD: ${{ inputs.update-to-head }}
+        run: |
+          if [[ -n "$MAX_MAJOR_VERSION" && ! "$MAX_MAJOR_VERSION" =~ ^(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::max-major-version must be empty or a nonnegative integer."
+            exit 1
+          fi
+          if [ -n "$MAX_MAJOR_VERSION" ] && [ "$UPDATE_TO_HEAD" = true ]; then
+            echo "::error::max-major-version cannot be combined with update-to-head."
+            exit 1
+          fi
       # Create a GitHub App token
       - id: create-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -73,45 +92,84 @@ jobs:
           echo "Parsed revision: $revision"
           echo "version=$version" >> $GITHUB_OUTPUT
           echo "revision=$revision" >> $GITHUB_OUTPUT
-      # Query the latest tag of mqt-core via the GitHub API (using the GitHub token for authentication).
+      # Select the latest release, optionally restricted to a supported major version.
       - name: Get latest release of MQT Core
         id: get-latest-release
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+          MAX_MAJOR_VERSION: ${{ inputs.max-major-version }}
         run: |
-          echo "Querying the latest release of MQT Core..."
-          latest_release=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/munich-quantum-toolkit/core/releases/latest)
-          tag=$(echo $latest_release | jq -r '.tag_name')
+          set -euo pipefail
+
+          if [ -z "$MAX_MAJOR_VERSION" ]; then
+            echo "Querying the latest release of MQT Core..."
+            latest_release=$(gh api repos/munich-quantum-toolkit/core/releases/latest)
+            tag=$(jq -er '.tag_name | strings | select(test("^v?(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"))' <<< "$latest_release")
+          else
+            echo "Querying MQT Core releases up to major version $MAX_MAJOR_VERSION..."
+            releases=$(gh api --paginate --slurp 'repos/munich-quantum-toolkit/core/releases?per_page=100')
+            tag=$(jq -er --argjson max "$MAX_MAJOR_VERSION" '
+              if type != "array" or any(.[]; type != "array") then
+                error("Expected an array of release pages")
+              else add // [] end
+              | if any(.[];
+                  type != "object" or (.tag_name | type) != "string"
+                  or (.draft | type) != "boolean" or (.prerelease | type) != "boolean") then
+                  error("Malformed release response")
+                else . end
+              | [ .[]
+                  | select(.draft == false and .prerelease == false)
+                  | select(.tag_name | test("^v?(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"))
+                  | . + {version: (.tag_name | ltrimstr("v") | split(".") | map(tonumber))}
+                  | select(.version[0] <= $max)
+                ]
+              | max_by(.version) | .tag_name // ""
+            ' <<< "$releases")
+          fi
+
+          if [ -z "$tag" ]; then
+            echo "No eligible MQT Core release found."
+            echo "release_found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           latest_version=${tag#v}
-          echo "latest_release=$latest_release"
           echo "tag=$tag"
           echo "latest_version=$latest_version"
-          echo "latest_version=$latest_version" >> $GITHUB_OUTPUT
-      # Query the commit SHA of the latest tag of mqt-core via the GitHub API (using the GitHub token for authentication).
-      - name: Get the commit SHA of the latest tag of MQT Core
+          echo "release_found=true" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "latest_version=$latest_version" >> "$GITHUB_OUTPUT"
+      # Resolve the selected release tag to its commit, including for annotated tags.
+      - name: Get the commit SHA of the selected MQT Core release
+        if: steps.get-latest-release.outputs.release_found == 'true'
         id: get-latest-tag-sha
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+          LATEST_TAG: ${{ steps.get-latest-release.outputs.tag }}
         run: |
-          echo "Querying the tags of MQT Core..."
-          tags=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/munich-quantum-toolkit/core/tags)
-          echo "tags=$tags"
-          latest_tag_sha=$(echo $tags | jq -r '.[0].commit.sha')
+          set -euo pipefail
+
+          echo "Querying the commit for MQT Core tag $LATEST_TAG..."
+          latest_tag_commit=$(gh api "repos/munich-quantum-toolkit/core/commits/tags/$LATEST_TAG")
+          latest_tag_sha=$(jq -er '.sha | strings | select(test("^[0-9a-f]{40}$"))' <<< "$latest_tag_commit")
           echo "latest_tag_sha=$latest_tag_sha"
-          echo "latest_tag_sha=$latest_tag_sha" >> $GITHUB_OUTPUT
+          echo "latest_tag_sha=$latest_tag_sha" >> "$GITHUB_OUTPUT"
       # Query the latest commit of the main branch of mqt-core via the GitHub API (using the GitHub token for authentication).
       - name: Get the latest commit of the main branch of MQT Core
+        if: inputs.update-to-head && steps.get-latest-release.outputs.release_found == 'true'
         id: get-latest-commit
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+
           echo "Querying the latest commit of the main branch of MQT Core..."
-          latest_commit=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/munich-quantum-toolkit/core/commits/main)
-          latest_commit_sha=$(echo $latest_commit | jq -r '.sha')
+          latest_commit=$(gh api repos/munich-quantum-toolkit/core/commits/main)
+          latest_commit_sha=$(jq -er '.sha | strings | select(test("^[0-9a-f]{40}$"))' <<< "$latest_commit")
           echo "latest_commit_sha=$latest_commit_sha"
-          echo "latest_commit_sha=$latest_commit_sha" >> $GITHUB_OUTPUT
+          echo "latest_commit_sha=$latest_commit_sha" >> "$GITHUB_OUTPUT"
       # Install the `semver` tool for making semantic version comparisons.
       - name: Install semver
+        if: steps.get-latest-release.outputs.release_found == 'true'
         run: |
           wget -O /usr/local/bin/semver \
           https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
@@ -122,6 +180,7 @@ jobs:
       # - the latest version is newer than the used version, or
       # - the latest version is the same as the used version, but its tag has a different commit SHA than the used revision.
       - name: Compare versions
+        if: steps.get-latest-release.outputs.release_found == 'true'
         id: compare-versions
         env:
           UPDATE_TO_HEAD: ${{ inputs.update-to-head }}
