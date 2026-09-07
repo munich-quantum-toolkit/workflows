@@ -31,10 +31,6 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
         type: string
-      use-sccache-gha:
-        description: "Whether non-Ubuntu builds use the GitHub Actions cache backend for sccache"
-        default: true
-        type: boolean
     secrets:
       AWS_S3_BUCKET:
         description: "S3 bucket used by AWS-backed wheel tests"
@@ -58,8 +54,6 @@ jobs:
     name: 🎡 ${{ inputs.runs-on }}
     runs-on: ${{ inputs.runs-on }}
     env:
-      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
-      SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -90,19 +84,10 @@ jobs:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
-      - name: Set up sccache
+      # set up sccache for faster builds (non-Ubuntu only)
+      - name: Install sccache
         if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
-
-      - name: Configure Windows native builds
-        if: runner.os == 'Windows'
-        shell: bash
-        run: |
-          {
-            echo "CMAKE_GENERATOR=Ninja"
-            echo "CMAKE_C_COMPILER_LAUNCHER=sccache"
-            echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
-          } >> "$GITHUB_ENV"
+        run: uv tool install sccache
 
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@1828c10ab37f080699c7b81cea34097c684a7074 # v4.2.0
@@ -118,8 +103,6 @@ jobs:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse/*.whl
 
-      - name: Verify sccache use
-        if: ${{ inputs.use-sccache-gha && !startsWith(inputs.runs-on, 'ubuntu') }}
-        run: |
-          sccache --show-stats --stats-format json |
-            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
+      - name: Show sccache stats
+        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+        run: sccache --show-stats

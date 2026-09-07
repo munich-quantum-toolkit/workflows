@@ -42,10 +42,6 @@ on:
         description: "Whether to free disk space before running the tests"
         default: false
         type: boolean
-      use-lld:
-        description: "Whether to use LLD for Windows native builds"
-        default: false
-        type: boolean
       use-sccache-gha:
         description: "Whether to use the GitHub Actions cache backend for sccache"
         default: true
@@ -69,7 +65,7 @@ jobs:
       CMAKE_CXX_COMPILER_LAUNCHER: sccache
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
       SCCACHE_IDLE_TIMEOUT: 0
-      SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
+      SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -177,15 +173,7 @@ jobs:
       - name: Configure Windows native builds
         if: runner.os == 'Windows'
         shell: bash
-        env:
-          USE_LLD: ${{ inputs.use-lld }}
-        run: |
-          {
-            echo "CMAKE_GENERATOR=Ninja"
-            if [[ "$USE_LLD" == "true" ]]; then
-              echo "SKBUILD_CMAKE_ARGS=-DLLVM_ENABLE_LLD=ON"
-            fi
-          } >> "$GITHUB_ENV"
+        run: echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}

@@ -51,10 +51,6 @@ on:
         description: "The CMake preset to use for configuration and build"
         required: true
         type: string
-      use-lld:
-        description: "Whether to enable LLD"
-        default: false
-        type: boolean
       use-sccache-gha:
         description: "Whether to use sccache with the GitHub Actions cache backend"
         default: true
@@ -81,7 +77,7 @@ jobs:
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
-      SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
+      SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -199,13 +195,9 @@ jobs:
       - name: Configure CMake
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
-          USE_LLD: ${{ inputs.use-lld }}
           USE_SCCACHE_GHA: ${{ inputs.use-sccache-gha }}
         run: |
           args=()
-          if [[ "$USE_LLD" == "true" ]]; then
-            args+=(-DLLVM_ENABLE_LLD=ON)
-          fi
           if [[ "$USE_SCCACHE_GHA" == "true" ]]; then
             args+=(-DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache)
           fi
