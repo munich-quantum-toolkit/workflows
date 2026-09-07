@@ -33,7 +33,7 @@ on:
         type: string
       use-sccache-gha:
         description: "Whether non-Ubuntu builds use the GitHub Actions cache backend for sccache"
-        default: false
+        default: true
         type: boolean
     secrets:
       AWS_S3_BUCKET:
@@ -59,7 +59,6 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     env:
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
-      SCCACHE_GHA_VERSION: ${{ inputs.use-sccache-gha && format('{0}-{1}-llvm-{2}', github.workflow, inputs.runs-on, inputs.llvm-version) || '' }}
       SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
@@ -94,8 +93,16 @@ jobs:
       - name: Set up sccache
         if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
-        with:
-          version: v0.17.0
+
+      - name: Configure Windows native builds
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          {
+            echo "CMAKE_GENERATOR=Ninja"
+            echo "CMAKE_C_COMPILER_LAUNCHER=sccache"
+            echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+          } >> "$GITHUB_ENV"
 
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@1828c10ab37f080699c7b81cea34097c684a7074 # v4.2.0

@@ -49,6 +49,10 @@ on:
         description: "The CMake preset to use for configuration and build"
         required: true
         type: string
+      use-sccache-gha:
+        description: "Whether to use sccache with the GitHub Actions cache backend"
+        default: true
+        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.preset-name }}
@@ -66,6 +70,8 @@ jobs:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -99,6 +105,10 @@ jobs:
 
       - name: Install Ninja
         run: uv tool install ninja
+
+      - name: Set up sccache
+        if: ${{ inputs.use-sccache-gha }}
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
@@ -146,7 +156,13 @@ jobs:
       - name: Configure CMake
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
-        run: cmake --preset "$PRESET_NAME"
+          USE_SCCACHE_GHA: ${{ inputs.use-sccache-gha }}
+        run: |
+          args=()
+          if [[ "$USE_SCCACHE_GHA" == "true" ]]; then
+            args+=(-DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache)
+          fi
+          cmake --preset "$PRESET_NAME" "${args[@]}"
 
       - name: Build
         env:
@@ -157,3 +173,9 @@ jobs:
         env:
           PRESET_NAME: ${{ inputs.preset-name }}
         run: ctest --preset "$PRESET_NAME"
+
+      - name: Verify sccache use
+        if: ${{ inputs.use-sccache-gha }}
+        run: |
+          sccache --show-stats --stats-format json |
+            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'

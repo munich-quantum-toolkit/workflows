@@ -26,6 +26,10 @@ on:
         description: "Whether to build the project"
         default: false
         type: boolean
+      use-sccache-gha:
+        description: "Whether project builds use sccache with the GitHub Actions cache backend"
+        default: true
+        type: boolean
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -67,11 +71,12 @@ jobs:
     name: 🚨 Lint
     runs-on: ubuntu-24.04
     permissions:
-      actions: write # Required to replace the preceding ccache entry on main
       contents: read # Needed to fetch code
       pull-requests: write # Needed to post PR comments
     env:
       CLANG_VERSION: ${{ inputs.clang-version }}
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -96,16 +101,9 @@ jobs:
         with:
           llvm-version: ${{ inputs.llvm-version }}
 
-      # set up ccache for faster builds
-      - name: Set up ccache
-        if: ${{ inputs.build-project }}
-        uses: Chocobo1/setup-ccache-action@a4d08616f5b614053bce228ddf881592f69d61d4 # v1.5.9
-        with:
-          ccache_options: max_size=500M
-          prepend_symlinks_to_path: false
-          override_cache_key: c++-lint
-          remove_stale_cache: ${{ github.ref == 'refs/heads/main' }}
-          store_cache: ${{ github.ref == 'refs/heads/main' }}
+      - name: Set up sccache
+        if: ${{ inputs.build-project && inputs.use-sccache-gha }}
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       - name: Set up mold as linker
         if: ${{ inputs.build-project }}
@@ -169,6 +167,12 @@ jobs:
       - name: Build
         if: ${{ inputs.build-project }}
         run: cmake --build build
+
+      - name: Verify sccache use
+        if: ${{ inputs.build-project && inputs.use-sccache-gha }}
+        run: |
+          sccache --show-stats --stats-format json |
+            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
 
       # runs the cpp-linter action using the generated compilation database and the specified clang version
       - name: Run cpp-linter

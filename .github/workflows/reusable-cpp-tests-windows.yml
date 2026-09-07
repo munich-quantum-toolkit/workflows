@@ -57,7 +57,7 @@ on:
         type: boolean
       use-sccache-gha:
         description: "Whether to use sccache with the GitHub Actions cache backend"
-        default: false
+        default: true
         type: boolean
 
 concurrency:
@@ -81,7 +81,6 @@ jobs:
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
-      SCCACHE_GHA_VERSION: ${{ inputs.use-sccache-gha && format('{0}-{1}-{2}-llvm-{3}', github.workflow, inputs.runs-on, inputs.compiler, inputs.llvm-version) || '' }}
       SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
@@ -185,13 +184,11 @@ jobs:
           enable-cache: false
 
       - name: Install Ninja
-        run: uv tool install ninja==1.13.0
+        run: uv tool install ninja
 
       - name: Set up sccache
         if: ${{ inputs.use-sccache-gha }}
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
-        with:
-          version: v0.17.0
 
       - name: Install lit
         if: ${{ inputs.setup-mlir }}
