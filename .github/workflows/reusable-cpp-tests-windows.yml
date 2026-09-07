@@ -228,5 +228,5 @@ jobs:
       - name: Verify sccache use
         if: ${{ inputs.use-sccache-gha }}
         run: |
-          "$SCCACHE_PATH" --show-stats --stats-format json |
+          sccache --show-stats --stats-format json |
             python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
