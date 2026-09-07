@@ -66,6 +66,7 @@ jobs:
       FORCE_COLOR: 3
       GITHUB_TOKEN: ${{ github.token }}
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_IDLE_TIMEOUT: 0
       SCCACHE_GHA_VERSION: ${{ inputs.use-sccache-gha && format('{0}-{1}-llvm-{2}', github.workflow, inputs.runs-on, inputs.llvm-version) || '' }}
       SCCACHE_GHA_RW_MODE: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
@@ -178,13 +179,13 @@ jobs:
         env:
           USE_LLD: ${{ inputs.use-lld }}
         run: |
-          skbuild_cmake_args="-DCMAKE_C_COMPILER_LAUNCHER=sccache;-DCMAKE_CXX_COMPILER_LAUNCHER=sccache"
-          if [[ "$USE_LLD" == "true" ]]; then
-            skbuild_cmake_args+=";-DLLVM_ENABLE_LLD=ON"
-          fi
           {
             echo "CMAKE_GENERATOR=Ninja"
-            echo "SKBUILD_CMAKE_ARGS=$skbuild_cmake_args"
+            echo "CMAKE_C_COMPILER_LAUNCHER=sccache"
+            echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+            if [[ "$USE_LLD" == "true" ]]; then
+              echo "SKBUILD_CMAKE_ARGS=-DLLVM_ENABLE_LLD=ON"
+            fi
           } >> "$GITHUB_ENV"
 
       - name: Set up Z3
@@ -205,7 +206,6 @@ jobs:
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
-          enable-cache: ${{ !inputs.use-sccache-gha }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Set up sccache
