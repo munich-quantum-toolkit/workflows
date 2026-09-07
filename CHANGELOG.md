@@ -10,6 +10,13 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#unreleased)._
+
+### Added
+
+- ✨ Allow limiting MQT Core updates to a maximum supported major version
+  ([#461]) ([**@denialhaag**])
+
 ## [2.3.1] - 2026-09-05
 
 ### Changed
@@ -535,6 +542,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#461]: https://github.com/munich-quantum-toolkit/workflows/pull/461
 [#457]: https://github.com/munich-quantum-toolkit/workflows/pull/457
 [#448]: https://github.com/munich-quantum-toolkit/workflows/pull/448
 [#442]: https://github.com/munich-quantum-toolkit/workflows/pull/442
