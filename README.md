@@ -63,21 +63,6 @@ The currently supported variables are
 If one of these secrets is not defined by the calling repository or environment,
 GitHub Actions leaves the corresponding environment variable empty.
 
-## Testing one wheel across Python environments
-
-`reusable-python-tests.yml` runs its Nox sessions sequentially by default.
-Projects with a Stable ABI wheel can set `wheel-test-sessions` to a JSON array
-of version-specific sessions, such as `["tests-3.11", "minimums-3.14"]`. The
-workflow builds one wheel on each platform with `uv build`, then runs each
-session in a separate job. Draft pull requests use `draft-sessions` instead.
-
-The selected sessions must install the single wheel in the directory named by
-`MQT_TEST_WHEEL`, including its runtime dependencies, without rebuilding the
-project. They must still resolve their own test and minimum dependencies. Each
-session gets a separate checkout and coverage report; the existing Python
-coverage workflow collects these reports. Use this option only when the wheel
-supports every selected interpreter and carries its required native libraries.
-
 ## Contributors and Supporters
 
 The _[Munich Quantum Toolkit (MQT)](https://mqt.readthedocs.io)_ is developed by
