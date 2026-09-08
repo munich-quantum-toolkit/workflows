@@ -35,6 +35,10 @@ on:
         description: "Whether the MLIR SDK should retain assertions"
         default: true
         type: boolean
+      xcode-version:
+        description: "Exact Xcode version for macOS wheel builds; empty uses the runner default"
+        default: ""
+        type: string
       llvm-version:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
@@ -79,6 +83,15 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Select Xcode
+        if: ${{ startsWith(inputs.runs-on, 'macos') && inputs.xcode-version != '' }}
+        env:
+          XCODE_VERSION: ${{ inputs.xcode-version }}
+        run: |
+          developer_dir="/Applications/Xcode_${XCODE_VERSION}.app/Contents/Developer"
+          test -d "$developer_dir"
+          echo "DEVELOPER_DIR=$developer_dir" >> "$GITHUB_ENV"
+
       - name: Set up Z3
         if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
         uses: cda-tum/setup-z3@0401375ea1e34d77ef35bbeb634f6203f3bcde60 # v1.7.3
@@ -87,7 +100,7 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir && !startsWith(inputs.runs-on, 'ubuntu') }}
-        uses: munich-quantum-software/setup-mlir@ed5b604a5540aad8dd5deb19f50745cced8a43e4
+        uses: munich-quantum-software/setup-mlir@dae31adab96bf01540439d2d2f8226464294f2f3
         with:
           llvm-version: ${{ inputs.llvm-version }}
           assertions: ${{ inputs.mlir-assertions }}
