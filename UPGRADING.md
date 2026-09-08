@@ -6,6 +6,30 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+### Limiting MQT Core updates
+
+The `reusable-mqt-core-update.yml` workflow now accepts an optional
+`max-major-version` input. To keep receiving stable MQT Core 3.x updates after
+v4 is released, add the following to the job calling the reusable workflow:
+
+```yaml
+with:
+  max-major-version: "3"
+```
+
+The input is a string containing a nonnegative integer. The workflow selects the
+highest stable release version whose major is at most the cap, excluding drafts
+and prereleases. It skips updates when no eligible release exists or the
+selected release is older than the installed version.
+
+Omit `max-major-version` or leave it empty for unrestricted latest-release
+updates. Existing callers do not need to change their configuration. A value of
+`"0"` limits updates to the 0.x series.
+
+A supplied cap cannot be combined with `update-to-head: true`; the workflow
+rejects that combination before creating a token or checking out the repository.
+To update to the latest commit on `main`, omit the cap or leave it empty.
+
 ## [2.3.0]
 
 The Python test workflow now accepts `sessions` and `draft-sessions` as
