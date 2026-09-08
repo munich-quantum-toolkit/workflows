@@ -26,6 +26,10 @@ on:
         description: "Whether to build the project"
         default: false
         type: boolean
+      build-target:
+        description: "Optional CMake target to build before linting (empty builds the default target)"
+        default: ""
+        type: string
       use-sccache-gha:
         description: "Whether project builds use sccache with the GitHub Actions cache backend"
         default: true
@@ -166,7 +170,14 @@ jobs:
 
       - name: Build
         if: ${{ inputs.build-project }}
-        run: cmake --build build
+        env:
+          BUILD_TARGET: ${{ inputs.build-target }}
+        run: |
+          args=()
+          if [[ -n "$BUILD_TARGET" ]]; then
+            args+=(--target "$BUILD_TARGET")
+          fi
+          cmake --build build "${args[@]}"
 
       - name: Verify sccache use
         if: ${{ inputs.build-project && inputs.use-sccache-gha }}
