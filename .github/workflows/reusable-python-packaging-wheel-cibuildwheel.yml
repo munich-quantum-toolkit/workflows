@@ -15,6 +15,10 @@ on:
         description: "The runner image to test on"
         default: "ubuntu-24.04"
         type: string
+      use-sccache-gha:
+        description: "Whether to use sccache with the GitHub Actions cache backend"
+        default: true
+        type: boolean
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -26,6 +30,10 @@ on:
       setup-mlir:
         description: "Whether to set up MLIR"
         default: false
+        type: boolean
+      mlir-assertions:
+        description: "Whether the MLIR SDK should retain assertions"
+        default: true
         type: boolean
       llvm-version:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
@@ -54,6 +62,11 @@ jobs:
     name: 🎡 ${{ inputs.runs-on }}
     runs-on: ${{ inputs.runs-on }}
     env:
+      CMAKE_C_COMPILER_LAUNCHER: sccache
+      CMAKE_CXX_COMPILER_LAUNCHER: sccache
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_IDLE_TIMEOUT: 0
+      SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -74,9 +87,10 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir && !startsWith(inputs.runs-on, 'ubuntu') }}
-        uses: munich-quantum-software/setup-mlir@3f32263ce571a8b745068980f30f188b6e800763 # v1.4.2
+        uses: munich-quantum-software/setup-mlir@ed5b604a5540aad8dd5deb19f50745cced8a43e4
         with:
           llvm-version: ${{ inputs.llvm-version }}
+          assertions: ${{ inputs.mlir-assertions }}
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
@@ -84,10 +98,8 @@ jobs:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
-      # set up sccache for faster builds (non-Ubuntu only)
-      - name: Install sccache
-        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        run: uv tool install sccache
+      - name: Set up sccache
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@e090b81e30c4d855ea63bf4b6e59204c09a101ae # v4.2.1
