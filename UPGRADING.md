@@ -28,11 +28,6 @@ With `check-stubs: true`, the Python linter also requires compilation through
 that do not compile need to run outside this workflow with `check-stubs`
 disabled.
 
-### Opt-in disk cleanup for Python tests
-
-`reusable-python-tests.yml` now defaults `free-disk-space` to `false`. Set it to
-`true` if the project needs the previous runner disk cleanup.
-
 ### Targeted C++ lint preparation
 
 With `build-project: true`, `reusable-cpp-linter.yml` accepts `build-target` to
@@ -64,6 +59,11 @@ A supplied cap cannot be combined with `update-to-head: true`; the workflow
 rejects that combination before creating a token or checking out the repository.
 To update to the latest commit on `main`, omit the cap or leave it empty.
 
+### Opt-in disk cleanup for Python tests
+
+`reusable-python-tests.yml` now defaults `free-disk-space` to `false`. Set it to
+`true` if the project needs the previous runner disk cleanup.
+
 ## [2.3.0]
 
 The Python test workflow now accepts `sessions` and `draft-sessions` as
@@ -71,10 +71,6 @@ JSON-formatted lists of Nox sessions. `sessions` is used for ready pull requests
 and non-pull-request events and defaults to `["minimums", "tests"]`.
 `draft-sessions` is used for draft pull requests and defaults to
 `["tests-3.14"]`.
-
-Ensure that the consuming project's Nox configuration provides `tests-3.14`, or
-set `draft-sessions` to a supported session. To retain the previous full test
-workload on drafts, use `draft-sessions: '["minimums", "tests"]'`.
 
 For example, the following matrix runs the `tests` session for every supported
 Python version on ready pull requests and other events, but only the Python 3.14
@@ -777,7 +773,7 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...HEAD
 [2.3.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.3...v2.3.0
 [2.2.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...v2.2.1

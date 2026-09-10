@@ -19,17 +19,16 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#unreleased)._
 - ✨ Allow limiting MQT Core updates to a maximum supported major version
   ([#461]) ([**@denialhaag**])
 - ✨ Make Python test runner disk cleanup opt-in with the `free-disk-space`
-  input, which defaults to `false` ([#460]) ([**@burgholzer**])
+  input ([#460]) ([**@burgholzer**])
 
 ### Changed
 
 - ⚡ Cache native Python stub builds with `sccache` when `check-stubs` is
-  enabled and verify that compilation uses the cache ([#462])
-  ([**@burgholzer**])
+  enabled ([#462]) ([**@burgholzer**])
 - ⚡ Enable shared `sccache` by default for C++ tests, coverage, and linter
   builds, as well as Python tests, with the `use-sccache-gha` opt-out. Only
-  `main` writes to the cache; other refs read from it. Jobs verify that
-  compilation uses `sccache` ([#460]) ([**@burgholzer**])
+  `main` writes to the cache; other refs read from it ([#460])
+  ([**@burgholzer**])
 - 🔧 Initialize native MSVC and install Ninja for Windows C++ tests so that
   compatible CMake presets can use compiler caching ([#460]) ([**@burgholzer**])
 
