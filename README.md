@@ -1,3 +1,6 @@
+![OS](https://img.shields.io/badge/os-linux%20%7C%20macos%20%7C%20windows-blue?style=flat-square)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+
 <p align="center">
   <a href="https://mqt.readthedocs.io">
    <picture>
