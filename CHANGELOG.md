@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- 🐛 Preserve `sccache` statistics during long C++ test and lint jobs by
+  disabling its idle timeout ([#470]) ([**@denialhaag**])
+
 ## [2.4.0] - 2026-09-11
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#240)._
@@ -565,6 +570,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#470]: https://github.com/munich-quantum-toolkit/workflows/pull/470
 [#463]: https://github.com/munich-quantum-toolkit/workflows/pull/463
 [#462]: https://github.com/munich-quantum-toolkit/workflows/pull/462
 [#461]: https://github.com/munich-quantum-toolkit/workflows/pull/461
