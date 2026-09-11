@@ -10,7 +10,9 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
-_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#unreleased)._
+## [2.4.0] - 2026-09-11
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#240)._
 
 ### Added
 
@@ -31,6 +33,11 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#unreleased)._
   ([**@burgholzer**])
 - 🔧 Initialize native MSVC and install Ninja for Windows C++ tests so that
   compatible CMake presets can use compiler caching ([#460]) ([**@burgholzer**])
+
+### Fixed
+
+- 🐛 Resolve the selected MQT Core release tag to its commit instead of using
+  the first tag returned by GitHub ([#461]) ([**@denialhaag**])
 
 ## [2.3.1] - 2026-09-05
 
@@ -511,7 +518,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.4.0
 [2.3.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.3.1
 [2.3.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.3.0
 [2.2.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.2.3

@@ -6,6 +6,8 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.4.0]
+
 ### Compiler caching
 
 Shared `sccache` is now enabled by default for C++ tests, coverage and linter
@@ -773,7 +775,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.3...v2.3.0
 [2.2.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.0...v2.2.1
