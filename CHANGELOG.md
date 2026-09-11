@@ -14,8 +14,23 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#unreleased)._
 
 ### Added
 
+- ✨ Allow building a specific CMake target before C++ linting with the optional
+  `build-target` input ([#463]) ([**@burgholzer**])
 - ✨ Allow limiting MQT Core updates to a maximum supported major version
   ([#461]) ([**@denialhaag**])
+- ✨ Make Python test runner disk cleanup opt-in with the `free-disk-space`
+  input ([#460]) ([**@burgholzer**])
+
+### Changed
+
+- ⚡ Cache native Python stub builds with `sccache` when `check-stubs` is
+  enabled ([#462]) ([**@burgholzer**])
+- ⚡ Enable shared `sccache` by default for C++ tests, coverage, and linter
+  builds, as well as Python tests, with the `use-sccache-gha` opt-out. Only
+  `main` writes to the cache; other refs read from it ([#460])
+  ([**@burgholzer**])
+- 🔧 Initialize native MSVC and install Ninja for Windows C++ tests so that
+  compatible CMake presets can use compiler caching ([#460]) ([**@burgholzer**])
 
 ## [2.3.1] - 2026-09-05
 
@@ -36,7 +51,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#230)._
 ### Added
 
 - ✨ Allow callers to reduce Python and C++ tests for draft pull requests
-  ([#443]) ([**@denialhaag**])
+  ([#444]) ([**@denialhaag**])
 
 ### Fixed
 
@@ -542,9 +557,13 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#463]: https://github.com/munich-quantum-toolkit/workflows/pull/463
+[#462]: https://github.com/munich-quantum-toolkit/workflows/pull/462
 [#461]: https://github.com/munich-quantum-toolkit/workflows/pull/461
+[#460]: https://github.com/munich-quantum-toolkit/workflows/pull/460
 [#457]: https://github.com/munich-quantum-toolkit/workflows/pull/457
 [#448]: https://github.com/munich-quantum-toolkit/workflows/pull/448
+[#444]: https://github.com/munich-quantum-toolkit/workflows/pull/444
 [#442]: https://github.com/munich-quantum-toolkit/workflows/pull/442
 [#441]: https://github.com/munich-quantum-toolkit/workflows/pull/441
 [#434]: https://github.com/munich-quantum-toolkit/workflows/pull/434

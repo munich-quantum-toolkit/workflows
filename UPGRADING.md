@@ -6,6 +6,35 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+### Compiler caching
+
+Shared `sccache` is now enabled by default for C++ tests, coverage and linter
+builds, and Python tests. These jobs fail if no compilation goes through
+`sccache`. For pure Python projects or jobs that do not compile, set
+`use-sccache-gha: false` in the calling job.
+
+- C++ coverage and linter builds no longer install `ccache`. Ensure the
+  `coverage` and `lint` presets or project configuration select `sccache` via
+  `CMAKE_C_COMPILER_LAUNCHER` and `CMAKE_CXX_COMPILER_LAUNCHER`. C++ test
+  workflows set these automatically.
+- Windows C++ presets must use a generator that supports compiler launchers,
+  such as Ninja, or opt out of shared caching. The workflow installs Ninja but
+  does not select the generator.
+- Python builds must preserve the supplied compiler launcher environment
+  variables. Remove explicit or cached CMake settings that override them.
+
+With `check-stubs: true`, the Python linter also requires compilation through
+`sccache` in the `stubs` session. It has no separate cache opt-out; sessions
+that do not compile need to run outside this workflow with `check-stubs`
+disabled.
+
+### Targeted C++ lint preparation
+
+With `build-project: true`, `reusable-cpp-linter.yml` accepts `build-target` to
+build a single existing CMake target before linting. Leaving it empty preserves
+the default build. For targets that only generate files without compiling, also
+set `use-sccache-gha: false` to skip cache verification.
+
 ### Limiting MQT Core updates
 
 The `reusable-mqt-core-update.yml` workflow now accepts an optional
@@ -30,6 +59,11 @@ A supplied cap cannot be combined with `update-to-head: true`; the workflow
 rejects that combination before creating a token or checking out the repository.
 To update to the latest commit on `main`, omit the cap or leave it empty.
 
+### Opt-in disk cleanup for Python tests
+
+`reusable-python-tests.yml` now defaults `free-disk-space` to `false`. Set it to
+`true` if the project needs the previous runner disk cleanup.
+
 ## [2.3.0]
 
 The Python test workflow now accepts `sessions` and `draft-sessions` as
@@ -53,7 +87,6 @@ python-tests:
           ubuntu-24.04,
           ubuntu-24.04-arm,
           macos-26,
-          macos-26-intel,
           windows-2025,
         ]
   uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-python-tests.yml@v2.3.0
@@ -97,9 +130,8 @@ cpp-tests-ubuntu:
 ```
 
 By default, GitHub does not run `pull_request` workflows when a pull request is
-marked ready for review or converted back to a draft. To run the appropriate
-sessions whenever the draft status changes, add `ready_for_review` and
-`converted_to_draft` to the pull request activity types in `ci.yml`. Specifying
+marked ready for review. To run the full test workload at that point, add
+`ready_for_review` to the pull request activity types in `ci.yml`. Specifying
 `types` replaces the defaults, so retain `opened`, `reopened`, and
 `synchronize`:
 
@@ -112,7 +144,7 @@ on:
 ## [2.2.2]
 
 This release updates [pypa/cibuildwheel] to `v4.2.0`. As a result, CPython 3.15
-wheels are built by default. Consumers may need to skips tests for `cp315-*` in
+wheels are built by default. Consumers may need to skip tests for `cp315-*` in
 their `cibuildwheel` configuration if any dependency does not support Python
 3.15 yet.
 
