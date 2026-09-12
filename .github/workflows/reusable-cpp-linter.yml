@@ -167,7 +167,14 @@ jobs:
           fi
 
       - name: Generate compilation database
-        run: cmake -B build --preset lint
+        env:
+          USE_SCCACHE_GHA: ${{ inputs.build-project && inputs.use-sccache-gha }}
+        run: |
+          args=()
+          if [[ "$USE_SCCACHE_GHA" == "true" ]]; then
+            args+=(-DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache)
+          fi
+          cmake -B build --preset lint "${args[@]}"
 
       - name: Build
         if: ${{ inputs.build-project }}
