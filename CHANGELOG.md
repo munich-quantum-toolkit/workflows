@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- 🐛 Configure `sccache` compiler launchers for C++ coverage and linter builds
+  ([#472]) ([**@denialhaag**])
+
 ## [2.4.1] - 2026-09-11
 
 ### Fixed
@@ -573,6 +578,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#472]: https://github.com/munich-quantum-toolkit/workflows/pull/472
 [#470]: https://github.com/munich-quantum-toolkit/workflows/pull/470
 [#463]: https://github.com/munich-quantum-toolkit/workflows/pull/463
 [#462]: https://github.com/munich-quantum-toolkit/workflows/pull/462
