@@ -15,6 +15,10 @@ on:
         description: "The runner image to test on"
         default: "ubuntu-24.04"
         type: string
+      python-abi:
+        description: "Optional CPython ABI tag to build separately, such as cp311 or cp315t"
+        default: ""
+        type: string
       use-sccache-gha:
         description: "Whether to use sccache with the GitHub Actions cache backend"
         default: true
@@ -51,7 +55,7 @@ on:
         required: false
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-python-packaging-cibw-${{ inputs.runs-on }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-python-packaging-cibw-${{ inputs.runs-on }}-${{ inputs.python-abi }}
   cancel-in-progress: true
 
 permissions:
@@ -59,8 +63,9 @@ permissions:
 
 jobs:
   build-wheel:
-    name: 🎡 ${{ inputs.runs-on }}
+    name: 🎡 ${{ inputs.runs-on }} ${{ inputs.python-abi }}
     runs-on: ${{ inputs.runs-on }}
+    timeout-minutes: 300
     env:
       CMAKE_C_COMPILER_LAUNCHER: sccache
       CMAKE_CXX_COMPILER_LAUNCHER: sccache
@@ -87,7 +92,7 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir && !startsWith(inputs.runs-on, 'ubuntu') }}
-        uses: munich-quantum-software/setup-mlir@dae31adab96bf01540439d2d2f8226464294f2f3
+        uses: munich-quantum-software/setup-mlir@01969745aad746dc11e47941c35316704158aa6f
         with:
           llvm-version: ${{ inputs.llvm-version }}
           assertions: ${{ inputs.mlir-assertions }}
@@ -101,6 +106,13 @@ jobs:
       - name: Set up sccache
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
+      - name: Select the requested Python ABI
+        if: inputs.python-abi != ''
+        shell: bash
+        env:
+          PYTHON_ABI: ${{ inputs.python-abi }}
+        run: echo "CIBW_BUILD=${PYTHON_ABI}-*" >> "$GITHUB_ENV"
+
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@e090b81e30c4d855ea63bf4b6e59204c09a101ae # v4.2.1
 
@@ -112,7 +124,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
+          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}${{ inputs.python-abi && format('-{0}', inputs.python-abi) || '' }}
           path: wheelhouse/*.whl
 
       - name: Show sccache stats
