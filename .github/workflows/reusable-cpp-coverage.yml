@@ -100,7 +100,14 @@ jobs:
           echo "LIT_BIN=$(which lit)" >> $GITHUB_ENV
 
       - name: Configure CMake
-        run: cmake --preset coverage
+        env:
+          USE_SCCACHE_GHA: ${{ inputs.use-sccache-gha }}
+        run: |
+          args=()
+          if [[ "$USE_SCCACHE_GHA" == "true" ]]; then
+            args+=(-DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache)
+          fi
+          cmake --preset coverage "${args[@]}"
 
       - name: Build
         run: cmake --build --preset coverage

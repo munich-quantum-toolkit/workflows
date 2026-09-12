@@ -10,6 +10,13 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.4.2] - 2026-09-12
+
+### Fixed
+
+- 🐛 Configure `sccache` compiler launchers for C++ coverage and linter builds
+  ([#472]) ([**@denialhaag**])
+
 ## [2.4.1] - 2026-09-11
 
 ### Fixed
@@ -525,7 +532,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...HEAD
+[2.4.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.4.2
 [2.4.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.4.1
 [2.4.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.4.0
 [2.3.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.3.1
@@ -573,6 +581,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#472]: https://github.com/munich-quantum-toolkit/workflows/pull/472
 [#470]: https://github.com/munich-quantum-toolkit/workflows/pull/470
 [#463]: https://github.com/munich-quantum-toolkit/workflows/pull/463
 [#462]: https://github.com/munich-quantum-toolkit/workflows/pull/462
