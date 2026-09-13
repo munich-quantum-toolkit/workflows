@@ -106,15 +106,15 @@ jobs:
       - name: Set up sccache
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
-      - name: Select the requested Python ABI
+      - name: Build the requested Python ABI
         if: inputs.python-abi != ''
-        shell: bash
+        uses: pypa/cibuildwheel@e090b81e30c4d855ea63bf4b6e59204c09a101ae # v4.2.1
         env:
-          PYTHON_ABI: ${{ inputs.python-abi }}
-        run: echo "CIBW_BUILD=${PYTHON_ABI}-*" >> "$GITHUB_ENV"
+          CIBW_BUILD: ${{ format('{0}-*', inputs.python-abi) }}
 
-      # run cibuildwheel to build wheels for the specified Python version
-      - uses: pypa/cibuildwheel@e090b81e30c4d855ea63bf4b6e59204c09a101ae # v4.2.1
+      - name: Build the configured Python ABIs
+        if: inputs.python-abi == ''
+        uses: pypa/cibuildwheel@e090b81e30c4d855ea63bf4b6e59204c09a101ae # v4.2.1
 
       - name: Verify clean directory
         run: git diff --exit-code
