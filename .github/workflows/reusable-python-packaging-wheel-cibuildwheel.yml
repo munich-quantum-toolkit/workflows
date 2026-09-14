@@ -88,7 +88,7 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir && !startsWith(inputs.runs-on, 'ubuntu') }}
-        uses: munich-quantum-software/setup-mlir@9e7b46e4ef38ea8e2d5134457fc1c49ee8833192 # zizmor: ignore[stale-action-refs] -- Pin PR #255 until its release.
+        uses: munich-quantum-software/setup-mlir@a43338b02c09c79c8da9eb98b4ad45b08429fd0f # zizmor: ignore[stale-action-refs] -- Pin PR #255 until its release.
         with:
           llvm-version: ${{ inputs.llvm-version }}
           assertions: ${{ inputs.mlir-assertions }}
