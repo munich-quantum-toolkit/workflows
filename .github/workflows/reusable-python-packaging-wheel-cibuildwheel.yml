@@ -19,10 +19,6 @@ on:
         description: "Optional CPython ABI tag to build separately, such as cp311 or cp315t"
         default: ""
         type: string
-      use-sccache-gha:
-        description: "Whether to use sccache with the GitHub Actions cache backend"
-        default: true
-        type: boolean
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -69,7 +65,7 @@ jobs:
     env:
       CMAKE_C_COMPILER_LAUNCHER: sccache
       CMAKE_CXX_COMPILER_LAUNCHER: sccache
-      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_GHA_ENABLED: true
       SCCACHE_IDLE_TIMEOUT: 0
       SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
@@ -92,7 +88,7 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir && !startsWith(inputs.runs-on, 'ubuntu') }}
-        uses: munich-quantum-software/setup-mlir@01969745aad746dc11e47941c35316704158aa6f # zizmor: ignore[stale-action-refs] -- Pin PR #255 until its release.
+        uses: munich-quantum-software/setup-mlir@9e7b46e4ef38ea8e2d5134457fc1c49ee8833192 # zizmor: ignore[stale-action-refs] -- Pin PR #255 until its release.
         with:
           llvm-version: ${{ inputs.llvm-version }}
           assertions: ${{ inputs.mlir-assertions }}
