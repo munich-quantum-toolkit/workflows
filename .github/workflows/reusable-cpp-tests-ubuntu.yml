@@ -12,9 +12,9 @@ on:
     inputs:
       runs-on:
         description: >
-          The Ubuntu runner image to use. Defaults to 'ubuntu-24.04'.
-          This can be any valid Ubuntu runner image, such as 'ubuntu-24.04' or its ARM variant 'ubuntu-24.04-arm'.
-        default: "ubuntu-24.04"
+          The Ubuntu runner image to use. Defaults to 'ubuntu-26.04'.
+          This can be any valid Ubuntu runner image, such as 'ubuntu-26.04' or its ARM variant 'ubuntu-26.04-arm'.
+        default: "ubuntu-26.04"
         type: string
       run-on-draft:
         description: "Whether to run the tests for draft pull requests"
@@ -98,7 +98,7 @@ jobs:
           llvm-version: ${{ inputs.llvm-version }}
 
       - name: Set up mold as linker
-        uses: rui314/setup-mold@7e4f20ad28a2e8ca6fd0892ccf72e2abb706b9c3 # v1
+        uses: rui314/setup-mold@10ca16bf91dc22e05ebdc935cad9c75ea248f621 # v1
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
