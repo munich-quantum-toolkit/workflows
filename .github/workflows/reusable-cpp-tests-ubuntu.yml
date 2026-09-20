@@ -12,9 +12,9 @@ on:
     inputs:
       runs-on:
         description: >
-          The Ubuntu runner image to use. Defaults to 'ubuntu-24.04'.
-          This can be any valid Ubuntu runner image, such as 'ubuntu-24.04' or its ARM variant 'ubuntu-24.04-arm'.
-        default: "ubuntu-24.04"
+          The Ubuntu runner image to use. Defaults to 'ubuntu-26.04'.
+          This can be any valid Ubuntu runner image, such as 'ubuntu-26.04' or its ARM variant 'ubuntu-26.04-arm'.
+        default: "ubuntu-26.04"
         type: string
       run-on-draft:
         description: "Whether to run the tests for draft pull requests"

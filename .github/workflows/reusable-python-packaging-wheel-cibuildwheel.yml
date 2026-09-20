@@ -13,7 +13,7 @@ on:
     inputs:
       runs-on:
         description: "The runner image to test on"
-        default: "ubuntu-24.04"
+        default: "ubuntu-26.04"
         type: string
       setup-z3:
         description: "Whether to set up Z3"
