@@ -112,7 +112,19 @@ jobs:
           uvx nox -s stubs
           if [[ $(git status --porcelain python) ]]; then
             git add --all -- python
-            git diff --cached --binary --no-renames -- ':(glob)python/**/*.pyi' > "$RUNNER_TEMP/stubs.patch"
+            node <<'JS'
+          const {execFileSync} = require('node:child_process');
+          const git = (...args) => execFileSync('git', args);
+          const changes = git('diff', '--cached', '--no-renames', '--name-status', '-z', '--', ':(glob)python/**/*.pyi')
+            .toString().split('\0');
+          const fileChanges = {additions: [], deletions: []};
+          for (let i = 0; i < changes.length - 1; i += 2) {
+            const [status, path] = changes.slice(i, i + 2);
+            if (status === 'D') fileChanges.deletions.push({path});
+            else fileChanges.additions.push({path, contents: git('show', `:${path}`).toString('base64')});
+          }
+          require('node:fs').writeFileSync(`${process.env.RUNNER_TEMP}/stubs.json`, JSON.stringify(fileChanges));
+          JS
             echo "outdated=true" >> "$GITHUB_OUTPUT"
             echo "Stub files are not up to date. Please run 'nox -s stubs' and commit the changes."
             git --no-pager diff --cached -- python
@@ -127,7 +139,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: python-stubs-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/stubs.patch
+          path: ${{ runner.temp }}/stubs.json
           if-no-files-found: error
           retention-days: 1
 
@@ -163,21 +175,13 @@ jobs:
     timeout-minutes: 5
     environment: mqt-app
     steps:
-      # Only apply the patch here; never execute project code with App credentials.
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          persist-credentials: false
-
+      # Never check out or execute project code with App credentials.
       - name: Download regenerated stubs
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           artifact-ids: ${{ needs.lint.outputs.stubs-artifact-id }}
           path: ${{ runner.temp }}/stubs
           merge-multiple: true
-
-      - name: Apply regenerated stubs to the index
-        run: git apply --cached --allow-empty --include='python/*.pyi' "$RUNNER_TEMP/stubs/stubs.patch"
 
       - id: create-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -192,15 +196,13 @@ jobs:
         with:
           github-token: ${{ steps.create-token.outputs.token }}
           script: |
-            const {execFileSync} = require('node:child_process');
-            const git = (...args) => execFileSync('git', args);
-            const changes = git('diff', '--cached', '--no-renames', '--name-status', '-z', '--', ':(glob)python/**/*.pyi')
-              .toString().split('\0');
-            const fileChanges = {additions: [], deletions: []};
-            for (let i = 0; i < changes.length - 1; i += 2) {
-              const [status, path] = changes.slice(i, i + 2);
-              if (status === 'D') fileChanges.deletions.push({path});
-              else fileChanges.additions.push({path, contents: git('show', `:${path}`).toString('base64')});
+            const fs = require('node:fs/promises');
+            const fileChanges = JSON.parse(await fs.readFile(`${process.env.RUNNER_TEMP}/stubs/stubs.json`, 'utf8'));
+            for (const {path} of [...fileChanges.additions, ...fileChanges.deletions]) {
+              if (typeof path !== 'string' || !path.startsWith('python/') || !path.endsWith('.pyi') ||
+                  path.includes('\\') || path.split('/').some(part => !part || part === '.' || part === '..')) {
+                throw new Error('The artifact contains an invalid stub path.');
+              }
             }
             if (!fileChanges.additions.length && !fileChanges.deletions.length) return;
 
