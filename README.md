@@ -66,6 +66,15 @@ The currently supported variables are
 If one of these secrets is not defined by the calling repository or environment,
 GitHub Actions leaves the corresponding environment variable empty.
 
+## Automatically Fixing Python Stubs
+
+Set `check-stubs: true` and `autofix-stubs: true` in the Python linter job to
+commit outdated `.pyi` files under `python/` using the MQT App. Pass `APP_ID`
+and `APP_PRIVATE_KEY` as secrets or configure them in the `mqt-app` environment;
+the app needs Contents write and Pull requests read access. Auto-fixes apply
+only to same-repository PR branches other than the default branch. Fork PRs keep
+the manual instructions, and auto-fixing is disabled by default.
+
 ## Contributors and Supporters
 
 The _[Munich Quantum Toolkit (MQT)](https://mqt.readthedocs.io)_ is developed by
