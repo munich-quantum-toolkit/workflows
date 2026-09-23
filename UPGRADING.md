@@ -10,7 +10,7 @@ of changes, including minor and patch releases, please refer to the
 
 With `check-stubs: true`, the Python linter now fixes outdated `.pyi` files
 under `python/` on same-repository PR branches other than the default branch.
-Set `autofix-stubs: false` to opt out.
+The fix runs as a follow-up step in the linter job.
 
 Define `APP_ID` and `APP_PRIVATE_KEY` in the calling repository's `mqt-app`
 environment, or pass them explicitly from the caller. Organization secrets

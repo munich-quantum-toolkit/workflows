@@ -13,8 +13,8 @@ releases may include breaking changes.
 ### Added
 
 - 🐍 Automatically commit outdated Python stubs with the MQT App when
-  `check-stubs` is enabled and App credentials are available. Set
-  `autofix-stubs: false` to opt out ([#476]) ([**@simon1hofmann**])
+  `check-stubs` is enabled and App credentials are available ([#476])
+  ([**@simon1hofmann**])
 
 ## [2.4.2] - 2026-09-12
 
