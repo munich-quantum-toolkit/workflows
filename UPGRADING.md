@@ -6,6 +6,22 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+### Automatic Python stub updates
+
+With `check-stubs: true`, the Python linter now defaults `autofix-stubs` to
+`true`. It commits regenerated `.pyi` files under `python/` to same-repository
+PR branches other than the default branch using the MQT App.
+
+Only consumers using autofix need App credentials. Pass `APP_ID` and
+`APP_PRIVATE_KEY` explicitly (or use `secrets: inherit` within the
+organization), or define them in the calling repository's `mqt-app` environment.
+Organization secrets are not automatically forwarded to reusable workflows. The
+App needs Contents write and Pull requests read permissions.
+
+Without credentials, or for fork PRs, outdated stubs still fail the check with
+instructions to run `nox -s stubs` manually. Set `autofix-stubs: false` to keep
+this behavior even when credentials are available.
+
 ## [2.4.0]
 
 ### Compiler caching
