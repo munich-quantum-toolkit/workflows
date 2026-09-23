@@ -38,6 +38,13 @@ on:
         description: "Whether to check if the stub files are up to date. Requires a nox session called `stubs` to exist."
         default: false
         type: boolean
+    secrets:
+      APP_ID:
+        description: ID of the GitHub App used to commit regenerated stubs
+        required: false
+      APP_PRIVATE_KEY:
+        description: Private key of the GitHub App used to commit regenerated stubs
+        required: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-python-linter
@@ -51,7 +58,11 @@ jobs:
     name: 🚨 Lint
     runs-on: ubuntu-26.04
     timeout-minutes: 10
+    environment:
+      name: mqt-app
+      deployment: false
     env:
+      APP_CONFIGURED: ${{ secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' }}
       CMAKE_C_COMPILER_LAUNCHER: sccache
       CMAKE_CXX_COMPILER_LAUNCHER: sccache
       SCCACHE_GHA_ENABLED: true
@@ -68,6 +79,11 @@ jobs:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
+          # Auto-fixes must be generated from the PR head, not the merge commit.
+          ref: >-
+            ${{ inputs.check-stubs && github.event_name == 'pull_request' &&
+                github.event.pull_request.head.repo.full_name == github.repository &&
+                github.event.pull_request.head.sha || github.sha }}
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
@@ -91,14 +107,67 @@ jobs:
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       - name: Check if stub files are up to date
+        id: stubs
         if: ${{ inputs.check-stubs }}
+        shell: bash
         run: |
           uvx nox -s stubs
           if [[ $(git status --porcelain python) ]]; then
+            git add --all -- python
+            echo "outdated=true" >> "$GITHUB_OUTPUT"
             echo "Stub files are not up to date. Please run 'nox -s stubs' and commit the changes."
-            git --no-pager diff python
+            git --no-pager diff --cached -- python
             exit 1
           fi
+
+      - name: Create stub auto-fix token
+        id: create-token
+        if: >-
+          failure() && steps.stubs.outputs.outdated == 'true' && env.APP_CONFIGURED == 'true' &&
+          github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref != github.event.repository.default_branch
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: read
+
+      - name: Commit regenerated stubs
+        if: ${{ failure() && steps.create-token.outputs.token != '' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.create-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.number }}
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git diff --cached --quiet -- ':(glob)python/**/*.pyi' && exit 0
+          PR_STATE="$(gh api "repos/$GH_REPO/pulls/$PR_NUMBER" --jq '.state + ":" + .head.sha')"
+          if [[ "$PR_STATE" != "open:$HEAD_SHA" ]]; then
+            echo "The pull request changed or closed; skipping the stale fix."
+            exit 0
+          fi
+          # Commit the local stub changes through the API so GitHub signs the App commit.
+          git diff --cached --no-renames --name-status -z -- ':(glob)python/**/*.pyi' |
+            while IFS= read -r -d '' status && IFS= read -r -d '' file; do
+              if [[ "$status" == D ]]; then
+                jq -n --arg path "$file" '{deletions: {path: $path}}'
+              else
+                git show ":$file" | base64 | jq -Rs --arg path "$file" \
+                  '{additions: {path: $path, contents: gsub("\n"; "")}}'
+              fi
+            done | jq -s --arg repository "$GH_REPO" --arg branch "$BRANCH_NAME" --arg oid "$HEAD_SHA" '{
+              query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
+              variables: {input: {
+                branch: {repositoryNameWithOwner: $repository, branchName: $branch},
+                expectedHeadOid: $oid,
+                message: {headline: "🐍 Regenerate Python stubs"},
+                fileChanges: {additions: map(.additions // empty), deletions: map(.deletions // empty)}
+              }}
+            }' > "$RUNNER_TEMP/stub-commit.json"
+          gh api graphql --input "$RUNNER_TEMP/stub-commit.json"
 
       # run mypy for static type checking
       - name: Run mypy

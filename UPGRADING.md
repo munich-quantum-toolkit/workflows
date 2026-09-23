@@ -6,6 +6,18 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+### Automatic Python stub updates
+
+With `check-stubs: true`, the Python linter now fixes outdated `.pyi` files
+under `python/` on same-repository PR branches other than the default branch.
+The fix runs as a follow-up step in the linter job.
+
+Define `APP_ID` and `APP_PRIVATE_KEY` in the calling repository's `mqt-app`
+environment, or pass them explicitly from the caller. Organization secrets
+require forwarding. The App needs Contents write and Pull requests read access.
+Without credentials, or for fork PRs, the check keeps the manual `nox -s stubs`
+instructions.
+
 ## [2.4.0]
 
 ### Compiler caching

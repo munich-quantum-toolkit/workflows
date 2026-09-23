@@ -10,6 +10,12 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Added
+
+- 🐍 Automatically commit outdated Python stubs with the MQT App when
+  `check-stubs` is enabled and App credentials are available ([#476])
+  ([**@simon1hofmann**])
+
 ## [2.4.2] - 2026-09-12
 
 ### Fixed
@@ -581,6 +587,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#476]: https://github.com/munich-quantum-toolkit/workflows/pull/476
 [#472]: https://github.com/munich-quantum-toolkit/workflows/pull/472
 [#470]: https://github.com/munich-quantum-toolkit/workflows/pull/470
 [#463]: https://github.com/munich-quantum-toolkit/workflows/pull/463
