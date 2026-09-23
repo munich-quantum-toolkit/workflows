@@ -111,6 +111,7 @@ jobs:
       - name: Check if stub files are up to date
         id: stubs
         if: ${{ inputs.check-stubs }}
+        shell: bash
         run: |
           uvx nox -s stubs
           if [[ $(git status --porcelain python) ]]; then
@@ -197,6 +198,7 @@ jobs:
 
       - name: Commit regenerated stubs
         if: env.APP_CONFIGURED == 'true'
+        shell: bash
         env:
           GH_TOKEN: ${{ steps.create-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
