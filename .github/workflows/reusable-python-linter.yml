@@ -58,7 +58,9 @@ jobs:
     name: 🚨 Lint
     runs-on: ubuntu-26.04
     timeout-minutes: 10
-    environment: mqt-app
+    environment:
+      name: mqt-app
+      deployment: false
     env:
       APP_CONFIGURED: ${{ secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' }}
       CMAKE_C_COMPILER_LAUNCHER: sccache
