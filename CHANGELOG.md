@@ -10,6 +10,10 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-09-25
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#250)._
+
 ### Added
 
 - 🐍 Automatically commit outdated Python stubs with the MQT App when
@@ -538,7 +542,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.0
 [2.4.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.4.2
 [2.4.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.4.1
 [2.4.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.4.0

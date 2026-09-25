@@ -6,17 +6,28 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.5.0]
+
 ### Automatic Python stub updates
 
 With `check-stubs: true`, the Python linter now fixes outdated `.pyi` files
 under `python/` on same-repository PR branches other than the default branch.
 The fix runs as a follow-up step in the linter job.
 
-Define `APP_ID` and `APP_PRIVATE_KEY` in the calling repository's `mqt-app`
-environment, or pass them explicitly from the caller. Organization secrets
-require forwarding. The App needs Contents write and Pull requests read access.
-Without credentials, or for fork PRs, the check keeps the manual `nox -s stubs`
-instructions.
+To enable automatic fixes, pass the organization or repository secrets
+explicitly in the job calling `reusable-python-linter.yml`:
+
+```yaml
+secrets:
+  APP_ID: ${{ secrets.APP_ID }}
+  APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+```
+
+`APP_ID` contains the App's client ID. The App needs Contents write and Pull
+requests read access to the calling repository. Storing the secrets only in the
+`mqt-app` environment is not sufficient. Without credentials, or for fork PRs,
+the check keeps the manual `nox -s stubs` instructions. Callers that do not need
+automatic fixes can omit the secrets.
 
 ## [2.4.0]
 
@@ -787,7 +798,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...v2.5.0
 [2.4.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.3...v2.3.0
 [2.2.2]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.1...v2.2.2
