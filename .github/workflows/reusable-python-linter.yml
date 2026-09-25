@@ -40,7 +40,7 @@ on:
         type: boolean
     secrets:
       APP_ID:
-        description: ID of the GitHub App used to commit regenerated stubs
+        description: Client ID of the GitHub App used to commit regenerated stubs
         required: false
       APP_PRIVATE_KEY:
         description: Private key of the GitHub App used to commit regenerated stubs
@@ -58,9 +58,6 @@ jobs:
     name: 🚨 Lint
     runs-on: ubuntu-26.04
     timeout-minutes: 10
-    environment:
-      name: mqt-app
-      deployment: false
     env:
       APP_CONFIGURED: ${{ secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' }}
       CMAKE_C_COMPILER_LAUNCHER: sccache
