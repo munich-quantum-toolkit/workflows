@@ -20,6 +20,10 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#250)._
   `check-stubs` is enabled and App credentials are available ([#476])
   ([**@simon1hofmann**])
 
+### Changed
+
+- 👷 Upgrade Ubuntu runners to 26.04 ([#474]) ([**@denialhaag**])
+
 ## [2.4.2] - 2026-09-12
 
 ### Fixed
@@ -593,6 +597,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 <!-- PR links -->
 
 [#476]: https://github.com/munich-quantum-toolkit/workflows/pull/476
+[#474]: https://github.com/munich-quantum-toolkit/workflows/pull/474
 [#472]: https://github.com/munich-quantum-toolkit/workflows/pull/472
 [#470]: https://github.com/munich-quantum-toolkit/workflows/pull/470
 [#463]: https://github.com/munich-quantum-toolkit/workflows/pull/463

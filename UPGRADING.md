@@ -10,12 +10,9 @@ of changes, including minor and patch releases, please refer to the
 
 ### Automatic Python stub updates
 
-With `check-stubs: true`, the Python linter now fixes outdated `.pyi` files
-under `python/` on same-repository PR branches other than the default branch.
-The fix runs as a follow-up step in the linter job.
-
-To enable automatic fixes, pass the organization or repository secrets
-explicitly in the job calling `reusable-python-linter.yml`:
+With `check-stubs: true`, the Python linter can now commit regenerated stubs
+automatically. To enable this, forward the organization or repository secrets in
+the job calling `reusable-python-linter.yml`:
 
 ```yaml
 secrets:
@@ -23,11 +20,8 @@ secrets:
   APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
-`APP_ID` contains the App's client ID. The App needs Contents write and Pull
-requests read access to the calling repository. Storing the secrets only in the
-`mqt-app` environment is not sufficient. Without credentials, or for fork PRs,
-the check keeps the manual `nox -s stubs` instructions. Callers that do not need
-automatic fixes can omit the secrets.
+Without these secrets, outdated stubs must still be regenerated and committed
+manually.
 
 ## [2.4.0]
 
