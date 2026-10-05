@@ -58,6 +58,11 @@ jobs:
     name: 🎡 ${{ inputs.runs-on }}
     runs-on: ${{ inputs.runs-on }}
     env:
+      CMAKE_C_COMPILER_LAUNCHER: sccache
+      CMAKE_CXX_COMPILER_LAUNCHER: sccache
+      SCCACHE_GHA_ENABLED: true
+      SCCACHE_IDLE_TIMEOUT: 0
+      SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -89,13 +94,11 @@ jobs:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
-      # set up sccache for faster builds (non-Ubuntu only)
-      - name: Install sccache
-        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        run: uv tool install sccache
+      - name: Set up sccache
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
-      # run cibuildwheel to build wheels for the specified Python version
-      - uses: pypa/cibuildwheel@adba99c781d3746d38b3a09b1cf797965bcb7fe6 # v4.3.0
+      - name: Build wheels
+        uses: pypa/cibuildwheel@adba99c781d3746d38b3a09b1cf797965bcb7fe6 # v4.3.0
 
       - name: Verify clean directory
         run: git diff --exit-code
@@ -107,7 +110,3 @@ jobs:
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse/*.whl
-
-      - name: Show sccache stats
-        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        run: sccache --show-stats

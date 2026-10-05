@@ -10,6 +10,13 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Changed
+
+- ⚡ Enable shared `sccache` for native wheel builds through the supported
+  action. Only `main` writes to the cache; other refs read from it. Linux
+  consumers forward the cache environment into cibuildwheel containers ([#464])
+  ([**@burgholzer**])
+
 ## [2.5.1] - 2026-10-07
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#251)._
@@ -623,6 +630,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [#474]: https://github.com/munich-quantum-toolkit/workflows/pull/474
 [#472]: https://github.com/munich-quantum-toolkit/workflows/pull/472
 [#470]: https://github.com/munich-quantum-toolkit/workflows/pull/470
+[#464]: https://github.com/munich-quantum-toolkit/workflows/pull/464
 [#463]: https://github.com/munich-quantum-toolkit/workflows/pull/463
 [#462]: https://github.com/munich-quantum-toolkit/workflows/pull/462
 [#461]: https://github.com/munich-quantum-toolkit/workflows/pull/461

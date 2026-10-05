@@ -6,6 +6,33 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+### Wheel compiler caching
+
+The cibuildwheel workflow now configures CMake compiler launchers and the GitHub
+Actions `sccache` backend. Only `main` writes to the cache; other refs read from
+it. Project CMake settings must preserve the supplied launcher environment
+variables and use a generator that supports compiler launchers, such as Ninja.
+
+Linux builds must install `sccache` inside their cibuildwheel containers and
+append these variables to `[tool.cibuildwheel.linux].environment-pass`:
+
+```toml
+environment-pass = [
+  "CMAKE_C_COMPILER_LAUNCHER",
+  "CMAKE_CXX_COMPILER_LAUNCHER",
+  "SCCACHE_GHA_ENABLED",
+  "SCCACHE_GHA_RW_MODE",
+  "SCCACHE_IDLE_TIMEOUT",
+  "ACTIONS_CACHE_SERVICE_V2",
+  "ACTIONS_RESULTS_URL",
+  "ACTIONS_RUNTIME_TOKEN",
+]
+```
+
+The action reports host-side statistics automatically. Linux projects can
+inspect container-side statistics in their cibuildwheel build hooks with
+`sccache --show-stats`.
+
 ## [2.5.1]
 
 MLIR-enabled workflows default to LLVM 23.1.2; set `llvm-version` explicitly to
