@@ -43,10 +43,6 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "21.1.8"
         type: string
-      mlir-debug:
-        description: "Whether to use a debug build of MLIR"
-        default: false
-        type: boolean
       preset-name:
         description: "The CMake preset to use for configuration and build"
         required: true
@@ -171,7 +167,6 @@ jobs:
         uses: munich-quantum-software/setup-mlir@5f3c4771ebb8d8e4fe284378b34460f428860a66 # zizmor: ignore[stale-action-refs] -- Pin Phase 1 setup-mlir PR #255 until its release.
         with:
           llvm-version: ${{ inputs.llvm-version }}
-          debug: ${{ inputs.mlir-debug }}
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
