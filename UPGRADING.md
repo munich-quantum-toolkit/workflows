@@ -6,6 +6,14 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.5.1]
+
+MLIR-enabled workflows default to LLVM 23.1.2; set `llvm-version` explicitly to
+retain an older version. macOS and Windows wheel builds default to
+assertion-free SDKs; use `mlir-assertions: true` for older SDKs or builds
+needing assertions. Linux wheel projects select their SDK inside cibuildwheel.
+Remove the `mlir-debug` input from Windows C++ test jobs.
+
 ## [2.5.0]
 
 ### Automatic Python stub updates
@@ -792,7 +800,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.1...HEAD
+[2.5.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...v2.5.0
 [2.4.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.2.3...v2.3.0
