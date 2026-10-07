@@ -60,7 +60,7 @@ on:
         type: boolean
       llvm-version:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters like 'a832a52')"
-        default: "21.1.8"
+        default: "23.1.2"
         type: string
 
 concurrency:
@@ -102,7 +102,7 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir }}
-        uses: munich-quantum-software/setup-mlir@d96700f8b67f3e903dac83ca752b6031c706e4da # zizmor: ignore[stale-action-refs] -- Pin Phase 1 setup-mlir PR #255 until its release.
+        uses: munich-quantum-software/setup-mlir@d7a2a5cec23685b1b10d1688f02351c5a0d5ded3 # zizmor: ignore[stale-action-refs] -- Pin Phase 1 setup-mlir PR #255 until its release.
         with:
           llvm-version: ${{ inputs.llvm-version }}
 
