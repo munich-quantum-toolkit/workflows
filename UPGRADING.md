@@ -800,7 +800,7 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...HEAD
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...v2.5.0
 [2.4.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...v2.4.0

@@ -10,6 +10,19 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.5.2] - 2026-10-18
+
+### Changed
+
+- ⬆️ Update [astral-sh/setup-uv] to `v10.3.0` ([#494])
+- ⬆️ Update [pypa/cibuildwheel] to `v4.3.1` ([#493])
+
+### Fixed
+
+- 🐛 Install `sccache` for Python lint jobs even when stub checks are disabled,
+  so native dependencies can build from source during type checking ([#496])
+  ([**@burgholzer**])
+
 ## [2.5.1] - 2026-10-07
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#251)._
@@ -565,7 +578,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.1...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...HEAD
+[2.5.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.2
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.1
 [2.5.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.0
 [2.4.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.4.2
@@ -616,6 +630,9 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#496]: https://github.com/munich-quantum-toolkit/workflows/pull/496
+[#494]: https://github.com/munich-quantum-toolkit/workflows/pull/494
+[#493]: https://github.com/munich-quantum-toolkit/workflows/pull/493
 [#489]: https://github.com/munich-quantum-toolkit/workflows/pull/489
 [#486]: https://github.com/munich-quantum-toolkit/workflows/pull/486
 [#484]: https://github.com/munich-quantum-toolkit/workflows/pull/484
