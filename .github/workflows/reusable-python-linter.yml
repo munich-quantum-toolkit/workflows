@@ -100,7 +100,6 @@ jobs:
           save-cache: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Set up sccache
-        if: ${{ inputs.check-stubs }}
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       - name: Check if stub files are up to date
