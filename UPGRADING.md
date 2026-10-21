@@ -6,6 +6,13 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.5.3]
+
+The Python linter accepts `use-sccache-gha: false` to disable the GitHub
+compiler cache backend and its usage check. Local `sccache` remains installed
+for source dependencies, including jobs with `check-stubs: false`. Existing
+callers keep remote caching enabled by default.
+
 ## [2.5.1]
 
 MLIR-enabled workflows default to LLVM 23.1.2; set `llvm-version` explicitly to
@@ -50,10 +57,9 @@ builds, and Python tests. These jobs fail if no compilation goes through
 - Python builds must preserve the supplied compiler launcher environment
   variables. Remove explicit or cached CMake settings that override them.
 
-With `check-stubs: true`, the Python linter also requires compilation through
-`sccache` in the `stubs` session. It has no separate cache opt-out; sessions
-that do not compile need to run outside this workflow with `check-stubs`
-disabled.
+Versions before 2.5.3 have no separate cache opt-out for the Python linter. With
+`check-stubs: true`, the `stubs` session must compile through `sccache`. Run
+sessions that do not compile outside this workflow with `check-stubs` disabled.
 
 ### Targeted C++ lint preparation
 
@@ -800,7 +806,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.3...HEAD
+[2.5.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...v2.5.3
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...v2.5.0
 [2.4.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.3.0...v2.4.0

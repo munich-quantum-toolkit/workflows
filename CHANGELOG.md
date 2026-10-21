@@ -10,6 +10,16 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.5.3] - 2026-10-21
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#253)._
+
+### Fixed
+
+- 🐛 Allow Python lint jobs to disable the GitHub compiler cache with
+  `use-sccache-gha: false` while retaining local caching ([#498])
+  ([**@burgholzer**])
+
 ## [2.5.2] - 2026-10-18
 
 ### Changed
@@ -578,7 +588,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.3...HEAD
+[2.5.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.3
 [2.5.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.2
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.1
 [2.5.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.0
@@ -630,6 +641,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#498]: https://github.com/munich-quantum-toolkit/workflows/pull/498
 [#496]: https://github.com/munich-quantum-toolkit/workflows/pull/496
 [#494]: https://github.com/munich-quantum-toolkit/workflows/pull/494
 [#493]: https://github.com/munich-quantum-toolkit/workflows/pull/493
