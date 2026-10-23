@@ -88,11 +88,11 @@ jobs:
         with:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
+          prune-cache: true
 
-      # set up sccache for faster builds (non-Ubuntu only)
-      - name: Install sccache
+      - name: Set up sccache
         if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        run: uv tool install sccache
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@b9e566a2b284570af229f6c2a33673410d0389a3 # v4.3.4
@@ -107,7 +107,3 @@ jobs:
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse/*.whl
-
-      - name: Show sccache stats
-        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-        run: sccache --show-stats

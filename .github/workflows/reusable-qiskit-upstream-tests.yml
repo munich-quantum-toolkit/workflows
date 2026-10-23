@@ -76,14 +76,11 @@ jobs:
         uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           save-cache: ${{ github.ref == 'refs/heads/main' }}
+          prune-cache: true
 
-      # Set up sccache for faster builds
-      - name: Install sccache
-        run: uv tool install sccache
+      - name: Set up sccache
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       # Run the nox qiskit session
       - name: Test against latest Qiskit
         run: uvx nox -s qiskit --verbose
-
-      - name: Show sccache stats
-        run: sccache --show-stats
