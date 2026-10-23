@@ -10,6 +10,13 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.5.4] - 2026-10-23
+
+### Changed
+
+- ⬆️ Update [pypa/cibuildwheel] to `v4.3.4`, including updated manylinux images
+  and fixes for the eMudhra CA compromise ([#499])
+
 ## [2.5.3] - 2026-10-21
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#253)._
@@ -24,7 +31,6 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#253)._
 
 ### Changed
 
-- ⬆️ Update [astral-sh/setup-uv] to `v10.3.0` ([#494])
 - ⬆️ Update [pypa/cibuildwheel] to `v4.3.1` ([#493])
 
 ### Fixed
@@ -45,7 +51,6 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#251)._
 - ⚡ Use assertion-free LLVM SDKs by default for macOS and Windows wheel builds,
   with the `mlir-assertions` input to retain assertions. Development workflows
   retain assertions ([#486]) ([**@burgholzer**])
-- ⬆️ Update [astral-sh/setup-uv] to `v10.2.0` ([#484])
 
 ### Removed
 
@@ -588,7 +593,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.4...HEAD
+[2.5.4]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.4
 [2.5.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.3
 [2.5.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.2
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.1
@@ -641,13 +647,12 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#499]: https://github.com/munich-quantum-toolkit/workflows/pull/499
 [#498]: https://github.com/munich-quantum-toolkit/workflows/pull/498
 [#496]: https://github.com/munich-quantum-toolkit/workflows/pull/496
-[#494]: https://github.com/munich-quantum-toolkit/workflows/pull/494
 [#493]: https://github.com/munich-quantum-toolkit/workflows/pull/493
 [#489]: https://github.com/munich-quantum-toolkit/workflows/pull/489
 [#486]: https://github.com/munich-quantum-toolkit/workflows/pull/486
-[#484]: https://github.com/munich-quantum-toolkit/workflows/pull/484
 [#476]: https://github.com/munich-quantum-toolkit/workflows/pull/476
 [#474]: https://github.com/munich-quantum-toolkit/workflows/pull/474
 [#472]: https://github.com/munich-quantum-toolkit/workflows/pull/472
@@ -740,5 +745,4 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [GitHub Release Notes]: https://github.com/munich-quantum-toolkit/workflows/releases
 [munich-quantum-software/setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
 [pypa/cibuildwheel]: https://github.com/pypa/cibuildwheel
-[astral-sh/setup-uv]: https://github.com/astral-sh/setup-uv
 [CMake presets]: https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html
