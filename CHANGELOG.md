@@ -10,6 +10,25 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.5.5] - 2026-10-23
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#255)._
+
+### Changed
+
+- ⚡ Prune Python dependency caches before saving, retaining wheels built from
+  source and keeping cache writes restricted to `main` ([#501])
+  ([**@burgholzer**])
+- ⬆️ Install the latest upstream `sccache` release for macOS and Windows wheel
+  builds and Qiskit upstream tests, matching the other compiler workflows
+  ([#501]) ([**@burgholzer**])
+
+### Fixed
+
+- 🐛 Skip remote compiler-cache startup checks so transient storage failures
+  fall back to compilation instead of failing the build ([#501])
+  ([**@burgholzer**])
+
 ## [2.5.4] - 2026-10-23
 
 ### Changed
@@ -593,7 +612,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.4...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.5...HEAD
+[2.5.5]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.5
 [2.5.4]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.4
 [2.5.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.3
 [2.5.2]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.2
@@ -647,6 +667,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#501]: https://github.com/munich-quantum-toolkit/workflows/pull/501
 [#499]: https://github.com/munich-quantum-toolkit/workflows/pull/499
 [#498]: https://github.com/munich-quantum-toolkit/workflows/pull/498
 [#496]: https://github.com/munich-quantum-toolkit/workflows/pull/496

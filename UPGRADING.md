@@ -6,6 +6,24 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.5.5]
+
+No caller changes are required. Python dependency caches are pruned before
+saving, retaining wheels built from source while downloading pre-built wheels
+from the package registry on each run. Cache writes remain restricted to `main`.
+
+The first run for each platform and Python version starts with a cold dependency
+cache because `setup-uv` includes `-pruned` in the new keys. After successful
+`main` runs populate these caches, repository maintainers can remove the
+corresponding older, unpruned `setup-uv-` entries from **Actions > Caches**.
+Keep the compiler caches and any dependency caches still used by other branches.
+Unused entries also expire automatically after seven days without access.
+
+The macOS and Windows wheel workflows and the Qiskit upstream workflow install
+the latest upstream `sccache` release through `mozilla-actions/sccache-action`,
+matching the other compiler workflows. Linux wheel builds continue to use the
+compiler cache configured by the calling project's container setup.
+
 ## [2.5.3]
 
 The Python linter accepts `use-sccache-gha: false` to disable the GitHub
@@ -806,7 +824,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.5...HEAD
+[2.5.5]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.4...v2.5.5
 [2.5.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...v2.5.3
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...v2.5.0
