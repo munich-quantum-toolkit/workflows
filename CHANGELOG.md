@@ -12,8 +12,6 @@ releases may include breaking changes.
 
 ## [2.5.5] - 2026-10-23
 
-_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#255)._
-
 ### Changed
 
 - ⚡ Prune Python dependency caches before saving, retaining wheels built from

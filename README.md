@@ -32,13 +32,6 @@ Overall, these enable modern CI/CD for
 - Python projects with compiled extensions, as well as
 - pure Python packages.
 
-Shared caches are written only by `main`; other branches read them. Python
-dependency caches retain wheels built from source and omit downloaded wheels.
-Compiler caches store individual build results, and remote cache read failures
-fall back to compilation. Wheel packaging and Qiskit upstream tests use local
-compiler caches. Workflows that install `sccache` use its latest upstream
-release.
-
 If you have any questions, feel free to create a
 [discussion](https://github.com/munich-quantum-toolkit/workflows/discussions) or
 an [issue](https://github.com/munich-quantum-toolkit/workflows/issues) on
