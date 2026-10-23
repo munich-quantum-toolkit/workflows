@@ -81,6 +81,8 @@ jobs:
       CLANG_VERSION: ${{ inputs.clang-version }}
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
       SCCACHE_IDLE_TIMEOUT: 0
+      # Cache availability must not prevent the compiler from running.
+      SCCACHE_SKIP_CACHE_CHECK: "true"
       SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}

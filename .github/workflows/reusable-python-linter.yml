@@ -68,6 +68,8 @@ jobs:
       CMAKE_CXX_COMPILER_LAUNCHER: sccache
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
       SCCACHE_IDLE_TIMEOUT: 0
+      # Cache availability must not prevent the compiler from running.
+      SCCACHE_SKIP_CACHE_CHECK: "true"
       SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
@@ -102,6 +104,7 @@ jobs:
         uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           save-cache: ${{ github.ref == 'refs/heads/main' }}
+          prune-cache: true
 
       - name: Set up sccache
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
