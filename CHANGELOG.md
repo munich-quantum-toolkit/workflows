@@ -10,6 +10,10 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- 🐛 Run C++ tests and linting when `CMakePresets.json` changes.
+
 ## [2.5.5] - 2026-10-23
 
 ### Changed
