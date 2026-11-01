@@ -10,6 +10,8 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.5.6] - 2026-11-02
+
 ### Fixed
 
 - 🐛 Run C++ tests and linting when `CMakePresets.json` changes ([#507])
@@ -615,7 +617,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.5...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.6...HEAD
+[2.5.6]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.6
 [2.5.5]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.5
 [2.5.4]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.4
 [2.5.3]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.3
