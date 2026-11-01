@@ -78,6 +78,7 @@ jobs:
             test/**
             !test/python/**
             CMakeLists.txt
+            CMakePresets.json
             cmake/**
             .github/codecov.yml
             .github/workflows/reusable-cpp-tests-ubuntu.yml
@@ -109,6 +110,7 @@ jobs:
             test/**
             !test/python/**
             .clang-tidy
+            CMakePresets.json
             .github/workflows/reusable-cpp-linter.yml
             .github/workflows/ci.yml
             ${{ env.ADDITIONAL_CPP_FILES }}
