@@ -10,6 +10,14 @@ name: 🐍 • Tests
 on:
   workflow_call:
     inputs:
+      apt-packages:
+        description: "Whitespace-separated additional APT packages to install on Linux"
+        default: ""
+        type: string
+      brew-packages:
+        description: "Whitespace-separated additional Homebrew packages to install on macOS"
+        default: ""
+        type: string
       runs-on:
         description: "The platform to run the tests on"
         required: true
@@ -101,6 +109,25 @@ jobs:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Install additional APT packages
+        if: ${{ runner.os == 'Linux' && inputs.apt-packages != '' }}
+        shell: bash
+        env:
+          APT_PACKAGES: ${{ inputs.apt-packages }}
+        run: |
+          read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
+          sudo apt-get update
+          sudo apt-get install -y -- "${packages[@]}"
+
+      - name: Install additional Homebrew packages
+        if: ${{ runner.os == 'macOS' && inputs.brew-packages != '' }}
+        shell: bash
+        env:
+          BREW_PACKAGES: ${{ inputs.brew-packages }}
+        run: |
+          read -r -a packages <<< "${BREW_PACKAGES//$'\n'/ }"
+          brew install -- "${packages[@]}"
 
       - name: Set up MSVC
         if: runner.os == 'Windows'

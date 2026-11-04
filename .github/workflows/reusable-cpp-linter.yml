@@ -10,6 +10,10 @@ name: 🇨 • Lint
 on:
   workflow_call:
     inputs:
+      apt-packages:
+        description: "Whitespace-separated additional APT packages to install"
+        default: ""
+        type: string
       clang-version:
         description: "Clang version to use"
         default: 18
@@ -95,6 +99,15 @@ jobs:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Install additional APT packages
+        if: ${{ inputs.apt-packages != '' }}
+        env:
+          APT_PACKAGES: ${{ inputs.apt-packages }}
+        run: |
+          read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
+          sudo apt-get update
+          sudo apt-get install -y -- "${packages[@]}"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}

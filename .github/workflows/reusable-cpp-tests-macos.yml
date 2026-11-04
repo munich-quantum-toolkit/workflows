@@ -10,6 +10,10 @@ name: 🇨 • Tests • macos
 on:
   workflow_call:
     inputs:
+      brew-packages:
+        description: "Whitespace-separated additional Homebrew packages to install"
+        default: ""
+        type: string
       runs-on:
         description: >
           The macOS runner image to use. Defaults to 'macos-latest'.
@@ -86,6 +90,14 @@ jobs:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Install additional Homebrew packages
+        if: ${{ inputs.brew-packages != '' }}
+        env:
+          BREW_PACKAGES: ${{ inputs.brew-packages }}
+        run: |
+          read -r -a packages <<< "${BREW_PACKAGES//$'\n'/ }"
+          brew install -- "${packages[@]}"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
