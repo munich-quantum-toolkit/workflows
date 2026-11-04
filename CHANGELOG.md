@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- 🐛 File upstream failures under the correct project and find existing issues
+  beyond the first page ([#510]) ([**@burgholzer**])
+
 ## [2.5.6] - 2026-11-02
 
 ### Fixed
@@ -673,6 +678,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#510]: https://github.com/munich-quantum-toolkit/workflows/pull/510
 [#507]: https://github.com/munich-quantum-toolkit/workflows/pull/507
 [#501]: https://github.com/munich-quantum-toolkit/workflows/pull/501
 [#499]: https://github.com/munich-quantum-toolkit/workflows/pull/499
