@@ -37,6 +37,15 @@ If you have any questions, feel free to create a
 an [issue](https://github.com/munich-quantum-toolkit/workflows/issues) on
 [GitHub](https://github.com/munich-quantum-toolkit/workflows).
 
+## Upstream Failure Issues
+
+[`reusable-upstream-issue.yml`](.github/workflows/reusable-upstream-issue.yml)
+creates or updates a project-specific issue when upstream checks fail on `main`.
+Pass `tests-result`, the project `name`, and `upstream-repository` as
+`owner/repository`, and grant `issues: write` to the calling job.
+`reusable-qiskit-upstream-issue.yml` supplies the Qiskit inputs for existing
+callers.
+
 ## Passing Project-Specific Secrets to Reusable Workflows
 
 Most reusable build, test, lint, and packaging workflows expose a fixed
