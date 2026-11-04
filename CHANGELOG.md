@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Added
+
+- 👷 Allow C++ and Python checks to install additional APT and Homebrew packages
+  through workflow inputs ([**@denialhaag**])
+
 ## [2.5.6] - 2026-11-02
 
 ### Fixed

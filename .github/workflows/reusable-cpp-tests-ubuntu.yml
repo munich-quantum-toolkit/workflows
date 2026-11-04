@@ -10,6 +10,10 @@ name: 🇨 • Tests • Ubuntu
 on:
   workflow_call:
     inputs:
+      apt-packages:
+        description: "Whitespace-separated additional APT packages to install on Linux"
+        default: ""
+        type: string
       runs-on:
         description: >
           The Ubuntu runner image to use. Defaults to 'ubuntu-26.04'.
@@ -86,6 +90,23 @@ jobs:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Install additional APT packages
+        if: ${{ inputs.apt-packages != '' }}
+        env:
+          APT_PACKAGES: ${{ inputs.apt-packages }}
+        run: |
+          read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
+          sudo timeout 10m apt-get \
+            -o Acquire::Retries=3 \
+            -o Acquire::http::Timeout=30 \
+            -o Acquire::https::Timeout=30 \
+            update
+          sudo timeout 10m apt-get \
+            -o Acquire::Retries=3 \
+            -o Acquire::http::Timeout=30 \
+            -o Acquire::https::Timeout=30 \
+            install -y -- "${packages[@]}"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
