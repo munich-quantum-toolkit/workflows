@@ -15,8 +15,7 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   create-issue:
@@ -26,5 +25,4 @@ jobs:
       name: Qiskit
       upstream-repository: Qiskit/qiskit
     permissions:
-      contents: read
       issues: write # Needed to create/update issues
