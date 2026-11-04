@@ -11,7 +11,7 @@ on:
   workflow_call:
     inputs:
       brew-packages:
-        description: "Whitespace-separated additional Homebrew packages to install on macOS"
+        description: "Whitespace-separated additional Homebrew packages to install"
         default: ""
         type: string
       runs-on:

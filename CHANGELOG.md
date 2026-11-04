@@ -12,8 +12,8 @@ releases may include breaking changes.
 
 ### Added
 
-- 👷 Allow C++ and Python checks to install additional APT and Homebrew packages
-  through workflow inputs ([**@denialhaag**])
+- ✨ Allow C++ and Python checks to install additional APT and Homebrew packages
+  through workflow inputs ([#509]) ([**@denialhaag**])
 
 ## [2.5.6] - 2026-11-02
 
@@ -678,6 +678,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#509]: https://github.com/munich-quantum-toolkit/workflows/pull/509
 [#507]: https://github.com/munich-quantum-toolkit/workflows/pull/507
 [#501]: https://github.com/munich-quantum-toolkit/workflows/pull/501
 [#499]: https://github.com/munich-quantum-toolkit/workflows/pull/499

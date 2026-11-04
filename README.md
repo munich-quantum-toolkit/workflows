@@ -37,19 +37,6 @@ If you have any questions, feel free to create a
 an [issue](https://github.com/munich-quantum-toolkit/workflows/issues) on
 [GitHub](https://github.com/munich-quantum-toolkit/workflows).
 
-## Additional System Packages
-
-Linux C++ tests, linting, and coverage accept `apt-packages`; macOS C++ tests
-accept `brew-packages`. Python tests accept both inputs and install packages
-only on the matching platform. Both default to an empty string. Supply package
-names separated by spaces or newlines, for example:
-
-```yaml
-with:
-  apt-packages: libcurl4-openssl-dev
-  brew-packages: openssl@3
-```
-
 ## Passing Project-Specific Secrets to Reusable Workflows
 
 Most reusable build, test, lint, and packaging workflows expose a fixed

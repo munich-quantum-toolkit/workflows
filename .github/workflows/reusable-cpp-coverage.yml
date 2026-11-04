@@ -11,7 +11,7 @@ on:
   workflow_call:
     inputs:
       apt-packages:
-        description: "Whitespace-separated additional APT packages to install on Linux"
+        description: "Whitespace-separated additional APT packages to install"
         default: ""
         type: string
       setup-z3:
@@ -76,16 +76,8 @@ jobs:
           APT_PACKAGES: ${{ inputs.apt-packages }}
         run: |
           read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
-          sudo timeout 10m apt-get \
-            -o Acquire::Retries=3 \
-            -o Acquire::http::Timeout=30 \
-            -o Acquire::https::Timeout=30 \
-            update
-          sudo timeout 10m apt-get \
-            -o Acquire::Retries=3 \
-            -o Acquire::http::Timeout=30 \
-            -o Acquire::https::Timeout=30 \
-            install -y -- "${packages[@]}"
+          sudo apt-get update
+          sudo apt-get install -y -- "${packages[@]}"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
