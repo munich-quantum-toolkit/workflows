@@ -10,6 +10,13 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.5.8] - 2026-11-04
+
+### Fixed
+
+- 🐛 Report upstream failures with issue-only permissions and when commit
+  metadata is unavailable ([#512]) ([**@burgholzer**])
+
 ## [2.5.7] - 2026-11-04
 
 ### Fixed
@@ -624,7 +631,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.7...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.8...HEAD
+[2.5.8]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.8
 [2.5.7]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.7
 [2.5.6]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.6
 [2.5.5]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.5
@@ -681,6 +689,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#512]: https://github.com/munich-quantum-toolkit/workflows/pull/512
 [#510]: https://github.com/munich-quantum-toolkit/workflows/pull/510
 [#507]: https://github.com/munich-quantum-toolkit/workflows/pull/507
 [#501]: https://github.com/munich-quantum-toolkit/workflows/pull/501
