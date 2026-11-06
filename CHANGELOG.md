@@ -12,6 +12,8 @@ releases may include breaking changes.
 
 ### Added
 
+- ✨ Add reusable C++ installation tests with configurable APT dependencies and
+  compiler caching ([**@denialhaag**])
 - 📚 Build executable documentation in GitHub Actions and publish the HTML and
   offline ZIP to Read the Docs ([#522]) ([**@burgholzer**])
 
