@@ -37,6 +37,26 @@ If you have any questions, feel free to create a
 an [issue](https://github.com/munich-quantum-toolkit/workflows/issues) on
 [GitHub](https://github.com/munich-quantum-toolkit/workflows).
 
+## C++ Installation Tests
+
+[`reusable-cpp-install-tests.yml`](.github/workflows/reusable-cpp-install-tests.yml)
+runs the caller's `test/install.cmake` script. The script owns the project's
+build, installation, relocation and consumer checks; the workflow supplies
+Windows long-path support, optional Linux dependencies and compiler caching.
+
+```yaml
+cpp-install-tests:
+  strategy:
+    matrix:
+      runs-on: [ubuntu-26.04, macos-26, windows-2025]
+  uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-cpp-install-tests.yml@main
+  with:
+    runs-on: ${{ matrix.runs-on }}
+    apt-packages: libssl-dev zlib1g-dev
+```
+
+Set `use-sccache-gha: false` to disable the workflow's compiler-cache setup.
+
 ## Upstream Failure Issues
 
 [`reusable-upstream-issue.yml`](.github/workflows/reusable-upstream-issue.yml)
