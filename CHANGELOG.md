@@ -12,8 +12,8 @@ releases may include breaking changes.
 
 ### Added
 
-- ✨ Add a reusable workflow for packaging and testing native C++ archives from
-  wheel artifacts ([**@denialhaag**])
+- ✨ Add a reusable workflow for packaging and testing C++ archives from wheel
+  artifacts ([**@denialhaag**])
 - ✨ Add reusable C++ installation tests with configurable APT dependencies and
   compiler caching ([**@denialhaag**])
 
