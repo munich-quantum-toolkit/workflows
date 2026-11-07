@@ -62,7 +62,7 @@ jobs:
         run: uv tool install ninja
 
       - name: Package, relocate, and test
-        run: cmake -P test/package.cmake
+        run: cmake -P cmake/PackageSDK.cmake
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
