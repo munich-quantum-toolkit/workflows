@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Added
+
+- ✨ Add reusable C++ installation tests with configurable APT dependencies and
+  compiler caching ([**@denialhaag**])
+
 ## [2.5.9] - 2026-11-05
 
 ### Added
