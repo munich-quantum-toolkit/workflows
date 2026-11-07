@@ -23,8 +23,16 @@ on:
         default: true
         type: boolean
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-install-tests-${{ inputs.runs-on }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   install:
@@ -34,6 +42,7 @@ jobs:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
+      CMAKE_GENERATOR: Ninja
       CMAKE_C_COMPILER_LAUNCHER: ${{ inputs.use-sccache-gha && 'sccache' || '' }}
       CMAKE_CXX_COMPILER_LAUNCHER: ${{ inputs.use-sccache-gha && 'sccache' || '' }}
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
@@ -43,7 +52,8 @@ jobs:
       SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
     steps:
       - name: Enable long paths on Windows and Git
-        if: runner.os == 'Windows'
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
         run: |
           reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f
           git config --system core.longpaths true
@@ -51,25 +61,111 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
-          persist-credentials: false
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Install build dependencies
-        if: runner.os == 'Linux' && inputs.apt-packages != ''
+      - name: Set up MSVC
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $vsArch = switch ($env:RUNNER_ARCH) {
+            'X64' { 'amd64' }
+            'ARM64' { 'arm64' }
+            default { throw "Unsupported Windows runner architecture: $env:RUNNER_ARCH" }
+          }
+          $component = switch ($env:RUNNER_ARCH) {
+            'X64' { 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64' }
+            'ARM64' { 'Microsoft.VisualStudio.Component.VC.Tools.ARM64' }
+          }
+
+          $candidates = @(
+            if (${env:ProgramFiles(x86)}) {
+              Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+            }
+            if ($env:ProgramFiles) {
+              Join-Path $env:ProgramFiles 'Microsoft Visual Studio\Installer\vswhere.exe'
+            }
+            Get-Command vswhere.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+          )
+          $vswhere = $candidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+          if (-not $vswhere) {
+            throw 'vswhere.exe not found'
+          }
+
+          $vsPath = (& $vswhere -latest -products '*' -prerelease -requires $component -property installationPath | Select-Object -First 1)
+          if (-not $vsPath) {
+            throw "Visual Studio with $component not found"
+          }
+          $devShell = Join-Path $vsPath 'Common7\Tools\Launch-VsDevShell.ps1'
+          if (-not (Test-Path $devShell)) {
+            throw "Developer shell not found: $devShell"
+          }
+
+          $before = @{}
+          Get-ChildItem Env: | ForEach-Object { $before[$_.Name] = $_.Value }
+          $devShellArguments = @{
+            Arch = $vsArch
+            SkipAutomaticLocation = $true
+          }
+          if ($env:RUNNER_ARCH -eq 'X64') {
+            $devShellArguments.HostArch = 'amd64'
+          }
+          & $devShell @devShellArguments
+
+          $compiler = (Get-Command cl.exe -ErrorAction Stop).Source
+          $expected = if ($env:RUNNER_ARCH -eq 'ARM64') { '\Hostarm64\arm64\' } else { '\Hostx64\x64\' }
+          if ($compiler -notmatch [regex]::Escape($expected)) {
+            throw "Unexpected MSVC compiler for $($env:RUNNER_ARCH): $compiler"
+          }
+          Write-Host "Using $compiler"
+
+          Get-ChildItem Env: | ForEach-Object {
+            if (
+              (!$before.ContainsKey($_.Name) -or $before[$_.Name] -cne $_.Value) -and
+              $_.Name -notmatch '^(GITHUB_|RUNNER_)' -and
+              $_.Name -ne 'NODE_OPTIONS'
+            ) {
+              $delimiter = "ghadelimiter_$([guid]::NewGuid().ToString('N'))"
+              Add-Content -Path $env:GITHUB_ENV -Value "$($_.Name)<<$delimiter" -Encoding utf8
+              Add-Content -Path $env:GITHUB_ENV -Value $_.Value -Encoding utf8
+              Add-Content -Path $env:GITHUB_ENV -Value $delimiter -Encoding utf8
+            }
+          }
+
+      - name: Install additional APT packages
+        if: ${{ runner.os == 'Linux' && inputs.apt-packages != '' }}
         env:
           APT_PACKAGES: ${{ inputs.apt-packages }}
         run: |
-          read -ra packages <<< "$APT_PACKAGES"
+          read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
           sudo apt-get update
           sudo apt-get install -y -- "${packages[@]}"
 
       - name: Set up sccache
-        if: inputs.use-sccache-gha
+        if: ${{ inputs.use-sccache-gha }}
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       - name: Set up mold as linker
-        if: runner.os == 'Linux'
+        if: ${{ runner.os == 'Linux' }}
         uses: rui314/setup-mold@339e96b4ff1f3bd865856ba4cbbe8818a7acb038 # v1
+
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: 3.13
+          activate-environment: true
+          enable-cache: false
+
+      - name: Install Ninja
+        run: uv tool install ninja
 
       - name: Build, install, relocate, and test
         run: cmake -P test/install.cmake
+
+      - name: Verify sccache use
+        if: ${{ inputs.use-sccache-gha }}
+        run: |
+          sccache --show-stats --stats-format json |
+            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
