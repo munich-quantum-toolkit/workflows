@@ -12,7 +12,7 @@ runs:
   using: composite
   steps:
     - shell: pwsh
-      run: | # zizmor: ignore[github-env] -- trusted MSVC environment changes
+      run: | # zizmor: ignore[github-env] Persist the trusted MSVC environment.
         $ErrorActionPreference = 'Stop'
 
         $vsArch = switch ($env:RUNNER_ARCH) {

@@ -6,7 +6,7 @@
 #
 # Licensed under the MIT License
 
-name: 📦 • C++ installation
+name: 🇨 • Installation
 on:
   workflow_call:
     inputs:
@@ -36,7 +36,7 @@ defaults:
 
 jobs:
   install:
-    name: 📦 ${{ inputs.runs-on }}
+    name: 🇨 ${{ inputs.runs-on }}
     runs-on: ${{ inputs.runs-on }}
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
