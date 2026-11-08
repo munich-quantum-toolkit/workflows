@@ -6,7 +6,7 @@
 #
 # Licensed under the MIT License
 
-name: 📦 • C++ packaging
+name: 🇨 • Packaging
 on:
   workflow_call:
     inputs:
