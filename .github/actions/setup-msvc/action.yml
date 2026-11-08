@@ -1,0 +1,80 @@
+# Copyright (c) 2023 - 2026 Chair for Design Automation, TUM
+# Copyright (c) 2025 - 2026 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: Set up MSVC
+description: Initialize the native MSVC compiler environment.
+runs:
+  using: composite
+  steps:
+    - shell: pwsh
+      run: | # zizmor: ignore[github-env] Persist the trusted MSVC environment.
+        $ErrorActionPreference = 'Stop'
+
+        $vsArch = switch ($env:RUNNER_ARCH) {
+          'X64' { 'amd64' }
+          'ARM64' { 'arm64' }
+          default { throw "Unsupported Windows runner architecture: $env:RUNNER_ARCH" }
+        }
+        $component = switch ($env:RUNNER_ARCH) {
+          'X64' { 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64' }
+          'ARM64' { 'Microsoft.VisualStudio.Component.VC.Tools.ARM64' }
+        }
+
+        $candidates = @(
+          if (${env:ProgramFiles(x86)}) {
+            Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          }
+          if ($env:ProgramFiles) {
+            Join-Path $env:ProgramFiles 'Microsoft Visual Studio\Installer\vswhere.exe'
+          }
+          Get-Command vswhere.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+        )
+        $vswhere = $candidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+        if (-not $vswhere) {
+          throw 'vswhere.exe not found'
+        }
+
+        $vsPath = (& $vswhere -latest -products '*' -prerelease -requires $component -property installationPath | Select-Object -First 1)
+        if (-not $vsPath) {
+          throw "Visual Studio with $component not found"
+        }
+        $devShell = Join-Path $vsPath 'Common7\Tools\Launch-VsDevShell.ps1'
+        if (-not (Test-Path $devShell)) {
+          throw "Developer shell not found: $devShell"
+        }
+
+        $before = @{}
+        Get-ChildItem Env: | ForEach-Object { $before[$_.Name] = $_.Value }
+        $devShellArguments = @{
+          Arch = $vsArch
+          SkipAutomaticLocation = $true
+        }
+        if ($env:RUNNER_ARCH -eq 'X64') {
+          $devShellArguments.HostArch = 'amd64'
+        }
+        & $devShell @devShellArguments
+
+        $compiler = (Get-Command cl.exe -ErrorAction Stop).Source
+        $expected = if ($env:RUNNER_ARCH -eq 'ARM64') { '\Hostarm64\arm64\' } else { '\Hostx64\x64\' }
+        if ($compiler -notmatch [regex]::Escape($expected)) {
+          throw "Unexpected MSVC compiler for $($env:RUNNER_ARCH): $compiler"
+        }
+        Write-Host "Using $compiler"
+
+        Get-ChildItem Env: | ForEach-Object {
+          if (
+            (!$before.ContainsKey($_.Name) -or $before[$_.Name] -cne $_.Value) -and
+            $_.Name -notmatch '^(GITHUB_|RUNNER_)' -and
+            $_.Name -ne 'NODE_OPTIONS'
+          ) {
+            $delimiter = "ghadelimiter_$([guid]::NewGuid().ToString('N'))"
+            Add-Content -Path $env:GITHUB_ENV -Value "$($_.Name)<<$delimiter" -Encoding utf8
+            Add-Content -Path $env:GITHUB_ENV -Value $_.Value -Encoding utf8
+            Add-Content -Path $env:GITHUB_ENV -Value $delimiter -Encoding utf8
+          }
+        }

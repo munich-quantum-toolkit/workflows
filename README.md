@@ -21,7 +21,7 @@ This repository provides reusable GitHub workflows for the MQT, which can be
 used in other repositories to automate various tasks such as:
 
 - Change detection for selective workflow execution.
-- C++ testing, linting, and coverage reporting.
+- C++ testing, installation checks, linting, and coverage reporting.
 - Python testing (including coverage reporting), linting, and packaging.
 - Dependabot-like updates for MQT Core.
 - Upstream testing against Qiskit.
@@ -36,44 +36,6 @@ If you have any questions, feel free to create a
 [discussion](https://github.com/munich-quantum-toolkit/workflows/discussions) or
 an [issue](https://github.com/munich-quantum-toolkit/workflows/issues) on
 [GitHub](https://github.com/munich-quantum-toolkit/workflows).
-
-## Upstream Failure Issues
-
-[`reusable-upstream-issue.yml`](.github/workflows/reusable-upstream-issue.yml)
-creates or updates a project-specific issue when upstream checks fail on `main`.
-Pass `tests-result`, the project `name`, and `upstream-repository` as
-`owner/repository`, and grant `issues: write` to the calling job.
-`reusable-qiskit-upstream-issue.yml` supplies the Qiskit inputs for existing
-callers.
-
-## Passing Project-Specific Secrets to Reusable Workflows
-
-Most reusable build, test, lint, and packaging workflows expose a fixed
-whitelist of inherited secrets as environment variables. In the calling
-workflow, use `secrets: inherit` and define the corresponding repository or
-environment secrets with the same names.
-
-Secret inheritance is limited to callers in the same organization or enterprise.
-Cross-organization callers of `reusable-python-packaging-wheel-cibuildwheel.yml`
-can instead pass the AWS secrets explicitly:
-
-```yaml
-secrets:
-  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-```
-
-The currently supported variables are
-
-- `IQM_TOKEN`,
-- `IQM_QC_ALIAS`,
-- `AWS_S3_BUCKET`,
-- `AWS_ACCESS_KEY_ID`, and
-- `AWS_SECRET_ACCESS_KEY`.
-
-If one of these secrets is not defined by the calling repository or environment,
-GitHub Actions leaves the corresponding environment variable empty.
 
 ## Contributors and Supporters
 
