@@ -33,6 +33,8 @@ permissions:
 jobs:
   docs:
     name: 📚 Build
+    # PR code must never run in a privileged caller context.
+    if: contains(fromJSON('["push", "pull_request", "merge_group", "workflow_dispatch"]'), github.event_name)
     runs-on: ubuntu-26.04
     timeout-minutes: 25
     env:
@@ -71,7 +73,7 @@ jobs:
           assertions: false
       - uses: rui314/setup-mold@339e96b4ff1f3bd865856ba4cbbe8818a7acb038 # v1
       # PR caches cannot be restored by main; only main writes shared compiler entries.
-      - uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # zizmor: ignore[cache-poisoning]
+      - uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
       - name: Build and validate documentation
         run: uvx nox --non-interactive -s docs
       - name: Record the preview number

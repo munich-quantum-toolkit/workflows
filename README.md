@@ -54,7 +54,9 @@ callers.
 execution and documentation checks, and must write HTML to `docs/_build/html`.
 The workflow uses sccache and supports `python-version`, `apt-packages`,
 `setup-mlir`, and `llvm-version` inputs. Build jobs need only `contents: read`;
-do not pass upload credentials to them.
+do not pass upload credentials to them. Use the build from `push`,
+`pull_request`, `merge_group`, or `workflow_dispatch`; privileged caller events
+are rejected.
 
 Enable `enable-docs: true` in `reusable-change-detection.yml`, condition the
 docs job on its `run-docs` output, and include the job in the existing aggregate
