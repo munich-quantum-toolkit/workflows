@@ -1,0 +1,89 @@
+# Copyright (c) 2023 - 2026 Chair for Design Automation, TUM
+# Copyright (c) 2025 - 2026 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: 📚 • Documentation
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: Python version used for the docs session
+        type: string
+        default: "3.14"
+      apt-packages:
+        description: Whitespace-separated APT packages needed by the docs
+        type: string
+        default: ""
+      setup-mlir:
+        description: Whether to set up MLIR
+        type: boolean
+        default: false
+      llvm-version:
+        description: LLVM version used when setup-mlir is enabled
+        type: string
+        default: "23.1.2"
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    name: 📚 Build
+    runs-on: ubuntu-26.04
+    timeout-minutes: 25
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: "4"
+      CMAKE_C_COMPILER_LAUNCHER: sccache
+      CMAKE_CXX_COMPILER_LAUNCHER: sccache
+      SCCACHE_GHA_ENABLED: "true"
+      SCCACHE_IDLE_TIMEOUT: "0"
+      SCCACHE_SKIP_CACHE_CHECK: "true"
+      SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          submodules: recursive
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: ${{ inputs.python-version }}
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          prune-cache: true
+      - name: Install additional APT packages
+        if: inputs.apt-packages != ''
+        env:
+          APT_PACKAGES: ${{ inputs.apt-packages }}
+        run: |
+          read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
+          sudo apt-get update
+          sudo apt-get install -y -- "${packages[@]}"
+      - uses: munich-quantum-software/setup-mlir@8d3eae73d0f0196fd30c787d91ebd2018cb6c709 # v1.5.0
+        if: inputs.setup-mlir
+        with:
+          llvm-version: ${{ inputs.llvm-version }}
+          assertions: false
+      - uses: rui314/setup-mold@339e96b4ff1f3bd865856ba4cbbe8818a7acb038 # v1
+      # PR caches cannot be restored by main; only main writes shared compiler entries.
+      - uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # zizmor: ignore[cache-poisoning]
+      - name: Build and validate documentation
+        run: uvx nox --non-interactive -s docs
+      - name: Record the preview number
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          test -f docs/_build/html/index.html
+          printf '%s' "$PR_NUMBER" > docs/_build/pr
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: docs-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            docs/_build/html
+            docs/_build/pr
+          if-no-files-found: error
