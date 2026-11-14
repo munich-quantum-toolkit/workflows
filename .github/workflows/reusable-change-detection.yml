@@ -13,6 +13,22 @@ name: ❓ • Change Detection
 on:
   workflow_call:
     inputs:
+      enable-docs:
+        description: Whether to detect documentation changes
+        type: boolean
+        default: false
+      docs-ignore-paths:
+        description: Newline-separated Git pathspecs that cannot affect a docs build
+        type: string
+        default: |
+          test/**
+          tests/**
+          mlir/unittests/**
+          .agent/**
+          paper/**
+          AGENTS.md
+          .github/ISSUE_TEMPLATE/**
+          .github/pull_request_template.md
       additional-cpp-files:
         description: Additional files to check for C++-related changes
         type: string
@@ -26,6 +42,9 @@ on:
         type: string
         default: ""
     outputs:
+      run-docs:
+        description: Whether to build and validate documentation
+        value: ${{ jobs.change-detection.outputs.run-docs || false }}
       run-cpp-tests:
         description: Whether to run the C++ tests
         value: ${{ jobs.change-detection.outputs.run-cpp-tests || false }}
@@ -53,8 +72,9 @@ jobs:
   change-detection:
     name: 🕵️ Check
     runs-on: ubuntu-slim
-    timeout-minutes: 1
+    timeout-minutes: 3
     outputs:
+      run-docs: ${{ steps.docs-changes.outputs.run-docs || false }}
       run-cpp-tests: ${{ steps.cpp-tests-changes.outputs.run-cpp-tests || false }}
       run-cpp-linter: ${{ steps.cpp-linter-changes.outputs.run-cpp-linter || false }}
       run-python-tests: ${{ steps.python-tests-changes.outputs.run-python-tests || false }}
@@ -64,6 +84,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: ${{ inputs.enable-docs && '0' || '1' }}
+          filter: blob:none
       - name: Get a list of the changed files relevant for the C++ tests
         if: github.event_name == 'pull_request'
         id: changed-cpp-testable-files
@@ -196,3 +218,23 @@ jobs:
         id: cd-changes
         run: >-
           echo "run-cd=true" >> "${GITHUB_OUTPUT}"
+      - name: Check for documentation changes
+        id: docs-changes
+        if: inputs.enable-docs
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          IGNORE_PATHS: ${{ inputs.docs-ignore-paths }}
+        run: |
+          changed=true
+          if [[ "$EVENT_NAME" == pull_request ]]; then
+            paths=(.)
+            while IFS= read -r path; do
+              [[ -z "$path" ]] || paths+=(":(exclude)$path")
+            done <<< "$IGNORE_PATHS"
+            # Treat renames as deletion plus addition so both paths are checked.
+            files=$(git diff --name-only --no-renames "$BASE...$HEAD" -- "${paths[@]}")
+            [[ -n "$files" ]] || changed=false
+          fi
+          echo "run-docs=$changed" >> "$GITHUB_OUTPUT"

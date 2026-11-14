@@ -1,0 +1,116 @@
+# Copyright (c) 2023 - 2026 Chair for Design Automation, TUM
+# Copyright (c) 2025 - 2026 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: 📚 • Publish documentation
+on:
+  workflow_call:
+    inputs:
+      project-slug:
+        description: Read the Docs project slug with direct upload enabled
+        type: string
+        required: true
+      build-workflows:
+        description: Whitespace-separated caller workflow paths allowed to produce docs
+        type: string
+        default: .github/workflows/ci.yml
+    secrets:
+      READTHEDOCS_TOKEN:
+        description: Read the Docs API token for the project
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_repository.id }}-${{ github.event.workflow_run.head_branch }}-docs-publish
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  publish:
+    name: 📚 Publish
+    if: >-
+      github.event_name == 'workflow_run' &&
+      contains(fromJSON('["push", "pull_request"]'), github.event.workflow_run.event)
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      actions: read # Download the triggering run's artifact
+      contents: read
+      pull-requests: read # Verify the current preview source
+    steps:
+      - name: Find this run's documentation
+        id: artifact
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          BUILD_WORKFLOWS: ${{ inputs.build-workflows }}
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            if (!process.env.BUILD_WORKFLOWS.split(/\s+/).includes(run.path))
+              throw new Error('Unexpected workflow');
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({
+              ...context.repo, run_id: run.id, name: `docs-${run.head_sha}`,
+            });
+            core.setOutput('id', data.artifacts.find(artifact => !artifact.expired)?.id ?? '');
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        if: steps.artifact.outputs.id != ''
+        with:
+          artifact-ids: ${{ steps.artifact.outputs.id }}
+          path: site
+          merge-multiple: true
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Prepare the offline download
+        if: steps.artifact.outputs.id != ''
+        run: |
+          test -z "$(find site -type l -print -quit)"
+          (cd site/html && zip -qr "$RUNNER_TEMP/html.zip" .)
+      - name: Select the current publication target
+        id: publication
+        if: steps.artifact.outputs.id != ''
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            let version = run.head_branch;
+            const defaultBranch = context.payload.repository.default_branch;
+            let type = version === defaultBranch ? 'branch' : 'tag';
+            if (run.event === 'pull_request') {
+              const number = Number(require('fs').readFileSync('site/pr', 'utf8'));
+              if (!Number.isSafeInteger(number) || number <= 0) throw new Error('Invalid PR number');
+              const { data: pull } = await github.rest.pulls.get({ ...context.repo, pull_number: number });
+              if (pull.state !== 'open' || pull.head.sha !== run.head_sha) return;
+              if (pull.head.repo?.id !== run.head_repository.id || pull.head.ref !== run.head_branch)
+                throw new Error('PR source does not match the build');
+              version = String(number);
+              type = 'external';
+            } else {
+              if (version !== defaultBranch && !version.startsWith('v')) return;
+              const ref = `refs/${type === 'branch' ? 'heads' : 'tags'}/${version}`;
+              const { data: commit } = await github.rest.repos.getCommit({ ...context.repo, ref });
+              if (commit.sha !== run.head_sha) return;
+            }
+            core.setOutput('version', version);
+            core.setOutput('type', type);
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        if: steps.publication.outputs.version != ''
+        with:
+          python-version: "3.14"
+          enable-cache: false
+      - name: Publish to Read the Docs
+        if: steps.publication.outputs.version != ''
+        env:
+          PROJECT_SLUG: ${{ inputs.project-slug }}
+          READTHEDOCS_TOKEN: ${{ secrets.READTHEDOCS_TOKEN }}
+          DOCS_VERSION: ${{ steps.publication.outputs.version }}
+          DOCS_VERSION_TYPE: ${{ steps.publication.outputs.type }}
+          DOCS_COMMIT: ${{ github.event.workflow_run.head_sha }}
+        run: >-
+          uvx --from git+https://github.com/readthedocs/readthedocs-cli@8b359129107745381963455ae43aa33eebed3ec7
+          readthedocs upload --project-slug "$PROJECT_SLUG"
+          --html site/html --htmlzip "$RUNNER_TEMP/html.zip"
+          --version-name "$DOCS_VERSION" --version-type "$DOCS_VERSION_TYPE" --commit "$DOCS_COMMIT"
