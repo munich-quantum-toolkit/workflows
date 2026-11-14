@@ -196,9 +196,9 @@ jobs:
 
       # Editable project builds are keyed by commit and never reused by later runs.
       - name: Drop project builds from the uv cache
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
         shell: bash
-        run: cd "$(uv cache dir)" && rm -rf sdists-v*/editable
+        run: cd "${UV_CACHE_DIR:?}" && rm -rf sdists-v*/editable
 
       # upload the report as an artifact to GitHub so that it can later be uploaded to Codecov
       - name: Upload 🐍 coverage report for ${{ inputs.runs-on }}
