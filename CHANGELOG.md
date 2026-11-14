@@ -10,6 +10,23 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [2.5.10] - 2026-11-14
+
+### Added
+
+- ✨ Add `use-sccache-gha` to wheel jobs to cache macOS and Windows compilations
+  in GitHub Actions and verify that they go through `sccache` ([#464])
+  ([**@burgholzer**])
+
+### Changed
+
+- ⚡ Build Windows wheels with native MSVC and Ninja so that CMake compiler
+  launchers such as `sccache` take effect ([#464]) ([**@burgholzer**])
+- ⚡ Keep Windows wheel environments on the uv cache drive so that uv can
+  hard-link packages ([#464]) ([**@burgholzer**])
+- ⚡ Save the uv cache only from Python tests and without editable project
+  builds ([#464]) ([**@burgholzer**])
+
 ## [2.5.9] - 2026-11-05
 
 ### Added
@@ -638,7 +655,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.9...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.10...HEAD
+[2.5.10]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.10
 [2.5.9]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.9
 [2.5.8]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.8
 [2.5.7]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.7
@@ -712,6 +730,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [#474]: https://github.com/munich-quantum-toolkit/workflows/pull/474
 [#472]: https://github.com/munich-quantum-toolkit/workflows/pull/472
 [#470]: https://github.com/munich-quantum-toolkit/workflows/pull/470
+[#464]: https://github.com/munich-quantum-toolkit/workflows/pull/464
 [#463]: https://github.com/munich-quantum-toolkit/workflows/pull/463
 [#462]: https://github.com/munich-quantum-toolkit/workflows/pull/462
 [#461]: https://github.com/munich-quantum-toolkit/workflows/pull/461

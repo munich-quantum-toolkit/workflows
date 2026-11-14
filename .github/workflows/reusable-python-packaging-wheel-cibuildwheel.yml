@@ -15,6 +15,10 @@ on:
         description: "The runner image to test on"
         default: "ubuntu-26.04"
         type: string
+      use-sccache-gha:
+        description: "Whether macOS and Windows builds use sccache with the GitHub Actions cache backend and must compile through sccache"
+        default: false
+        type: boolean
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -58,6 +62,10 @@ jobs:
     name: 🎡 ${{ inputs.runs-on }}
     runs-on: ${{ inputs.runs-on }}
     env:
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_IDLE_TIMEOUT: 0
+      SCCACHE_SKIP_CACHE_CHECK: "true"
+      SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -69,6 +77,34 @@ jobs:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
+
+      # Reusable workflows run in the caller's workspace; fetch the scripts of this revision.
+      - name: Check out shared workflow scripts
+        if: runner.os == 'Windows'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .mqt-workflows
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          ./.mqt-workflows/.github/scripts/setup-msvc.ps1
+          Remove-Item -Recurse -Force .mqt-workflows
+
+      - name: Configure Windows builds
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          # Visual Studio generators ignore CMake compiler launchers such as sccache.
+          echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
+          # Keep wheel environments on the same drive as the uv cache for hard links.
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
@@ -87,7 +123,8 @@ jobs:
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          # Only the Python tests save the shared uv cache key.
+          save-cache: false
           prune-cache: true
 
       - name: Set up sccache
@@ -96,6 +133,15 @@ jobs:
 
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@f9b966cfadf4109556cadc5bb39ddb72d0ce664e # v4.3.5
+
+      # Linux wheels are built in containers with their own sccache instance
+      - name: Verify sccache use
+        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') && inputs.use-sccache-gha }}
+        shell: bash
+        run: |
+          sccache --show-stats
+          sccache --show-stats --stats-format json |
+            uv run --no-project python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
 
       - name: Verify clean directory
         run: git diff --exit-code

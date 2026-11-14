@@ -6,6 +6,13 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.5.10]
+
+Windows wheel jobs now build with native MSVC for the runner architecture and
+the Ninja generator, which supports CMake compiler launchers. Build Windows
+wheels for each architecture on a runner of that architecture; cross-compiling
+from one Windows runner is not supported.
+
 ## [2.5.3]
 
 The Python linter accepts `use-sccache-gha: false` to disable the GitHub
@@ -806,7 +813,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.10...HEAD
+[2.5.10]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.9...v2.5.10
 [2.5.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...v2.5.3
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...v2.5.0
