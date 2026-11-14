@@ -129,75 +129,23 @@ jobs:
           read -r -a packages <<< "${BREW_PACKAGES//$'\n'/ }"
           brew install -- "${packages[@]}"
 
+      # Reusable workflows run in the caller's workspace; fetch the scripts of this revision.
+      - name: Check out shared workflow scripts
+        if: runner.os == 'Windows'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .mqt-workflows
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+
       - name: Set up MSVC
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $ErrorActionPreference = 'Stop'
-
-          $vsArch = switch ($env:RUNNER_ARCH) {
-            'X64' { 'amd64' }
-            'ARM64' { 'arm64' }
-            default { throw "Unsupported Windows runner architecture: $env:RUNNER_ARCH" }
-          }
-          $component = switch ($env:RUNNER_ARCH) {
-            'X64' { 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64' }
-            'ARM64' { 'Microsoft.VisualStudio.Component.VC.Tools.ARM64' }
-          }
-
-          $candidates = @(
-            if (${env:ProgramFiles(x86)}) {
-              Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
-            }
-            if ($env:ProgramFiles) {
-              Join-Path $env:ProgramFiles 'Microsoft Visual Studio\Installer\vswhere.exe'
-            }
-            Get-Command vswhere.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
-          )
-          $vswhere = $candidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
-          if (-not $vswhere) {
-            throw 'vswhere.exe not found'
-          }
-
-          $vsPath = (& $vswhere -latest -products '*' -prerelease -requires $component -property installationPath | Select-Object -First 1)
-          if (-not $vsPath) {
-            throw "Visual Studio with $component not found"
-          }
-          $devShell = Join-Path $vsPath 'Common7\Tools\Launch-VsDevShell.ps1'
-          if (-not (Test-Path $devShell)) {
-            throw "Developer shell not found: $devShell"
-          }
-
-          $before = @{}
-          Get-ChildItem Env: | ForEach-Object { $before[$_.Name] = $_.Value }
-          $devShellArguments = @{
-            Arch = $vsArch
-            SkipAutomaticLocation = $true
-          }
-          if ($env:RUNNER_ARCH -eq 'X64') {
-            $devShellArguments.HostArch = 'amd64'
-          }
-          & $devShell @devShellArguments
-
-          $compiler = (Get-Command cl.exe -ErrorAction Stop).Source
-          $expected = if ($env:RUNNER_ARCH -eq 'ARM64') { '\Hostarm64\arm64\' } else { '\Hostx64\x64\' }
-          if ($compiler -notmatch [regex]::Escape($expected)) {
-            throw "Unexpected MSVC compiler for $($env:RUNNER_ARCH): $compiler"
-          }
-          Write-Host "Using $compiler"
-
-          Get-ChildItem Env: | ForEach-Object {
-            if (
-              (!$before.ContainsKey($_.Name) -or $before[$_.Name] -cne $_.Value) -and
-              $_.Name -notmatch '^(GITHUB_|RUNNER_)' -and
-              $_.Name -ne 'NODE_OPTIONS'
-            ) {
-              $delimiter = "ghadelimiter_$([guid]::NewGuid().ToString('N'))"
-              Add-Content -Path $env:GITHUB_ENV -Value "$($_.Name)<<$delimiter" -Encoding utf8
-              Add-Content -Path $env:GITHUB_ENV -Value $_.Value -Encoding utf8
-              Add-Content -Path $env:GITHUB_ENV -Value $delimiter -Encoding utf8
-            }
-          }
+          ./.mqt-workflows/.github/scripts/setup-msvc.ps1
+          Remove-Item -Recurse -Force .mqt-workflows
 
       - name: Configure Windows native builds
         if: runner.os == 'Windows'
@@ -245,6 +193,12 @@ jobs:
           RUNS_ON: ${{ inputs.runs-on }}
           SESSIONS: ${{ join(fromJSON(inputs.draft-sessions), ' ') }}
         run: uvx nox -s $SESSIONS --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
+
+      # Editable project builds are keyed by commit and never reused by later runs.
+      - name: Drop project builds from the uv cache
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: cd "$(uv cache dir)" && rm -rf sdists-v*/editable
 
       # upload the report as an artifact to GitHub so that it can later be uploaded to Codecov
       - name: Upload 🐍 coverage report for ${{ inputs.runs-on }}

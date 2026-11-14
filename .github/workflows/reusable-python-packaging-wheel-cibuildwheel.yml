@@ -15,10 +15,6 @@ on:
         description: "The runner image to test on"
         default: "ubuntu-26.04"
         type: string
-      windows-native-build:
-        description: "Use native MSVC and Ninja on Windows; all wheels must target the runner architecture"
-        default: false
-        type: boolean
       use-sccache-gha:
         description: "Whether to use sccache with the GitHub Actions cache backend"
         default: true
@@ -82,85 +78,30 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # Reusable workflows run in the caller's workspace; fetch the scripts of this revision.
+      - name: Check out shared workflow scripts
+        if: runner.os == 'Windows'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .mqt-workflows
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+
       - name: Set up MSVC
-        if: runner.os == 'Windows' && inputs.windows-native-build
+        if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $ErrorActionPreference = 'Stop'
-
-          $vsArch = switch ($env:RUNNER_ARCH) {
-            'X64' { 'amd64' }
-            'ARM64' { 'arm64' }
-            default { throw "Unsupported Windows runner architecture: $env:RUNNER_ARCH" }
-          }
-          $component = switch ($env:RUNNER_ARCH) {
-            'X64' { 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64' }
-            'ARM64' { 'Microsoft.VisualStudio.Component.VC.Tools.ARM64' }
-          }
-
-          $candidates = @(
-            if (${env:ProgramFiles(x86)}) {
-              Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
-            }
-            if ($env:ProgramFiles) {
-              Join-Path $env:ProgramFiles 'Microsoft Visual Studio\Installer\vswhere.exe'
-            }
-            Get-Command vswhere.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
-          )
-          $vswhere = $candidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
-          if (-not $vswhere) {
-            throw 'vswhere.exe not found'
-          }
-
-          $vsPath = (& $vswhere -latest -products '*' -prerelease -requires $component -property installationPath | Select-Object -First 1)
-          if (-not $vsPath) {
-            throw "Visual Studio with $component not found"
-          }
-          $devShell = Join-Path $vsPath 'Common7\Tools\Launch-VsDevShell.ps1'
-          if (-not (Test-Path $devShell)) {
-            throw "Developer shell not found: $devShell"
-          }
-
-          $before = @{}
-          Get-ChildItem Env: | ForEach-Object { $before[$_.Name] = $_.Value }
-          $devShellArguments = @{
-            Arch = $vsArch
-            SkipAutomaticLocation = $true
-          }
-          if ($env:RUNNER_ARCH -eq 'X64') {
-            $devShellArguments.HostArch = 'amd64'
-          }
-          & $devShell @devShellArguments
-
-          $compiler = (Get-Command cl.exe -ErrorAction Stop).Source
-          $expected = if ($env:RUNNER_ARCH -eq 'ARM64') { '\Hostarm64\arm64\' } else { '\Hostx64\x64\' }
-          if ($compiler -notmatch [regex]::Escape($expected)) {
-            throw "Unexpected MSVC compiler for $($env:RUNNER_ARCH): $compiler"
-          }
-          Write-Host "Using $compiler"
-
-          Get-ChildItem Env: | ForEach-Object {
-            if (
-              (!$before.ContainsKey($_.Name) -or $before[$_.Name] -cne $_.Value) -and
-              $_.Name -notmatch '^(GITHUB_|RUNNER_)' -and
-              $_.Name -ne 'NODE_OPTIONS'
-            ) {
-              $delimiter = "ghadelimiter_$([guid]::NewGuid().ToString('N'))"
-              Add-Content -Path $env:GITHUB_ENV -Value "$($_.Name)<<$delimiter" -Encoding utf8
-              Add-Content -Path $env:GITHUB_ENV -Value $_.Value -Encoding utf8
-              Add-Content -Path $env:GITHUB_ENV -Value $delimiter -Encoding utf8
-            }
-          }
+          ./.mqt-workflows/.github/scripts/setup-msvc.ps1
+          Remove-Item -Recurse -Force .mqt-workflows
 
       - name: Configure Windows builds
-        env:
-          NATIVE_BUILD: ${{ inputs.windows-native-build }}
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          if [[ "$NATIVE_BUILD" == "true" ]]; then
-            echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
-          fi
+          # Visual Studio generators ignore CMake compiler launchers such as sccache.
+          echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
           # Keep wheel environments on the same drive as the uv cache for hard links.
           echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
           echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
@@ -182,7 +123,8 @@ jobs:
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          # Only the Python tests save the shared uv cache key.
+          save-cache: false
           prune-cache: true
 
       - name: Set up sccache
@@ -191,6 +133,15 @@ jobs:
 
       # run cibuildwheel to build wheels for the specified Python version
       - uses: pypa/cibuildwheel@f9b966cfadf4109556cadc5bb39ddb72d0ce664e # v4.3.5
+
+      # Linux wheels are built in containers with their own sccache instance
+      - name: Verify sccache use
+        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') && inputs.use-sccache-gha }}
+        shell: bash
+        run: |
+          sccache --show-stats
+          sccache --show-stats --stats-format json |
+            uv run --no-project python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
 
       - name: Verify clean directory
         run: git diff --exit-code
