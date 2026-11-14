@@ -6,6 +6,17 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [2.5.10]
+
+macOS and Windows wheel jobs enable the GitHub Actions sccache backend by
+default. Set `use-sccache-gha: false` to use only the local compiler cache.
+Projects must configure their compiler launcher to use `sccache`.
+
+For Windows wheels targeting only the runner architecture, set
+`windows-native-build: true` to initialize native MSVC and select Ninja, which
+supports CMake compiler launchers. Leave this disabled for jobs that build
+wheels for other architectures. Linux container configuration is unchanged.
+
 ## [2.5.3]
 
 The Python linter accepts `use-sccache-gha: false` to disable the GitHub
@@ -806,7 +817,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.3...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.10...HEAD
+[2.5.10]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.9...v2.5.10
 [2.5.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...v2.5.3
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.4.2...v2.5.0

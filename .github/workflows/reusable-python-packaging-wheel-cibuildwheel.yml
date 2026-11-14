@@ -15,6 +15,14 @@ on:
         description: "The runner image to test on"
         default: "ubuntu-26.04"
         type: string
+      windows-native-build:
+        description: "Use native MSVC and Ninja on Windows; all wheels must target the runner architecture"
+        default: false
+        type: boolean
+      use-sccache-gha:
+        description: "Whether to use sccache with the GitHub Actions cache backend"
+        default: true
+        type: boolean
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -58,6 +66,10 @@ jobs:
     name: 🎡 ${{ inputs.runs-on }}
     runs-on: ${{ inputs.runs-on }}
     env:
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_IDLE_TIMEOUT: 0
+      SCCACHE_SKIP_CACHE_CHECK: "true"
+      SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
       IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
       IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -69,6 +81,89 @@ jobs:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Set up MSVC
+        if: runner.os == 'Windows' && inputs.windows-native-build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $vsArch = switch ($env:RUNNER_ARCH) {
+            'X64' { 'amd64' }
+            'ARM64' { 'arm64' }
+            default { throw "Unsupported Windows runner architecture: $env:RUNNER_ARCH" }
+          }
+          $component = switch ($env:RUNNER_ARCH) {
+            'X64' { 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64' }
+            'ARM64' { 'Microsoft.VisualStudio.Component.VC.Tools.ARM64' }
+          }
+
+          $candidates = @(
+            if (${env:ProgramFiles(x86)}) {
+              Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+            }
+            if ($env:ProgramFiles) {
+              Join-Path $env:ProgramFiles 'Microsoft Visual Studio\Installer\vswhere.exe'
+            }
+            Get-Command vswhere.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+          )
+          $vswhere = $candidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+          if (-not $vswhere) {
+            throw 'vswhere.exe not found'
+          }
+
+          $vsPath = (& $vswhere -latest -products '*' -prerelease -requires $component -property installationPath | Select-Object -First 1)
+          if (-not $vsPath) {
+            throw "Visual Studio with $component not found"
+          }
+          $devShell = Join-Path $vsPath 'Common7\Tools\Launch-VsDevShell.ps1'
+          if (-not (Test-Path $devShell)) {
+            throw "Developer shell not found: $devShell"
+          }
+
+          $before = @{}
+          Get-ChildItem Env: | ForEach-Object { $before[$_.Name] = $_.Value }
+          $devShellArguments = @{
+            Arch = $vsArch
+            SkipAutomaticLocation = $true
+          }
+          if ($env:RUNNER_ARCH -eq 'X64') {
+            $devShellArguments.HostArch = 'amd64'
+          }
+          & $devShell @devShellArguments
+
+          $compiler = (Get-Command cl.exe -ErrorAction Stop).Source
+          $expected = if ($env:RUNNER_ARCH -eq 'ARM64') { '\Hostarm64\arm64\' } else { '\Hostx64\x64\' }
+          if ($compiler -notmatch [regex]::Escape($expected)) {
+            throw "Unexpected MSVC compiler for $($env:RUNNER_ARCH): $compiler"
+          }
+          Write-Host "Using $compiler"
+
+          Get-ChildItem Env: | ForEach-Object {
+            if (
+              (!$before.ContainsKey($_.Name) -or $before[$_.Name] -cne $_.Value) -and
+              $_.Name -notmatch '^(GITHUB_|RUNNER_)' -and
+              $_.Name -ne 'NODE_OPTIONS'
+            ) {
+              $delimiter = "ghadelimiter_$([guid]::NewGuid().ToString('N'))"
+              Add-Content -Path $env:GITHUB_ENV -Value "$($_.Name)<<$delimiter" -Encoding utf8
+              Add-Content -Path $env:GITHUB_ENV -Value $_.Value -Encoding utf8
+              Add-Content -Path $env:GITHUB_ENV -Value $delimiter -Encoding utf8
+            }
+          }
+
+      - name: Configure Windows builds
+        env:
+          NATIVE_BUILD: ${{ inputs.windows-native-build }}
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          if [[ "$NATIVE_BUILD" == "true" ]]; then
+            echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
+          fi
+          # Keep wheel environments on the same drive as the uv cache for hard links.
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
