@@ -12,14 +12,16 @@ releases may include breaking changes.
 
 ## [2.5.10] - 2026-11-14
 
+### Added
+
+- ✨ Add `use-sccache-gha` to wheel jobs to cache macOS and Windows compilations
+  in GitHub Actions and verify that they go through `sccache` ([#464])
+  ([**@burgholzer**])
+
 ### Changed
 
 - ⚡ Build Windows wheels with native MSVC and Ninja so that CMake compiler
   launchers such as `sccache` take effect ([#464]) ([**@burgholzer**])
-- ⚡ Use the GitHub Actions `sccache` backend for macOS and Windows wheels
-  ([#464]) ([**@burgholzer**])
-- 👷 Fail macOS and Windows wheel jobs when no compilation goes through
-  `sccache` ([#464]) ([**@burgholzer**])
 - ⚡ Keep Windows wheel environments on the uv cache drive so that uv can
   hard-link packages ([#464]) ([**@burgholzer**])
 - ⚡ Save the uv cache only from Python tests and without editable project

@@ -8,17 +8,10 @@ of changes, including minor and patch releases, please refer to the
 
 ## [2.5.10]
 
-macOS and Windows wheel jobs enable the GitHub Actions sccache backend by
-default. Set `use-sccache-gha: false` to use only the local compiler cache.
-Projects must configure their compiler launcher to use `sccache`. While the
-backend is enabled, the wheel job fails if no compilation goes through
-`sccache`.
-
 Windows wheel jobs now build with native MSVC for the runner architecture and
 the Ninja generator, which supports CMake compiler launchers. Build Windows
 wheels for each architecture on a runner of that architecture; cross-compiling
-from one Windows runner is not supported. Linux container configuration is
-unchanged.
+from one Windows runner is not supported.
 
 ## [2.5.3]
 
