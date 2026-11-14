@@ -1,0 +1,105 @@
+# Copyright (c) 2023 - 2026 Chair for Design Automation, TUM
+# Copyright (c) 2025 - 2026 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: 🇨 • Installation
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: "The runner image to use"
+        default: "ubuntu-26.04"
+        type: string
+      apt-packages:
+        description: "Whitespace-separated additional APT packages to install on Linux"
+        default: ""
+        type: string
+      use-sccache-gha:
+        description: "Whether to use sccache with the GitHub Actions cache backend"
+        default: true
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-install-tests-${{ inputs.runs-on }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  install:
+    name: 🇨 ${{ inputs.runs-on }}
+    runs-on: ${{ inputs.runs-on }}
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 4
+      CTEST_PARALLEL_LEVEL: 4
+      FORCE_COLOR: 3
+      CMAKE_GENERATOR: Ninja
+      CMAKE_C_COMPILER_LAUNCHER: ${{ inputs.use-sccache-gha && 'sccache' || '' }}
+      CMAKE_CXX_COMPILER_LAUNCHER: ${{ inputs.use-sccache-gha && 'sccache' || '' }}
+      SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
+      SCCACHE_IDLE_TIMEOUT: 0
+      # Cache availability must not prevent the compiler from running.
+      SCCACHE_SKIP_CACHE_CHECK: "true"
+      SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
+    steps:
+      - name: Enable long paths on Windows and Git
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+          reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f
+          git config --system core.longpaths true
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up MSVC
+        if: ${{ runner.os == 'Windows' }}
+        uses: $/.github/actions/setup-msvc
+
+      - name: Install additional APT packages
+        if: ${{ runner.os == 'Linux' && inputs.apt-packages != '' }}
+        env:
+          APT_PACKAGES: ${{ inputs.apt-packages }}
+        run: |
+          read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
+          sudo apt-get update
+          sudo apt-get install -y -- "${packages[@]}"
+
+      - name: Set up sccache
+        if: ${{ inputs.use-sccache-gha }}
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
+
+      - name: Set up mold as linker
+        if: ${{ runner.os == 'Linux' }}
+        uses: rui314/setup-mold@339e96b4ff1f3bd865856ba4cbbe8818a7acb038 # v1
+
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: 3.13
+          activate-environment: true
+          enable-cache: false
+
+      - name: Install Ninja
+        run: uv tool install ninja
+
+      - name: Build, install, relocate, and test
+        run: cmake -P test/install.cmake
+
+      - name: Verify sccache use
+        if: ${{ inputs.use-sccache-gha }}
+        run: |
+          sccache --show-stats --stats-format json |
+            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
