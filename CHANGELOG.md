@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Added
+
+- ✨ Allow Python test jobs to opt into parallel Nox sessions with
+  `parallel-sessions` ([#525]) ([**@simon1hofmann**])
+
 ### Fixed
 
 - 🐛 Upload all Python coverage reports when a runner produces more than one
