@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- 🐛 Upload all Python coverage reports when a runner produces more than one
+  ([#525]) ([**@simon1hofmann**])
+
 ## [2.5.10] - 2026-11-14
 
 ### Added
@@ -715,6 +720,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#525]: https://github.com/munich-quantum-toolkit/workflows/pull/525
 [#512]: https://github.com/munich-quantum-toolkit/workflows/pull/512
 [#510]: https://github.com/munich-quantum-toolkit/workflows/pull/510
 [#509]: https://github.com/munich-quantum-toolkit/workflows/pull/509
