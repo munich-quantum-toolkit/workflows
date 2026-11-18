@@ -26,6 +26,10 @@ on:
         description: "The Nox sessions to run for ready pull requests and non-pull-request events, formatted as a JSON array"
         default: '["minimums", "tests"]'
         type: string
+      parallel-sessions:
+        description: "Run eligible Nox sessions in parallel on ready pull requests and non-pull-request events"
+        default: false
+        type: boolean
       draft-sessions:
         description: "The Nox sessions to run for draft pull requests, formatted as a JSON array"
         default: '["tests-3.14"]'
@@ -169,7 +173,8 @@ jobs:
         env:
           RUNS_ON: ${{ inputs.runs-on }}
           SESSIONS: ${{ join(fromJSON(inputs.sessions), ' ') }}
-        run: uvx nox -s $SESSIONS --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
+          NOX_PARALLEL_ARGS: ${{ inputs.parallel-sessions && '--parallel auto' || '' }}
+        run: uvx nox $NOX_PARALLEL_ARGS -s $SESSIONS --verbose -- --cov --cov-report=xml:coverage-$RUNS_ON.xml --cov-append
 
       - if: ${{ github.event.pull_request.draft }}
         name: 🐍 Test
