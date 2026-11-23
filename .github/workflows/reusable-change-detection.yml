@@ -81,68 +81,42 @@ jobs:
           predicate-quantifier: some-with-excludes
           filters: |
             docs:
-              - 'docs/**'
-              - '{bindings,include,python,src}/**'
-              - 'cmake/**'
-              - 'CMakeLists.txt'
-              - 'CMakePresets.json'
-              - 'noxfile.py'
-              - 'pyproject.toml'
-              - 'uv.lock'
-              - 'README*'
-              - 'LICENSE*'
+              - '{bindings,cmake,docs,include,python,src}/**'
+              - '{CMakeLists.txt,CMakePresets.json}'
+              - '{noxfile.py,pyproject.toml,uv.lock}'
+              - '{README*,LICENSE*}'
               - '.gitmodules'
               - '.readthedocs.{yml,yaml}'
               - '.github/workflows/{ci,docs,docs-publish}.yml'
               - ${{ inputs.additional-docs-files }}
             cpp-tests:
-              - 'include/**'
-              - 'mlir/**'
-              - 'src/**'
-              - 'test/**'
-              - '!test/python/**'
-              - '**/CMakeLists.txt'
-              - '**/CMakePresets.json'
-              - 'cmake/**'
-              - '.github/codecov.yml'
-              - '.github/workflows/ci.yml'
-              - ${{ inputs.additional-test-files }}
-              - ${{ inputs.additional-cpp-files }}
+              - &cpp-checks
+                - '!test/python/**'
+                - '**/CMakePresets.json'
+                - '.github/workflows/ci.yml'
+                - ${{ inputs.additional-cpp-files }}
+              - '{cmake,include,mlir,src,test}/**'
+              - &test-inputs
+                - '**/CMakeLists.txt'
+                - '.github/codecov.yml'
+                - ${{ inputs.additional-test-files }}
             cpp-linter:
+              - *cpp-checks
               # CMake also configures native sources from .in templates.
               - '{bindings,include,mlir,src,test}/**/*.{c,cc,cpp,cxx,cu,cuh,h,hh,hpp,hxx,inc,inl,ipp,tpp,def,td}?(.in)'
-              - '!test/python/**'
               - '**/.clang-tidy'
-              - '**/CMakePresets.json'
-              - '.github/workflows/ci.yml'
-              - ${{ inputs.additional-cpp-files }}
             python-tests:
-              - 'cmake/**'
-              - 'bindings/**'
-              - 'include/**'
-              - 'python/**'
-              - 'src/**'
-              - 'test/**/*.py'
-              - 'tests/**/*.py'
-              - '**/noxfile.py'
-              - '**/pyproject.toml'
-              - '**/uv.lock'
-              - '**/CMakeLists.txt'
-              - '.github/codecov.yml'
-              - '.github/workflows/ci.yml'
-              - ${{ inputs.additional-test-files }}
-              - ${{ inputs.additional-python-files }}
+              - &python-checks
+                - '**/*.{py,pyi}'
+                - 'python/**'
+                - '**/{pyproject.toml,uv.lock}'
+                - '.github/workflows/ci.yml'
+                - ${{ inputs.additional-python-files }}
+              - '{bindings,cmake,include,src,test/python}/**'
+              - *test-inputs
             python-linter:
-              - 'python/**'
-              - 'src/**/*.{py,pyi}'
-              - 'test/**/*.py'
-              - 'tests/**/*.py'
-              - '**/noxfile.py'
-              - '**/pyproject.toml'
-              - '**/uv.lock'
-              - '.github/workflows/ci.yml'
+              - *python-checks
               - '**/.pre-commit-config.yaml'
-              - ${{ inputs.additional-python-files }}
             cd:
               - '.github/workflows/cd.yml'
               - ${{ inputs.additional-cd-files }}

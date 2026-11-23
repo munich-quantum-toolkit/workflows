@@ -16,8 +16,10 @@ leading `!` excludes matches even if a later glob includes the path.
 Docs detection is enabled by default for documentation, package sources, build
 configuration and CI entry points. Add imported guides, data files or scripts
 outside those paths with `additional-docs-files`. Use `additional-test-files`
-for fixtures shared by the C++ and Python suites. Use `additional-cpp-files` for
-native source trees in other locations, such as `["lib/**"]`.
+for shared fixtures or native test helpers outside the default source trees.
+Python tests and lint select `.py` and `.pyi` files anywhere in the repository.
+Use `additional-cpp-files` for native source trees in other locations, such as
+`["lib/**"]`.
 
 The filters track caller workflow files. A change to a shared workflow pin in
 `.github/workflows/ci.yml` selects the test and lint jobs. PRs at GitHub's
