@@ -6,6 +6,16 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+Grant `pull-requests: read` to jobs that call `reusable-change-detection.yml`.
+It reads changed paths from the GitHub API. Pass `additional-cpp-files`,
+`additional-python-files` and `additional-cd-files` as strings containing JSON
+arrays, for example `additional-python-files: '["mlir/**"]'`. Globs match
+repository-relative paths. Use `**/name` to match a basename at any depth. A
+leading `!` excludes matches even if a later glob includes the path.
+
+Docs detection is enabled by default. Set `docs-files` to override its patterns.
+PRs at GitHub's 3,000-file limit run every check.
+
 ## [2.5.10]
 
 Windows wheel jobs now build with native MSVC for the runner architecture and

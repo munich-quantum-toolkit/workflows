@@ -14,185 +14,128 @@ on:
   workflow_call:
     inputs:
       additional-cpp-files:
-        description: Additional files to check for C++-related changes
+        description: JSON array of additional globs to check for C++-related changes
         type: string
-        default: ""
+        default: "[]"
       additional-python-files:
-        description: Additional files to check for Python-related changes
+        description: JSON array of additional globs to check for Python-related changes
         type: string
-        default: ""
+        default: "[]"
       additional-cd-files:
-        description: Additional files to check for CD-related changes
+        description: JSON array of additional globs to check for CD-related changes
         type: string
-        default: ""
+        default: "[]"
+      docs-files:
+        description: JSON array of globs for documentation inputs
+        type: string
+        default: '["**", "!test/**", "!tests/**", "!mlir/unittests/**", "!.agent/**", "!paper/**", "!AGENTS.md", "!.github/ISSUE_TEMPLATE/**", "!.github/pull_request_template.md"]'
     outputs:
+      run-docs:
+        description: Whether to build the documentation
+        value: ${{ jobs.change-detection.outputs.run-docs }}
       run-cpp-tests:
         description: Whether to run the C++ tests
-        value: ${{ jobs.change-detection.outputs.run-cpp-tests || false }}
+        value: ${{ jobs.change-detection.outputs.run-cpp-tests }}
       run-cpp-linter:
         description: Whether to run the C++ linter
-        value: ${{ jobs.change-detection.outputs.run-cpp-linter || false }}
+        value: ${{ jobs.change-detection.outputs.run-cpp-linter }}
       run-python-tests:
         description: Whether to run the Python tests
-        value: ${{ jobs.change-detection.outputs.run-python-tests || false }}
+        value: ${{ jobs.change-detection.outputs.run-python-tests }}
       run-python-linter:
         description: Whether to run the Python linter
-        value: ${{ jobs.change-detection.outputs.run-python-linter || false }}
+        value: ${{ jobs.change-detection.outputs.run-python-linter }}
       run-cd:
         description: Whether to run the continuous deployment job
-        value: ${{ jobs.change-detection.outputs.run-cd || false }}
+        value: ${{ jobs.change-detection.outputs.run-cd }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-change-detection
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  pull-requests: read # List changed files, including both paths of a rename
 
 jobs:
   change-detection:
     name: 🕵️ Check
     runs-on: ubuntu-slim
-    timeout-minutes: 1
+    timeout-minutes: 3
     outputs:
-      run-cpp-tests: ${{ steps.cpp-tests-changes.outputs.run-cpp-tests || false }}
-      run-cpp-linter: ${{ steps.cpp-linter-changes.outputs.run-cpp-linter || false }}
-      run-python-tests: ${{ steps.python-tests-changes.outputs.run-python-tests || false }}
-      run-python-linter: ${{ steps.python-linter-changes.outputs.run-python-linter || false }}
-      run-cd: ${{ steps.cd-changes.outputs.run-cd || false }}
+      run-cpp-tests: ${{ steps.paths.outputs.cpp-tests || true }}
+      run-cpp-linter: ${{ steps.paths.outputs.cpp-linter || true }}
+      run-python-tests: ${{ steps.paths.outputs.python-tests || true }}
+      run-python-linter: ${{ steps.paths.outputs.python-linter || true }}
+      run-cd: ${{ steps.paths.outputs.cd || github.event_name == 'pull_request' }}
+      run-docs: ${{ steps.paths.outputs.docs || true }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: paths
+        # Above GitHub's PR file limit we run all checks, including packaging.
+        if: github.event_name == 'pull_request' && github.event.pull_request.changed_files > 0 && github.event.pull_request.changed_files < 3000
         with:
-          persist-credentials: false
-      - name: Get a list of the changed files relevant for the C++ tests
-        if: github.event_name == 'pull_request'
-        id: changed-cpp-testable-files
-        env:
-          ADDITIONAL_CPP_FILES: ${{ inputs.additional-cpp-files }}
-        uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
-        with:
-          filter: |
-            include/**
-            mlir/**
-            src/**
-            test/**
-            !test/python/**
-            CMakeLists.txt
-            CMakePresets.json
-            cmake/**
-            .github/codecov.yml
-            .github/workflows/reusable-cpp-tests-ubuntu.yml
-            .github/workflows/reusable-cpp-tests-macos.yml
-            .github/workflows/reusable-cpp-tests-windows.yml
-            .github/workflows/reusable-cpp-coverage.yml
-            .github/workflows/reusable-cpp-ci.yml
-            .github/workflows/ci.yml
-            ${{ env.ADDITIONAL_CPP_FILES }}
-      - name: Set a flag for running the C++ tests
-        if: >-
-          github.event_name != 'pull_request'
-          || steps.changed-cpp-testable-files.outputs.all != ''
-        id: cpp-tests-changes
-        run: >-
-          echo "run-cpp-tests=true" >> "${GITHUB_OUTPUT}"
-      - name: Get a list of the changed files relevant for the C++ linter
-        if: github.event_name == 'pull_request'
-        id: changed-cpp-linter-files
-        env:
-          ADDITIONAL_CPP_FILES: ${{ inputs.additional-cpp-files }}
-        uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
-        with:
-          filter: |
-            bindings/**
-            include/**
-            mlir/**
-            src/**
-            test/**
-            !test/python/**
-            .clang-tidy
-            CMakePresets.json
-            .github/workflows/reusable-cpp-linter.yml
-            .github/workflows/ci.yml
-            ${{ env.ADDITIONAL_CPP_FILES }}
-      - name: Set a flag for running the C++ linter
-        if: >-
-          github.event_name != 'pull_request'
-          || steps.changed-cpp-linter-files.outputs.all != ''
-        id: cpp-linter-changes
-        run: >-
-          echo "run-cpp-linter=true" >> "${GITHUB_OUTPUT}"
-      - name: Get a list of the changed files relevant for the Python tests
-        if: github.event_name == 'pull_request'
-        id: changed-python-testable-files
-        env:
-          ADDITIONAL_PYTHON_FILES: ${{ inputs.additional-python-files }}
-        uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
-        with:
-          filter: |
-            cmake/**
-            bindings/**
-            include/**
-            python/**
-            src/**
-            test/**/*.py
-            tests/**/*.py
-            noxfile.py
-            pyproject.toml
-            uv.lock
-            CMakeLists.txt
-            .github/codecov.yml
-            .github/workflows/reusable-python-linter.yml
-            .github/workflows/reusable-python-tests.yml
-            .github/workflows/reusable-python-ci.yml
-            .github/workflows/ci.yml
-            ${{ env.ADDITIONAL_PYTHON_FILES }}
-      - name: Set a flag for running the Python tests
-        if: >-
-          github.event_name != 'pull_request'
-          || steps.changed-python-testable-files.outputs.all != ''
-        id: python-tests-changes
-        run: >-
-          echo "run-python-tests=true" >> "${GITHUB_OUTPUT}"
-      - name: Get a list of the changed files relevant for the Python linter
-        if: github.event_name == 'pull_request'
-        id: changed-python-linter-files
-        env:
-          ADDITIONAL_PYTHON_FILES: ${{ inputs.additional-python-files }}
-        uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
-        with:
-          filter: |
-            python/**
-            test/**/*.py
-            tests/**/*.py
-            noxfile.py
-            pyproject.toml
-            uv.lock
-            .github/workflows/reusable-python-linter.yml
-            .github/workflows/reusable-python-ci.yml
-            .github/workflows/ci.yml
-            .pre-commit-config.yaml
-            ${{ env.ADDITIONAL_PYTHON_FILES }}
-      - name: Set a flag for running the Python linter
-        if: >-
-          github.event_name != 'pull_request'
-          || steps.changed-python-linter-files.outputs.all != ''
-        id: python-linter-changes
-        run: >-
-          echo "run-python-linter=true" >> "${GITHUB_OUTPUT}"
-      - name: Get a list of the changed files relevant for the continuous deployment job
-        if: github.event_name == 'pull_request'
-        id: changed-cd-files
-        env:
-          ADDITIONAL_CD_FILES: ${{ inputs.additional-cd-files }}
-        uses: Ana06/get-changed-files@25f79e676e7ea1868813e21465014798211fad8c # v2.3.0
-        with:
-          filter: |
-            .github/workflows/cd.yml
-            ${{ env.ADDITIONAL_CD_FILES }}
-      - name: Set a flag for running the continuous deployment job
-        if: >-
-          github.event_name == 'pull_request'
-          && steps.changed-cd-files.outputs.all != ''
-        id: cd-changes
-        run: >-
-          echo "run-cd=true" >> "${GITHUB_OUTPUT}"
+          predicate-quantifier: some-with-excludes
+          filters: |
+            docs: ${{ inputs.docs-files }}
+            cpp-tests:
+              - 'include/**'
+              - 'mlir/**'
+              - 'src/**'
+              - 'test/**'
+              - '!test/python/**'
+              - '**/CMakeLists.txt'
+              - '**/CMakePresets.json'
+              - 'cmake/**'
+              - '.github/codecov.yml'
+              - '.github/workflows/reusable-cpp-tests-ubuntu.yml'
+              - '.github/workflows/reusable-cpp-tests-macos.yml'
+              - '.github/workflows/reusable-cpp-tests-windows.yml'
+              - '.github/workflows/reusable-cpp-coverage.yml'
+              - '.github/workflows/reusable-cpp-ci.yml'
+              - '.github/workflows/ci.yml'
+              - ${{ inputs.additional-cpp-files }}
+            cpp-linter:
+              - 'bindings/**'
+              - 'include/**'
+              - 'mlir/**'
+              - 'src/**'
+              - 'test/**'
+              - '!test/python/**'
+              - '**/.clang-tidy'
+              - '**/CMakePresets.json'
+              - '.github/workflows/reusable-cpp-linter.yml'
+              - '.github/workflows/ci.yml'
+              - ${{ inputs.additional-cpp-files }}
+            python-tests:
+              - 'cmake/**'
+              - 'bindings/**'
+              - 'include/**'
+              - 'python/**'
+              - 'src/**'
+              - 'test/**/*.py'
+              - 'tests/**/*.py'
+              - '**/noxfile.py'
+              - '**/pyproject.toml'
+              - '**/uv.lock'
+              - '**/CMakeLists.txt'
+              - '.github/codecov.yml'
+              - '.github/workflows/reusable-python-linter.yml'
+              - '.github/workflows/reusable-python-tests.yml'
+              - '.github/workflows/reusable-python-ci.yml'
+              - '.github/workflows/ci.yml'
+              - ${{ inputs.additional-python-files }}
+            python-linter:
+              - 'python/**'
+              - 'test/**/*.py'
+              - 'tests/**/*.py'
+              - '**/noxfile.py'
+              - '**/pyproject.toml'
+              - '**/uv.lock'
+              - '.github/workflows/reusable-python-linter.yml'
+              - '.github/workflows/reusable-python-ci.yml'
+              - '.github/workflows/ci.yml'
+              - '**/.pre-commit-config.yaml'
+              - ${{ inputs.additional-python-files }}
+            cd:
+              - '.github/workflows/cd.yml'
+              - ${{ inputs.additional-cd-files }}

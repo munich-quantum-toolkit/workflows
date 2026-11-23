@@ -37,6 +37,29 @@ If you have any questions, feel free to create a
 an [issue](https://github.com/munich-quantum-toolkit/workflows/issues) on
 [GitHub](https://github.com/munich-quantum-toolkit/workflows).
 
+## Documentation
+
+The change detector returns `run-docs` alongside its test and lint outputs. Use
+it to condition a job calling
+[`reusable-docs.yml`](.github/workflows/reusable-docs.yml) and include that job
+in the aggregate CI check. The build runs `uvx nox --non-interactive -s docs`
+and expects `docs/_build/html/index.html`. Projects can request APT packages
+such as Doxygen.
+
+To use a shallow checkout for PR previews, set `preview-version-variable` to the
+version override for the project's distribution (for example,
+`VCS_VERSIONING_PRETEND_VERSION_FOR_MQT_CORE`). Preview packages use
+`0.0.0.dev<PR number>`. Other builds use Git history and tags.
+
+Call [`reusable-docs-publish.yml`](.github/workflows/reusable-docs-publish.yml)
+from a default-branch `workflow_run` listener for completed builds. Pass the
+Read the Docs `project-slug` and `READTHEDOCS_TOKEN` to the publisher. It needs
+read access to actions, contents and pull requests. `build-workflows` lists
+trusted workflow paths and defaults to `.github/workflows/ci.yml`. The publisher
+checks the current PR, branch or tag against the build commit before uploading
+the HTML and offline ZIP through
+[direct upload](https://docs.readthedocs.com/platform/stable/guides/build/direct-upload.html).
+
 ## Upstream Failure Issues
 
 [`reusable-upstream-issue.yml`](.github/workflows/reusable-upstream-issue.yml)
