@@ -13,6 +13,10 @@ name: ❓ • Change Detection
 on:
   workflow_call:
     inputs:
+      additional-test-files:
+        description: JSON array of additional inputs to the C++ and Python test suites
+        type: string
+        default: "[]"
       additional-cpp-files:
         description: JSON array of additional globs to check for C++-related changes
         type: string
@@ -67,7 +71,7 @@ jobs:
       run-python-tests: ${{ steps.paths.outputs.python-tests || true }}
       run-python-linter: ${{ steps.paths.outputs.python-linter || true }}
       run-cd: ${{ steps.paths.outputs.cd || github.event_name == 'pull_request' }}
-      run-docs: ${{ steps.paths.outcome == 'skipped' || steps.paths.outputs.docs == 'true' || steps.paths.outputs.additional-docs == 'true' }}
+      run-docs: ${{ steps.paths.outputs.docs || true }}
     steps:
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: paths
@@ -77,18 +81,20 @@ jobs:
           predicate-quantifier: some-with-excludes
           filters: |
             docs:
-              - '**'
-              - '!test/**'
-              - '!tests/**'
-              - '!mlir/unittests/**'
-              - '!.agent/**'
-              - '!paper/**'
-              - '!AGENTS.md'
-              - '!.github/ISSUE_TEMPLATE/**'
-              - '!.github/pull_request_template.md'
+              - 'docs/**'
+              - '{bindings,include,python,src}/**'
+              - 'cmake/**'
+              - 'CMakeLists.txt'
+              - 'CMakePresets.json'
+              - 'noxfile.py'
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - 'README*'
+              - 'LICENSE*'
+              - '.gitmodules'
+              - '.readthedocs.{yml,yaml}'
+              - '.github/workflows/{ci,docs,docs-publish}.yml'
               - ${{ inputs.additional-docs-files }}
-            # Explicit inputs can include a fixture under a normally excluded test directory.
-            additional-docs: ${{ inputs.additional-docs-files }}
             cpp-tests:
               - 'include/**'
               - 'mlir/**'
@@ -99,23 +105,15 @@ jobs:
               - '**/CMakePresets.json'
               - 'cmake/**'
               - '.github/codecov.yml'
-              - '.github/workflows/reusable-cpp-tests-ubuntu.yml'
-              - '.github/workflows/reusable-cpp-tests-macos.yml'
-              - '.github/workflows/reusable-cpp-tests-windows.yml'
-              - '.github/workflows/reusable-cpp-coverage.yml'
-              - '.github/workflows/reusable-cpp-ci.yml'
               - '.github/workflows/ci.yml'
+              - ${{ inputs.additional-test-files }}
               - ${{ inputs.additional-cpp-files }}
             cpp-linter:
-              - 'bindings/**'
-              - 'include/**'
-              - 'mlir/**'
-              - 'src/**'
-              - 'test/**'
+              # CMake also configures native sources from .in templates.
+              - '{bindings,include,mlir,src,test}/**/*.{c,cc,cpp,cxx,cu,cuh,h,hh,hpp,hxx,inc,inl,ipp,tpp,def,td}?(.in)'
               - '!test/python/**'
               - '**/.clang-tidy'
               - '**/CMakePresets.json'
-              - '.github/workflows/reusable-cpp-linter.yml'
               - '.github/workflows/ci.yml'
               - ${{ inputs.additional-cpp-files }}
             python-tests:
@@ -131,20 +129,17 @@ jobs:
               - '**/uv.lock'
               - '**/CMakeLists.txt'
               - '.github/codecov.yml'
-              - '.github/workflows/reusable-python-linter.yml'
-              - '.github/workflows/reusable-python-tests.yml'
-              - '.github/workflows/reusable-python-ci.yml'
               - '.github/workflows/ci.yml'
+              - ${{ inputs.additional-test-files }}
               - ${{ inputs.additional-python-files }}
             python-linter:
               - 'python/**'
+              - 'src/**/*.{py,pyi}'
               - 'test/**/*.py'
               - 'tests/**/*.py'
               - '**/noxfile.py'
               - '**/pyproject.toml'
               - '**/uv.lock'
-              - '.github/workflows/reusable-python-linter.yml'
-              - '.github/workflows/reusable-python-ci.yml'
               - '.github/workflows/ci.yml'
               - '**/.pre-commit-config.yaml'
               - ${{ inputs.additional-python-files }}
