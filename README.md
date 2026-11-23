@@ -23,7 +23,6 @@ used in other repositories to automate various tasks such as:
 - Change detection for selective workflow execution.
 - C++ testing, linting, and coverage reporting.
 - Python testing (including coverage reporting), linting, and packaging.
-- Dependabot-like updates for MQT Core.
 - Upstream testing against Qiskit.
 
 Overall, these enable modern CI/CD for
