@@ -10,6 +10,11 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Removed
+
+- 🔥 Remove the MQT Core update workflow in favor of the CMake Renovate preset
+  from MQT Templates ([#530]) ([**@denialhaag**]).
+
 ## [2.5.10] - 2026-11-14
 
 ### Added
@@ -715,6 +720,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
 [#512]: https://github.com/munich-quantum-toolkit/workflows/pull/512
 [#510]: https://github.com/munich-quantum-toolkit/workflows/pull/510
 [#509]: https://github.com/munich-quantum-toolkit/workflows/pull/509
