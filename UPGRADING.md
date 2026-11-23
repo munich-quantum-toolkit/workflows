@@ -6,6 +6,25 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+Grant `pull-requests: read` to jobs that call `reusable-change-detection.yml`.
+It reads changed paths from the GitHub API. Pass `additional-cpp-files`,
+`additional-python-files` and `additional-cd-files` as strings containing JSON
+arrays, for example `additional-python-files: '["mlir/**"]'`. Globs match
+repository-relative paths. Use `**/name` to match a basename at any depth. A
+leading `!` excludes matches even if a later glob includes the path.
+
+Docs detection is enabled by default for documentation, package sources, build
+configuration and CI entry points. Add imported guides, data files or scripts
+outside those paths with `additional-docs-files`. Use `additional-test-files`
+for shared fixtures or native test helpers outside the default source trees.
+Python tests and lint select `.py` and `.pyi` files anywhere in the repository.
+Use `additional-cpp-files` for native source trees in other locations, such as
+`["lib/**"]`.
+
+The filters track caller workflow files. A change to a shared workflow pin in
+`.github/workflows/ci.yml` selects the test and lint jobs. PRs at GitHub's
+3,000-file limit run every check.
+
 ## [2.5.10]
 
 Windows wheel jobs now build with native MSVC for the runner architecture and
