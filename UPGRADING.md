@@ -13,8 +13,9 @@ arrays, for example `additional-python-files: '["mlir/**"]'`. Globs match
 repository-relative paths. Use `**/name` to match a basename at any depth. A
 leading `!` excludes matches even if a later glob includes the path.
 
-Docs detection is enabled by default. Set `docs-files` to override its patterns.
-PRs at GitHub's 3,000-file limit run every check.
+Docs detection is enabled by default. Use `additional-docs-files` to include
+project-specific inputs or exclude files that do not affect documentation. PRs
+at GitHub's 3,000-file limit run every check.
 
 ## [2.5.10]
 

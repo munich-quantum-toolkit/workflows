@@ -25,10 +25,10 @@ on:
         description: JSON array of additional globs to check for CD-related changes
         type: string
         default: "[]"
-      docs-files:
-        description: JSON array of globs for documentation inputs
+      additional-docs-files:
+        description: JSON array of additional globs for documentation inputs
         type: string
-        default: '["**", "!test/**", "!tests/**", "!mlir/unittests/**", "!.agent/**", "!paper/**", "!AGENTS.md", "!.github/ISSUE_TEMPLATE/**", "!.github/pull_request_template.md"]'
+        default: "[]"
     outputs:
       run-docs:
         description: Whether to build the documentation
@@ -60,14 +60,14 @@ jobs:
   change-detection:
     name: 🕵️ Check
     runs-on: ubuntu-slim
-    timeout-minutes: 3
+    timeout-minutes: 1
     outputs:
       run-cpp-tests: ${{ steps.paths.outputs.cpp-tests || true }}
       run-cpp-linter: ${{ steps.paths.outputs.cpp-linter || true }}
       run-python-tests: ${{ steps.paths.outputs.python-tests || true }}
       run-python-linter: ${{ steps.paths.outputs.python-linter || true }}
       run-cd: ${{ steps.paths.outputs.cd || github.event_name == 'pull_request' }}
-      run-docs: ${{ steps.paths.outputs.docs || true }}
+      run-docs: ${{ steps.paths.outcome == 'skipped' || steps.paths.outputs.docs == 'true' || steps.paths.outputs.additional-docs == 'true' }}
     steps:
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: paths
@@ -76,7 +76,19 @@ jobs:
         with:
           predicate-quantifier: some-with-excludes
           filters: |
-            docs: ${{ inputs.docs-files }}
+            docs:
+              - '**'
+              - '!test/**'
+              - '!tests/**'
+              - '!mlir/unittests/**'
+              - '!.agent/**'
+              - '!paper/**'
+              - '!AGENTS.md'
+              - '!.github/ISSUE_TEMPLATE/**'
+              - '!.github/pull_request_template.md'
+              - ${{ inputs.additional-docs-files }}
+            # Explicit inputs can include a fixture under a normally excluded test directory.
+            additional-docs: ${{ inputs.additional-docs-files }}
             cpp-tests:
               - 'include/**'
               - 'mlir/**'

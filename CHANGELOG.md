@@ -725,6 +725,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links -->
 
+[#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
 [#512]: https://github.com/munich-quantum-toolkit/workflows/pull/512
 [#510]: https://github.com/munich-quantum-toolkit/workflows/pull/510
 [#509]: https://github.com/munich-quantum-toolkit/workflows/pull/509
@@ -830,5 +831,3 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [munich-quantum-software/setup-mlir]: https://github.com/munich-quantum-software/setup-mlir
 [pypa/cibuildwheel]: https://github.com/pypa/cibuildwheel
 [CMake presets]: https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html
-
-[#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
