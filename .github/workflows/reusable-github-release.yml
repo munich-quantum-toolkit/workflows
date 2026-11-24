@@ -20,7 +20,7 @@ on:
         type: string
       artifacts-pattern:
         description: "The artifact name pattern containing C++ archives"
-        default: "cpp-sdk-*"
+        default: "cpp-archives-*"
         type: string
     secrets:
       APP_ID:

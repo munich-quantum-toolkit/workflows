@@ -86,7 +86,7 @@ leave published releases unchanged.
 
 Call it after the build and approval jobs. Pass the stable version without `v`,
 the release title, and GitHub App credentials with write access to repository
-contents and workflows. The default artifact pattern is `cpp-sdk-*`; set
+contents and workflows. The default artifact pattern is `cpp-archives-*`; set
 `artifacts-pattern` to use another name.
 
 ```yaml
