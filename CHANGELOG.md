@@ -17,6 +17,8 @@ releases may include breaking changes.
 
 ### Changed
 
+- ⚡ Reuse compiler outputs within macOS and Windows wheel jobs when the GitHub
+  cache is read-only or cold ([#533]) ([**@burgholzer**])
 - ⚡ Determine all CI checks, including documentation, from one PR file list
   ([#522]) ([**@burgholzer**])
 
@@ -728,8 +730,9 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.9.0
 [1.8.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.8.1
 
-<!-- PR links -->
+<!-- PR links (sorted by PR number in descending order) -->
 
+[#533]: https://github.com/munich-quantum-toolkit/workflows/pull/533
 [#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
 [#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
 [#512]: https://github.com/munich-quantum-toolkit/workflows/pull/512

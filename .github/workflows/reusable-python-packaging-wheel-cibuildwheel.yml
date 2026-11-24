@@ -127,6 +127,13 @@ jobs:
           save-cache: false
           prune-cache: true
 
+      - name: Configure local and GitHub compiler caches
+        if: inputs.use-sccache-gha && runner.os != 'Linux'
+        shell: bash
+        run: |
+          echo "SCCACHE_DIR=$RUNNER_TEMP/sccache" >> "$GITHUB_ENV"
+          echo "SCCACHE_MULTILEVEL_CHAIN=disk,gha" >> "$GITHUB_ENV"
+
       - name: Set up sccache
         if: ${{ runner.os != 'Linux' }}
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
