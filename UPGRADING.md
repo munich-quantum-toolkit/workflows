@@ -6,6 +6,24 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+### MQT Core updates
+
+The `reusable-mqt-core-update.yml` workflow has been removed. Remove jobs that
+call it before upgrading and use the CMake Renovate preset introduced in
+https://github.com/munich-quantum-toolkit/templates/pull/508. <!-- rumdl-disable-line MD034 -->
+
+Use the synchronized Renovate template and annotate the MQT Core release pin in
+`cmake/ExternalDependencies.cmake` as described in the
+[Templates usage guide](https://github.com/munich-quantum-toolkit/templates/blob/main/docs/usage.md#configure-renovate).
+
+To skip an unwanted version update, close its Renovate PR without merging it.
+
+The preset updates annotated release tags and commit SHAs; it does not update a
+separate `MQT_CORE_VERSION` minimum or replace `update-to-head`. Leave
+development commits unannotated to keep them pinned.
+
+### Change detection
+
 Grant `pull-requests: read` to jobs that call `reusable-change-detection.yml`.
 It reads changed paths from the GitHub API. Pass `additional-cpp-files`,
 `additional-python-files` and `additional-cd-files` as strings containing JSON
