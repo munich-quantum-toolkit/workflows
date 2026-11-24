@@ -79,15 +79,11 @@ also updates `stable`. See the [direct upload guide].
 ### [`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
 
 [`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
-publishes C++ `.tar.gz` archives from the current run's artifacts, with
-`SHA256SUMS`, a link to the tagged changelog and optional new-contributor notes.
-It uploads the archives to a draft before publishing. Retries resume drafts and
-leave published releases unchanged.
+publishes `cpp-archives-*` artifacts from the current run with checksums, a
+changelog link, and optional new-contributor notes.
 
-Call it after the build and approval jobs. Pass the stable version without `v`,
-the release title, and GitHub App credentials with write access to repository
-contents and workflows. The default artifact pattern is `cpp-archives-*`; set
-`artifacts-pattern` to use another name.
+Call it after the build and approval jobs with a version such as `1.2.3`. The
+GitHub App needs write access to repository contents and workflows.
 
 ```yaml
 publish-github:
@@ -102,9 +98,6 @@ publish-github:
     APP_ID: ${{ secrets.APP_ID }}
     APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
-
-Keep PyPI trusted publishing in a separate job in the calling workflow.
-Serialize release runs in the caller so publications cannot overlap.
 
 ### [`reusable-python-packaging-wheel-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-wheel-cibuildwheel.yml)
 
