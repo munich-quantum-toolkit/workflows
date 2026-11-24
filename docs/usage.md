@@ -41,6 +41,11 @@ packages wheel artifacts as standalone C++ archives, tests them after
 relocation, and uploads `cpp-archives-<runner>`. Call it after the wheel build,
 passing the same `runs-on` value.
 
+The wheel artifact must contain one project's wheels for that platform. When
+multiple Python variants are available, the first non-musllinux wheel in
+lexicographic filename order supplies the C++ installation. That installation
+must be independent of the Python variant.
+
 Provide `.github/cpp-packaging.json` in the calling repository:
 
 ```json
