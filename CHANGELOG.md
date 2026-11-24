@@ -10,10 +10,20 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+### Added
+
+- 📚 Build executable documentation in GitHub Actions and publish the HTML and
+  offline ZIP to Read the Docs ([#522]) ([**@burgholzer**])
+
+### Changed
+
+- ⚡ Determine all CI checks, including documentation, from one PR file list
+  ([#522]) ([**@burgholzer**])
+
 ### Removed
 
 - 🔥 Remove the MQT Core update workflow in favor of the CMake Renovate preset
-  from MQT Templates ([#530]) ([**@denialhaag**]).
+  from MQT Templates ([#530]) ([**@denialhaag**])
 
 ## [2.5.10] - 2026-11-14
 
@@ -721,6 +731,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 <!-- PR links -->
 
 [#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
+[#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
 [#512]: https://github.com/munich-quantum-toolkit/workflows/pull/512
 [#510]: https://github.com/munich-quantum-toolkit/workflows/pull/510
 [#509]: https://github.com/munich-quantum-toolkit/workflows/pull/509
