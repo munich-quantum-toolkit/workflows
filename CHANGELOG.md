@@ -13,7 +13,7 @@ releases may include breaking changes.
 ### Added
 
 - ✨ Add reusable GitHub releases with archive checksums and optional
-  contributor notes ([**@denialhaag**])
+  contributor notes ([#531]) ([**@denialhaag**])
 - ✨ Add reusable C++ packaging from wheel artifacts with relocation tests
   ([#520]) ([**@denialhaag**])
 - ✨ Add reusable C++ installation tests with configurable APT dependencies and
@@ -739,6 +739,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 <!-- PR links (sorted by PR number in descending order) -->
 
 [#533]: https://github.com/munich-quantum-toolkit/workflows/pull/533
+[#531]: https://github.com/munich-quantum-toolkit/workflows/pull/531
 [#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
 [#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
 [#520]: https://github.com/munich-quantum-toolkit/workflows/pull/520
