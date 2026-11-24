@@ -29,6 +29,8 @@ repos:
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.39.0
     hooks:
+      - id: check-github-actions
+        priority: 0
       - id: check-github-workflows
         priority: 0
 

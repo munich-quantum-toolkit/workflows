@@ -51,36 +51,15 @@ jobs:
       SCCACHE_SKIP_CACHE_CHECK: "true"
       SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
     steps:
-      - name: Enable long paths on Windows and Git
+      - name: Set up MSVC
         if: ${{ runner.os == 'Windows' }}
-        shell: pwsh
-        run: |
-          reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f
-          git config --system core.longpaths true
+        uses: $/.github/actions/setup-msvc
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
-
-      # Reusable workflows run in the caller's workspace; fetch the scripts of this revision.
-      - name: Check out shared workflow scripts
-        if: runner.os == 'Windows'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ job.workflow_repository }}
-          ref: ${{ job.workflow_sha }}
-          path: .mqt-workflows
-          sparse-checkout: .github/scripts
-          persist-credentials: false
-
-      - name: Set up MSVC
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          ./.mqt-workflows/.github/scripts/setup-msvc.ps1
-          Remove-Item -Recurse -Force .mqt-workflows
 
       - name: Install additional APT packages
         if: ${{ runner.os == 'Linux' && inputs.apt-packages != '' }}
@@ -102,7 +81,7 @@ jobs:
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
-          python-version: 3.13
+          python-version: 3.14
           activate-environment: true
           enable-cache: false
 
