@@ -12,6 +12,8 @@ releases may include breaking changes.
 
 ### Added
 
+- ✨ Add reusable GitHub releases with archive checksums and optional
+  contributor notes ([**@denialhaag**])
 - ✨ Add reusable C++ packaging from wheel artifacts with relocation tests
   ([#520]) ([**@denialhaag**])
 - ✨ Add reusable C++ installation tests with configurable APT dependencies and

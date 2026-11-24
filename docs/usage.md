@@ -76,6 +76,36 @@ project slug. PR previews use the PR number, the default branch publishes as
 `latest`, and tags publish under their own names. The highest stable version
 also updates `stable`. See the [direct upload guide].
 
+### [`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
+
+[`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
+publishes C++ `.tar.gz` archives from the current run's artifacts, with
+`SHA256SUMS`, a link to the tagged changelog and optional new-contributor notes.
+It uploads the archives to a draft before publishing. Retries resume drafts and
+leave published releases unchanged.
+
+Call it after the build and approval jobs. Pass the stable version without `v`,
+the release title, and GitHub App credentials with write access to repository
+contents and workflows. The default artifact pattern is `cpp-sdk-*`; set
+`artifacts-pattern` to use another name.
+
+```yaml
+publish-github:
+  needs: [check-release, approve-release]
+  permissions:
+    contents: write
+  uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-github-release.yml@<commit-sha>
+  with:
+    version: ${{ needs.check-release.outputs.version }}
+    release-name: My project ${{ needs.check-release.outputs.version }} Release
+  secrets:
+    APP_ID: ${{ secrets.APP_ID }}
+    APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+```
+
+Keep PyPI trusted publishing in a separate job in the calling workflow.
+Serialize release runs in the caller so publications cannot overlap.
+
 ### [`reusable-python-packaging-wheel-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-wheel-cibuildwheel.yml)
 
 Cross-organization callers can pass AWS secrets explicitly:
