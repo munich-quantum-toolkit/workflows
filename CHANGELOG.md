@@ -730,10 +730,10 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [1.9.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.9.0
 [1.8.1]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v1.8.1
 
-<!-- PR links -->
+<!-- PR links (sorted by PR number in descending order) -->
 
-[#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
 [#533]: https://github.com/munich-quantum-toolkit/workflows/pull/533
+[#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
 [#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
 [#512]: https://github.com/munich-quantum-toolkit/workflows/pull/512
 [#510]: https://github.com/munich-quantum-toolkit/workflows/pull/510
