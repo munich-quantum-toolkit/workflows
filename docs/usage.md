@@ -37,9 +37,9 @@ errors.
 ### [`reusable-cpp-packaging.yml`](../.github/workflows/reusable-cpp-packaging.yml)
 
 [`reusable-cpp-packaging.yml`](../.github/workflows/reusable-cpp-packaging.yml)
-turns each runner's wheel artifact into a standalone C++ `.tar.gz` archive and
-checks it after relocation. It uses the same wheel artifact names as the Python
-packaging workflow and uploads `cpp-archives-<runner>`.
+packages wheel artifacts as standalone C++ archives, tests them after
+relocation, and uploads `cpp-archives-<runner>`. Call it after the wheel build,
+passing the same `runs-on` value.
 
 Provide `.github/cpp-packaging.json` in the calling repository:
 
@@ -54,19 +54,13 @@ Provide `.github/cpp-packaging.json` in the calling repository:
 }
 ```
 
-`package` names the exported CMake package and archive directory;
-`install-prefix` is its install tree inside the wheel. Map every runner in your
-matrix to an archive target triple under `platforms`.
+`package` names the exported CMake package; `install-prefix` is its directory
+inside the wheel. `platforms` maps runner names to archive target triples.
 
-The wheel must contain one install tree with headers, CMake package files, and
-license notices. The caller's `test/install.cmake` must accept
-`-Dinstalled_prefix=<path>` and compile, link, and run an offline consumer of
-that installation without rebuilding the producer. The shared action assembles,
-archives, and relocates the installation before invoking this check.
-
-Linux archives use `patchelf` to update library search paths after moving the
-wheel's bundled libraries. macOS wheels with bundled runtime libraries are not
-supported.
+`test/install.cmake` must accept `-Dinstalled_prefix=<path>` and build and run
+an offline consumer of that installation without rebuilding the package. The
+wheel must include headers, CMake package files, and license notices. macOS
+wheels with bundled runtime libraries are unsupported.
 
 ### [`reusable-docs.yml`](../.github/workflows/reusable-docs.yml)
 
