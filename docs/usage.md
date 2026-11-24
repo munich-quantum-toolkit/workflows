@@ -79,8 +79,9 @@ also updates `stable`. See the [direct upload guide].
 ### [`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
 
 [`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
-publishes `cpp-archives-*` artifacts from the current run with checksums, a
-changelog link, and optional new-contributor notes.
+publishes a GitHub release with a changelog link and optional new-contributor
+notes. When `cpp-archives-*` artifacts are available, it attaches them with
+checksums.
 
 Call it after the build and approval jobs with a version such as `1.2.3`. The
 GitHub App needs write access to repository contents and workflows.
