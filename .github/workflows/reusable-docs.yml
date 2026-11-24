@@ -145,17 +145,15 @@ jobs:
               const ref = `refs/${type === 'tag' ? 'tags' : 'heads'}/${version}`;
               const { data: commit } = await github.rest.repos.getCommit({ ...context.repo, ref });
               if (commit.sha !== run.head_sha) return;
-              if (type === 'branch' && version !== 'latest') {
-                core.setOutput('alias', 'latest');
-              } else if (type === 'tag') {
+              if (type === 'tag') {
                 const { data: refs } = await github.rest.git.listMatchingRefs({ ...context.repo, ref: 'tags/v' });
                 const releases = refs.map(({ ref }) => ref.slice('refs/tags/'.length))
                   .filter(tag => /^v(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){2}$/.test(tag));
                 const newest = releases.sort(new Intl.Collator('en', { numeric: true }).compare).at(-1);
-                if (version === newest) core.setOutput('alias', 'stable');
+                if (version === newest) core.setOutput('stable', true);
               }
             }
-            core.setOutput('version', version);
+            core.setOutput('version', type === 'branch' ? 'latest' : version);
             core.setOutput('type', type);
       - name: Prepare offline documentation
         if: steps.target.outputs.version
@@ -174,14 +172,14 @@ jobs:
           version-name: ${{ steps.target.outputs.version }}
           version-type: ${{ steps.target.outputs.type }}
           commit: ${{ github.event.workflow_run.head_sha }}
-      - name: Publish ${{ steps.target.outputs.alias }}
-        if: steps.target.outputs.alias
+      - name: Publish stable
+        if: steps.target.outputs.stable
         uses: readthedocs/upload-action@80f3c6547919b97858e61ffbe3a4990a25959f9a # v1
         with:
           token: ${{ secrets.READTHEDOCS_TOKEN }}
           project-slug: ${{ inputs.project-slug }}
           html: site/html
           htmlzip: ${{ runner.temp }}/html.zip
-          version-name: ${{ steps.target.outputs.alias }}
+          version-name: stable
           version-type: ${{ steps.target.outputs.type }}
           commit: ${{ github.event.workflow_run.head_sha }}
