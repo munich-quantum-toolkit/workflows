@@ -34,6 +34,40 @@ that:
 The checks must run offline and propagate build and test failures as script
 errors.
 
+### [`reusable-cpp-packaging.yml`](../.github/workflows/reusable-cpp-packaging.yml)
+
+[`reusable-cpp-packaging.yml`](../.github/workflows/reusable-cpp-packaging.yml)
+turns each runner's wheel artifact into a standalone C++ `.tar.gz` archive and
+checks it after relocation. It uses the same wheel artifact names as the Python
+packaging workflow and uploads `cpp-archives-<runner>`.
+
+Provide `.github/cpp-packaging.json` in the calling repository:
+
+```json
+{
+  "package": "my-qdmi-device",
+  "install-prefix": "my/qdmi/data",
+  "platforms": {
+    "ubuntu-26.04": "x86_64-unknown-linux-gnu",
+    "windows-2025": "x86_64-pc-windows-msvc"
+  }
+}
+```
+
+`package` names the exported CMake package and archive directory;
+`install-prefix` is its install tree inside the wheel. Map every runner in your
+matrix to an archive target triple under `platforms`.
+
+The wheel must contain one install tree with headers, CMake package files, and
+license notices. The caller's `test/install.cmake` must accept
+`-Dinstalled_prefix=<path>` and compile, link, and run an offline consumer of
+that installation without rebuilding the producer. The shared action assembles,
+archives, and relocates the installation before invoking this check.
+
+Linux archives use `patchelf` to update library search paths after moving the
+wheel's bundled libraries. macOS wheels with bundled runtime libraries are not
+supported.
+
 ### [`reusable-docs.yml`](../.github/workflows/reusable-docs.yml)
 
 Builds documentation with `uvx nox --non-interactive -s docs`. The session must

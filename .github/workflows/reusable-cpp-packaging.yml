@@ -16,7 +16,7 @@ on:
         type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-sdk-${{ inputs.runs-on }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-packaging-${{ inputs.runs-on }}
   cancel-in-progress: true
 
 permissions:
@@ -34,8 +34,12 @@ jobs:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
-      SDK_PLATFORM: ${{ inputs.runs-on }}
+      CPP_PACKAGING_PLATFORM: ${{ inputs.runs-on }}
     steps:
+      - name: Set up MSVC
+        if: ${{ runner.os == 'Windows' }}
+        uses: $/.github/actions/setup-msvc
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -44,24 +48,6 @@ jobs:
         with:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse
-
-      # Reusable workflows run in the caller's workspace; fetch the scripts of this revision.
-      - name: Check out shared workflow scripts
-        if: runner.os == 'Windows'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ job.workflow_repository }}
-          ref: ${{ job.workflow_sha }}
-          path: .mqt-workflows
-          sparse-checkout: .github/scripts
-          persist-credentials: false
-
-      - name: Set up MSVC
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          ./.mqt-workflows/.github/scripts/setup-msvc.ps1
-          Remove-Item -Recurse -Force .mqt-workflows
 
       - name: Install patchelf
         if: ${{ runner.os == 'Linux' }}
@@ -76,10 +62,10 @@ jobs:
         run: uv tool install ninja
 
       - name: Package, relocate, and test
-        run: cmake -P cmake/PackageSDK.cmake
+        uses: $/.github/actions/package-cpp
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: cpp-sdk-${{ inputs.runs-on }}
+          name: cpp-archives-${{ inputs.runs-on }}
           path: dist/*
           if-no-files-found: error
