@@ -85,6 +85,9 @@ jobs:
           activate-environment: true
           enable-cache: false
 
+      - name: Install CMake
+        run: uv tool install cmake
+
       - name: Install Ninja
         run: uv tool install ninja
 

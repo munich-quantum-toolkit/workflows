@@ -57,12 +57,4 @@ secrets:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 ```
 
-### [`reusable-qiskit-upstream-issue.yml`](../.github/workflows/reusable-qiskit-upstream-issue.yml)
-
-Reports Qiskit upstream failures using the shared upstream-issue workflow.
-
-### [`reusable-upstream-issue.yml`](../.github/workflows/reusable-upstream-issue.yml)
-
-Creates or updates a project-specific issue when upstream checks fail on `main`.
-
 [direct upload guide]: https://docs.readthedocs.com/platform/stable/guides/build/direct-upload.html
