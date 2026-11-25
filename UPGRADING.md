@@ -6,6 +6,14 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+### Provider credentials
+
+Shared build, test, lint, and packaging workflows no longer expose `IQM_TOKEN`,
+`IQM_QC_ALIAS`, `AWS_S3_BUCKET`, `AWS_ACCESS_KEY_ID`, or `AWS_SECRET_ACCESS_KEY`
+as environment variables. Remove explicit AWS secret arguments from calls to
+`reusable-python-packaging-wheel-cibuildwheel.yml`. Run authenticated provider
+checks in repository-local workflows that configure their own credentials.
+
 ### MQT Core updates
 
 The `reusable-mqt-core-update.yml` workflow has been removed. Remove jobs that

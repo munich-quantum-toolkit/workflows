@@ -30,6 +30,8 @@ releases may include breaking changes.
 
 ### Removed
 
+- 🔥 Remove IQM and AWS provider-secret forwarding from shared workflows
+  ([**@denialhaag**])
 - 🔥 Remove the MQT Core update workflow in favor of the CMake Renovate preset
   from MQT Templates ([#530]) ([**@denialhaag**])
 

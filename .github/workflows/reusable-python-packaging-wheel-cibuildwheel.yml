@@ -39,16 +39,6 @@ on:
         description: "The LLVM version to set up (formatted as 'major.minor.patch') or commit hash (minimum 7 characters, e.g., 'a832a52')"
         default: "23.1.2"
         type: string
-    secrets:
-      AWS_S3_BUCKET:
-        description: "S3 bucket used by AWS-backed wheel tests"
-        required: false
-      AWS_ACCESS_KEY_ID:
-        description: "AWS access key ID used by wheel tests"
-        required: false
-      AWS_SECRET_ACCESS_KEY:
-        description: "AWS secret access key used by wheel tests"
-        required: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-python-packaging-cibw-${{ inputs.runs-on }}
@@ -66,11 +56,6 @@ jobs:
       SCCACHE_IDLE_TIMEOUT: 0
       SCCACHE_SKIP_CACHE_CHECK: "true"
       SCCACHE_GHA_RW_MODE: ${{ github.ref == 'refs/heads/main' && 'READ_WRITE' || 'READ_ONLY' }}
-      IQM_TOKEN: ${{ secrets.IQM_TOKEN }}
-      IQM_QC_ALIAS: ${{ secrets.IQM_QC_ALIAS }}
-      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - name: Set up MSVC
         if: ${{ runner.os == 'Windows' }}
