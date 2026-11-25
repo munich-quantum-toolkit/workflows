@@ -48,17 +48,17 @@ Provide `.github/cpp-packaging.json` in the calling repository:
 
 ```json
 {
-  "package": "my-qdmi-device",
-  "install-prefix": "my/qdmi/data",
-  "platforms": {
-    "ubuntu-26.04": "x86_64-unknown-linux-gnu",
-    "windows-2025": "x86_64-pc-windows-msvc"
-  }
+  "package": "my-library",
+  "install-prefix": "my/package"
 }
 ```
 
 `package` names the exported CMake package. `install-prefix` is its directory
-inside the wheel. `platforms` maps runner names to archive target triples.
+inside the wheel. Archive names use the wheel's platform tag.
+
+Only the CMake installation directories (`bin`, `include`, `lib`, `lib64`, and
+`share`) are included, leaving out Python modules and bindings. Shared libraries
+must use relocatable runtime search paths.
 
 The caller's `test/install.cmake` must also accept `-Dinstalled_prefix=<path>`
 to test an existing installation without rebuilding the package. Wheels must

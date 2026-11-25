@@ -34,7 +34,6 @@ jobs:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
       CTEST_PARALLEL_LEVEL: 4
       FORCE_COLOR: 3
-      CPP_PACKAGING_PLATFORM: ${{ inputs.runs-on }}
     steps:
       - name: Set up MSVC
         if: ${{ runner.os == 'Windows' }}
@@ -54,12 +53,11 @@ jobs:
         with:
           enable-cache: false
 
+      - name: Install CMake
+        run: uv tool install cmake
+
       - name: Install Ninja
         run: uv tool install ninja
-
-      - name: Install PatchELF
-        if: ${{ runner.os == 'Linux' }}
-        run: uv tool install patchelf
 
       - name: Package, relocate, and test
         uses: $/.github/actions/package-cpp
