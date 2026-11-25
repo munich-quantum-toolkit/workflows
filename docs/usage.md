@@ -34,6 +34,36 @@ that:
 The checks must run offline and propagate build and test failures as script
 errors.
 
+### [`reusable-cpp-packaging.yml`](../.github/workflows/reusable-cpp-packaging.yml)
+
+Packages wheel artifacts as standalone C++ archives, tests them after
+relocation, and uploads `cpp-archives-<runner>`.
+
+The wheel artifact must contain one project's wheels for that platform. When
+multiple Python variants are available, the first non-musllinux wheel in
+lexicographic filename order supplies the C++ installation. That installation
+must be independent of the Python variant.
+
+Provide `.github/cpp-packaging.json` in the calling repository:
+
+```json
+{
+  "package": "my-library",
+  "install-prefix": "my/package"
+}
+```
+
+`package` names the exported CMake package. `install-prefix` is its directory
+inside the wheel. Archive names use the wheel's platform tag.
+
+Only the CMake installation directories (`bin`, `include`, `lib`, `lib64`, and
+`share`) are included, leaving out Python modules and bindings. Shared libraries
+must use relocatable runtime search paths.
+
+The caller's `test/install.cmake` must also accept `-Dinstalled_prefix=<path>`
+to test an existing installation without rebuilding the package. Wheels must
+include headers, CMake package files, and license notices.
+
 ### [`reusable-docs.yml`](../.github/workflows/reusable-docs.yml)
 
 Builds documentation with `uvx nox --non-interactive -s docs`. The session must
