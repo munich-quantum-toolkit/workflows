@@ -83,8 +83,9 @@ upgrade guide, or with GitHub's full generated release notes. New-contributor
 notes are included when available. It attaches any `cpp-archives-*` artifacts
 with checksums.
 
-Call it after the build and approval jobs. The GitHub App must be installed on
-the calling repository with write access to repository contents and workflows.
+Call it after the build and approval jobs. Publication uses the calling
+repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN` when older-commit tagging
+requires additional permissions or release events must trigger other workflows.
 Published releases are left unchanged when a workflow is retried.
 
 ### [`reusable-python-packaging-wheel-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-wheel-cibuildwheel.yml)
