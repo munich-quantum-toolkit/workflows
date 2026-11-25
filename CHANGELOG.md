@@ -23,6 +23,8 @@ releases may include breaking changes.
 
 ### Changed
 
+- ⚡ Default C++ checks to shallow checkouts with configurable history depth
+  ([**@denialhaag**])
 - ⚡ Reuse compiler outputs within macOS and Windows wheel jobs when the GitHub
   cache is read-only or cold ([#533]) ([**@burgholzer**])
 - ⚡ Determine all CI checks, including documentation, from one PR file list

@@ -10,6 +10,10 @@ name: 🇨 • Coverage
 on:
   workflow_call:
     inputs:
+      fetch-depth:
+        description: "Number of commits to fetch. Use 0 for full history and tags."
+        default: 1
+        type: number
       apt-packages:
         description: "Whitespace-separated additional APT packages to install"
         default: ""
@@ -67,7 +71,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
-          fetch-depth: 0
+          fetch-depth: ${{ inputs.fetch-depth }}
           persist-credentials: false
 
       - name: Install additional APT packages
