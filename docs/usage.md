@@ -76,6 +76,19 @@ project slug. PR previews use the PR number, the default branch publishes as
 `latest`, and tags publish under their own names. The highest stable version
 also updates `stable`. See the [direct upload guide].
 
+### [`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
+
+Publishes a GitHub release with links to the project's changelog and optional
+upgrade guide, or with GitHub's full generated release notes. New-contributor
+notes are included when available. It attaches any `cpp-archives-*` artifacts
+with checksums.
+
+Call it after the build and approval jobs. Publication uses the calling
+repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN` when GitHub requires
+workflow-write permission for the release target or release events must trigger
+other workflows. Published releases are left unchanged when a workflow is
+retried.
+
 ### [`reusable-python-packaging-wheel-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-wheel-cibuildwheel.yml)
 
 Cross-organization callers can pass AWS secrets explicitly:
