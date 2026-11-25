@@ -28,11 +28,11 @@ on:
         default: "4.13.4"
         type: string
       setup-mlir:
-        description: "Whether to set up MLIR"
+        description: "Install MLIR on macOS and Windows. Linux projects provision the SDK inside the wheel container."
         default: false
         type: boolean
       mlir-assertions:
-        description: "Whether the MLIR SDK should retain assertions (Linux consumers select the SDK inside cibuildwheel)"
+        description: "Enable assertions in the SDK installed by setup-mlir"
         default: false
         type: boolean
       llvm-version:
@@ -72,29 +72,15 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
+      - name: Set up MSVC
+        if: ${{ runner.os == 'Windows' }}
+        uses: $/.github/actions/setup-msvc
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
-
-      # Reusable workflows run in the caller's workspace; fetch the scripts of this revision.
-      - name: Check out shared workflow scripts
-        if: runner.os == 'Windows'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ job.workflow_repository }}
-          ref: ${{ job.workflow_sha }}
-          path: .mqt-workflows
-          sparse-checkout: .github/scripts
-          persist-credentials: false
-
-      - name: Set up MSVC
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          ./.mqt-workflows/.github/scripts/setup-msvc.ps1
-          Remove-Item -Recurse -Force .mqt-workflows
 
       - name: Configure Windows builds
         if: runner.os == 'Windows'
@@ -107,13 +93,13 @@ jobs:
           echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
 
       - name: Set up Z3
-        if: ${{ inputs.setup-z3 && !startsWith(inputs.runs-on, 'ubuntu') }}
+        if: ${{ inputs.setup-z3 && runner.os != 'Linux' }}
         uses: cda-tum/setup-z3@0401375ea1e34d77ef35bbeb634f6203f3bcde60 # v1.7.3
         with:
           version: ${{ inputs.z3-version }}
 
       - name: Set up MLIR
-        if: ${{ inputs.setup-mlir && !startsWith(inputs.runs-on, 'ubuntu') }}
+        if: ${{ inputs.setup-mlir && runner.os != 'Linux' }}
         uses: munich-quantum-software/setup-mlir@8d3eae73d0f0196fd30c787d91ebd2018cb6c709 # v1.5.0
         with:
           llvm-version: ${{ inputs.llvm-version }}
@@ -122,13 +108,20 @@ jobs:
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          enable-cache: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+          enable-cache: ${{ runner.os != 'Linux' }}
           # Only the Python tests save the shared uv cache key.
           save-cache: false
           prune-cache: true
 
+      - name: Configure local and GitHub compiler caches
+        if: inputs.use-sccache-gha && runner.os != 'Linux'
+        shell: bash
+        run: |
+          echo "SCCACHE_DIR=$RUNNER_TEMP/sccache" >> "$GITHUB_ENV"
+          echo "SCCACHE_MULTILEVEL_CHAIN=disk,gha" >> "$GITHUB_ENV"
+
       - name: Set up sccache
-        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') }}
+        if: ${{ runner.os != 'Linux' }}
         uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       # run cibuildwheel to build wheels for the specified Python version
@@ -136,7 +129,7 @@ jobs:
 
       # Linux wheels are built in containers with their own sccache instance
       - name: Verify sccache use
-        if: ${{ !startsWith(inputs.runs-on, 'ubuntu') && inputs.use-sccache-gha }}
+        if: ${{ runner.os != 'Linux' && inputs.use-sccache-gha }}
         shell: bash
         run: |
           sccache --show-stats

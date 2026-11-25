@@ -10,6 +10,9 @@
 
 $ErrorActionPreference = 'Stop'
 
+reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f
+git config --system core.longpaths true
+
 $vsArch = switch ($env:RUNNER_ARCH) {
   'X64' { 'amd64' }
   'ARM64' { 'arm64' }
@@ -64,7 +67,7 @@ Write-Host "Using $compiler"
 Get-ChildItem Env: | ForEach-Object {
   if (
     (!$before.ContainsKey($_.Name) -or $before[$_.Name] -cne $_.Value) -and
-    $_.Name -notmatch '^(GITHUB_|RUNNER_)' -and
+    $_.Name -notmatch '^(GITHUB_|RUNNER_|ACTIONS_)' -and
     $_.Name -ne 'NODE_OPTIONS'
   ) {
     $delimiter = "ghadelimiter_$([guid]::NewGuid().ToString('N'))"

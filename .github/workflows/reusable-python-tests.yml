@@ -108,6 +108,10 @@ jobs:
           Remove-Item -Recurse -Force "C:\Program Files\dotnet" -ErrorAction SilentlyContinue
           Remove-Item -Recurse -Force "C:\Program Files\ghc" -ErrorAction SilentlyContinue
 
+      - name: Set up MSVC
+        if: ${{ runner.os == 'Windows' }}
+        uses: $/.github/actions/setup-msvc
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
@@ -132,24 +136,6 @@ jobs:
         run: |
           read -r -a packages <<< "${BREW_PACKAGES//$'\n'/ }"
           brew install -- "${packages[@]}"
-
-      # Reusable workflows run in the caller's workspace; fetch the scripts of this revision.
-      - name: Check out shared workflow scripts
-        if: runner.os == 'Windows'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ job.workflow_repository }}
-          ref: ${{ job.workflow_sha }}
-          path: .mqt-workflows
-          sparse-checkout: .github/scripts
-          persist-credentials: false
-
-      - name: Set up MSVC
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          ./.mqt-workflows/.github/scripts/setup-msvc.ps1
-          Remove-Item -Recurse -Force .mqt-workflows
 
       - name: Configure Windows native builds
         if: runner.os == 'Windows'

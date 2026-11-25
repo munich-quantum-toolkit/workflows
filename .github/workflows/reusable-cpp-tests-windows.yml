@@ -83,27 +83,14 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
+      - name: Set up MSVC
+        uses: $/.github/actions/setup-msvc
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
           fetch-depth: 0
           persist-credentials: false
-
-      # Reusable workflows run in the caller's workspace; fetch the scripts of this revision.
-      - name: Check out shared workflow scripts
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ job.workflow_repository }}
-          ref: ${{ job.workflow_sha }}
-          path: .mqt-workflows
-          sparse-checkout: .github/scripts
-          persist-credentials: false
-
-      - name: Set up MSVC
-        shell: pwsh
-        run: |
-          ./.mqt-workflows/.github/scripts/setup-msvc.ps1
-          Remove-Item -Recurse -Force .mqt-workflows
 
       - name: Set up Z3
         if: ${{ inputs.setup-z3 }}
