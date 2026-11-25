@@ -78,27 +78,14 @@ also updates `stable`. See the [direct upload guide].
 
 ### [`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
 
-[`reusable-github-release.yml`](../.github/workflows/reusable-github-release.yml)
-publishes a GitHub release with a changelog link and optional new-contributor
-notes. When `cpp-archives-*` artifacts are available, it attaches them with
-checksums.
+Publishes a GitHub release with links to the project's changelog and optional
+upgrade guide, or with GitHub's full generated release notes. New-contributor
+notes are included when available. It attaches any `cpp-archives-*` artifacts
+with checksums.
 
-Call it after the build and approval jobs with a version such as `1.2.3`. The
-GitHub App needs write access to repository contents and workflows.
-
-```yaml
-publish-github:
-  needs: [check-release, approve-release]
-  permissions:
-    contents: write
-  uses: munich-quantum-toolkit/workflows/.github/workflows/reusable-github-release.yml@<commit-sha>
-  with:
-    version: ${{ needs.check-release.outputs.version }}
-    release-name: My project ${{ needs.check-release.outputs.version }} Release
-  secrets:
-    APP_ID: ${{ secrets.APP_ID }}
-    APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
-```
+Call it after the build and approval jobs. The GitHub App must be installed on
+the calling repository with write access to repository contents and workflows.
+Published releases are left unchanged when a workflow is retried.
 
 ### [`reusable-python-packaging-wheel-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-wheel-cibuildwheel.yml)
 

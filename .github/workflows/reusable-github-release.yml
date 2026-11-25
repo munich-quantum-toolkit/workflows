@@ -18,6 +18,14 @@ on:
         description: "The title of the GitHub release"
         required: true
         type: string
+      has-changelog:
+        description: "Whether to link to CHANGELOG.md instead of listing every change"
+        default: true
+        type: boolean
+      has-upgrade-guide:
+        description: "Whether to also link to UPGRADING.md when a changelog is available"
+        default: false
+        type: boolean
     secrets:
       APP_ID:
         required: true
@@ -61,11 +69,12 @@ jobs:
             core.setOutput('release-id', release?.id ?? '');
             return false;
 
-      - name: Prepare release notes
+      - name: Generate release notes
         id: notes
         if: steps.existing.outputs.result != 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
+          result-encoding: string
           script: |
             const tag = process.env.RELEASE_TAG;
             let previous;
@@ -80,15 +89,53 @@ jobs:
               target_commitish: context.sha,
               previous_tag_name: previous?.tag_name,
             });
-            const contributors = notes.body
-              .split('## New Contributors\n')[1]
-              ?.split('\n**Full Changelog**:')[0].trim();
-            core.setOutput('new-contributors', contributors || '');
             const repositoryUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}`;
             core.setOutput('changes-url', previous
               ? `${repositoryUrl}/compare/${previous.tag_name}...${tag}`
               : `${repositoryUrl}/commits/${tag}`
             );
+            return notes.body;
+
+      - name: Extract new contributors
+        id: contributors
+        if: steps.existing.outputs.result != 'true' && inputs.has-changelog
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          RELEASE_NOTES: ${{ steps.notes.outputs.result }}
+        with:
+          result-encoding: string
+          script: |
+            return process.env.RELEASE_NOTES
+              .split('## New Contributors\n')[1]
+              ?.split('\n**Full Changelog**:')[0].trim() || '';
+
+      - name: Build release body
+        id: body
+        if: steps.existing.outputs.result != 'true'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          HAS_CHANGELOG: ${{ inputs.has-changelog }}
+          HAS_UPGRADE_GUIDE: ${{ inputs.has-upgrade-guide }}
+          RELEASE_NOTES: ${{ steps.notes.outputs.result }}
+          NEW_CONTRIBUTORS: ${{ steps.contributors.outputs.result }}
+          CHANGES_URL: ${{ steps.notes.outputs.changes-url }}
+        with:
+          result-encoding: string
+          script: |
+            if (process.env.HAS_CHANGELOG !== 'true') return process.env.RELEASE_NOTES;
+            const repositoryUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}`;
+            const base = `${repositoryUrl}/blob/${process.env.RELEASE_TAG}`;
+            const guides = `[changelog](${base}/CHANGELOG.md)` + (
+              process.env.HAS_UPGRADE_GUIDE === 'true'
+                ? ` and the [upgrade guide](${base}/UPGRADING.md)` : ''
+            );
+            const contributors = process.env.NEW_CONTRIBUTORS;
+            return [
+              '## 👀 What Changed',
+              `_Please refer to the ${guides} for a structured overview of the changes._`,
+              contributors ? `## 🤝 New Contributors\n\n${contributors}` : '',
+              `**Full Changelog**: ${process.env.CHANGES_URL}`,
+            ].filter(Boolean).join('\n\n');
 
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         if: steps.existing.outputs.result != 'true'
@@ -120,16 +167,7 @@ jobs:
         env:
           RELEASE_ID: ${{ steps.existing.outputs.release-id }}
           RELEASE_NAME: ${{ inputs.release-name }}
-          RELEASE_BODY: |
-            ## 👀 What Changed
-
-            _Please refer to the [changelog](https://github.com/${{ github.repository }}/blob/${{ env.RELEASE_TAG }}/CHANGELOG.md) for a structured overview of the changes._
-
-            ${{ steps.notes.outputs.new-contributors && '## 🤝 New Contributors' || '' }}
-
-            ${{ steps.notes.outputs.new-contributors }}
-
-            **Full Changelog**: ${{ steps.notes.outputs.changes-url }}
+          RELEASE_BODY: ${{ steps.body.outputs.result }}
         with:
           github-token: ${{ steps.create-token.outputs.token }}
           retries: 3
