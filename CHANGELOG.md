@@ -31,7 +31,7 @@ releases may include breaking changes.
 ### Removed
 
 - 🔥 Remove IQM and AWS provider-secret forwarding from shared workflows
-  ([**@denialhaag**])
+  ([#534]) ([**@denialhaag**])
 - 🔥 Remove the MQT Core update workflow in favor of the CMake Renovate preset
   from MQT Templates ([#530]) ([**@denialhaag**])
 
@@ -740,6 +740,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links (sorted by PR number in descending order) -->
 
+[#534]: https://github.com/munich-quantum-toolkit/workflows/pull/534
 [#533]: https://github.com/munich-quantum-toolkit/workflows/pull/533
 [#531]: https://github.com/munich-quantum-toolkit/workflows/pull/531
 [#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
