@@ -49,10 +49,6 @@ jobs:
           name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
           path: wheelhouse
 
-      - name: Install patchelf
-        if: ${{ runner.os == 'Linux' }}
-        run: sudo apt-get update && sudo apt-get install -y patchelf
-
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
@@ -60,6 +56,10 @@ jobs:
 
       - name: Install Ninja
         run: uv tool install ninja
+
+      - name: Install PatchELF
+        if: ${{ runner.os == 'Linux' }}
+        run: uv tool install patchelf
 
       - name: Package, relocate, and test
         uses: $/.github/actions/package-cpp

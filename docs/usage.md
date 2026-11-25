@@ -36,10 +36,8 @@ errors.
 
 ### [`reusable-cpp-packaging.yml`](../.github/workflows/reusable-cpp-packaging.yml)
 
-[`reusable-cpp-packaging.yml`](../.github/workflows/reusable-cpp-packaging.yml)
-packages wheel artifacts as standalone C++ archives, tests them after
-relocation, and uploads `cpp-archives-<runner>`. Call it after the wheel build,
-passing the same `runs-on` value.
+Packages wheel artifacts as standalone C++ archives, tests them after
+relocation, and uploads `cpp-archives-<runner>`.
 
 The wheel artifact must contain one project's wheels for that platform. When
 multiple Python variants are available, the first non-musllinux wheel in
@@ -59,13 +57,13 @@ Provide `.github/cpp-packaging.json` in the calling repository:
 }
 ```
 
-`package` names the exported CMake package; `install-prefix` is its directory
+`package` names the exported CMake package. `install-prefix` is its directory
 inside the wheel. `platforms` maps runner names to archive target triples.
 
-`test/install.cmake` must accept `-Dinstalled_prefix=<path>` and build and run
-an offline consumer of that installation without rebuilding the package. The
-wheel must include headers, CMake package files, and license notices. macOS
-wheels with bundled runtime libraries are unsupported.
+The caller's `test/install.cmake` must also accept `-Dinstalled_prefix=<path>`
+to test an existing installation without rebuilding the package. Wheels must
+include headers, CMake package files, and license notices. macOS wheels with
+bundled runtime libraries are unsupported.
 
 ### [`reusable-docs.yml`](../.github/workflows/reusable-docs.yml)
 
