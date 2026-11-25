@@ -84,9 +84,10 @@ notes are included when available. It attaches any `cpp-archives-*` artifacts
 with checksums.
 
 Call it after the build and approval jobs. Publication uses the calling
-repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN` when older-commit tagging
-requires additional permissions or release events must trigger other workflows.
-Published releases are left unchanged when a workflow is retried.
+repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN` when GitHub requires
+workflow-write permission for the release target or release events must trigger
+other workflows. Published releases are left unchanged when a workflow is
+retried.
 
 ### [`reusable-python-packaging-wheel-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-wheel-cibuildwheel.yml)
 
