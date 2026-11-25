@@ -62,8 +62,7 @@ must use relocatable runtime search paths.
 
 The caller's `test/install.cmake` must also accept `-Dinstalled_prefix=<path>`
 to test an existing installation without rebuilding the package. Wheels must
-include headers, CMake package files, and license notices. macOS wheels with
-bundled runtime libraries are unsupported.
+include headers, CMake package files, and license notices.
 
 ### [`reusable-docs.yml`](../.github/workflows/reusable-docs.yml)
 
