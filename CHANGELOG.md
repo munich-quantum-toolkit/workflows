@@ -12,6 +12,8 @@ releases may include breaking changes.
 
 ### Added
 
+- ✨ Add reusable C++ installation tests with configurable APT dependencies and
+  compiler caching ([#516]) ([**@denialhaag**])
 - 📚 Build executable documentation in GitHub Actions and publish the HTML and
   offline ZIP to Read the Docs ([#522]) ([**@burgholzer**])
 
@@ -735,6 +737,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 [#533]: https://github.com/munich-quantum-toolkit/workflows/pull/533
 [#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
 [#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
+[#516]: https://github.com/munich-quantum-toolkit/workflows/pull/516
 [#512]: https://github.com/munich-quantum-toolkit/workflows/pull/512
 [#510]: https://github.com/munich-quantum-toolkit/workflows/pull/510
 [#509]: https://github.com/munich-quantum-toolkit/workflows/pull/509
