@@ -30,7 +30,7 @@ releases may include breaking changes.
 
 ### Fixed
 
-- 🐛 Upload all Python coverage reports when a runner produces more than one
+- 🐛 Archive Python coverage reports to support multiple files per runner
   ([#525]) ([**@simon1hofmann**])
 
 ### Removed
