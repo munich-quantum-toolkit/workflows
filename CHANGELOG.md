@@ -30,8 +30,15 @@ releases may include breaking changes.
 - ⚡ Determine all CI checks, including documentation, from one PR file list
   ([#522]) ([**@burgholzer**])
 
+### Fixed
+
+- 🐛 Archive Python coverage reports to support multiple files per runner
+  ([#525]) ([**@simon1hofmann**])
+
 ### Removed
 
+- 🔥 Remove IQM and AWS provider-secret forwarding from shared workflows
+  ([#534]) ([**@denialhaag**])
 - 🔥 Remove the MQT Core update workflow in favor of the CMake Renovate preset
   from MQT Templates ([#530]) ([**@denialhaag**])
 
@@ -741,9 +748,11 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 <!-- PR links (sorted by PR number in descending order) -->
 
 [#535]: https://github.com/munich-quantum-toolkit/workflows/pull/535
+[#534]: https://github.com/munich-quantum-toolkit/workflows/pull/534
 [#533]: https://github.com/munich-quantum-toolkit/workflows/pull/533
 [#531]: https://github.com/munich-quantum-toolkit/workflows/pull/531
 [#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
+[#525]: https://github.com/munich-quantum-toolkit/workflows/pull/525
 [#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
 [#520]: https://github.com/munich-quantum-toolkit/workflows/pull/520
 [#516]: https://github.com/munich-quantum-toolkit/workflows/pull/516
