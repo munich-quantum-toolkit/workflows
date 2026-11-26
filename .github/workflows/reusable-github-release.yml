@@ -14,6 +14,9 @@ on:
         description: "The stable release version without the v prefix"
         required: true
         type: string
+      previous-version:
+        description: "Previous stable version without the v prefix. Defaults to the latest published release."
+        type: string
       release-name:
         description: "The title of the GitHub release"
         required: true
@@ -51,16 +54,13 @@ jobs:
             if (!/^v[0-9]+[.][0-9]+[.][0-9]+$/.test(tag)) {
               throw new Error('version must be a stable X.Y.Z release.');
             }
-            try {
-              const { data: commit } = await github.rest.repos.getCommit({
-                ...context.repo,
-                ref: `refs/tags/${tag}`,
-              });
-              if (commit.sha !== context.sha) {
-                throw new Error('Release tag points to a different commit.');
-              }
-            } catch (error) {
-              if (error.status !== 404) throw error;
+            const ref = `refs/tags/${tag}`;
+            const { data: refs } = await github.rest.git.listMatchingRefs({
+              ...context.repo,
+              ref: `tags/${tag}`,
+            });
+            if (refs.some(candidate => candidate.ref === ref)) {
+              throw new Error(`Release tag ${tag} already exists.`);
             }
             const releases = await github.paginate(github.rest.repos.listReleases, context.repo);
             const release = releases.find(release => release.tag_name === tag);
@@ -71,26 +71,36 @@ jobs:
       - name: Generate release notes
         id: notes
         if: steps.existing.outputs.result != 'true'
+        env:
+          PREVIOUS_VERSION: ${{ inputs.previous-version }}
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           result-encoding: string
           script: |
             const tag = process.env.RELEASE_TAG;
-            let previous;
-            try {
-              ({ data: previous } = await github.rest.repos.getLatestRelease(context.repo));
-            } catch (error) {
-              if (error.status !== 404) throw error;
+            let previousTag;
+            if (process.env.PREVIOUS_VERSION) {
+              if (!/^[0-9]+[.][0-9]+[.][0-9]+$/.test(process.env.PREVIOUS_VERSION)) {
+                throw new Error('previous-version must be a stable X.Y.Z release.');
+              }
+              previousTag = `v${process.env.PREVIOUS_VERSION}`;
+            } else {
+              try {
+                const { data } = await github.rest.repos.getLatestRelease(context.repo);
+                previousTag = data.tag_name;
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
             }
             const { data: notes } = await github.rest.repos.generateReleaseNotes({
               ...context.repo,
               tag_name: tag,
               target_commitish: context.sha,
-              previous_tag_name: previous?.tag_name,
+              previous_tag_name: previousTag,
             });
             const repositoryUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}`;
-            core.setOutput('changes-url', previous
-              ? `${repositoryUrl}/compare/${previous.tag_name}...${tag}`
+            core.setOutput('changes-url', previousTag
+              ? `${repositoryUrl}/compare/${previousTag}...${tag}`
               : `${repositoryUrl}/commits/${tag}`
             );
             return notes.body;

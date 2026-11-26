@@ -1,0 +1,24 @@
+# Copyright (c) 2023 - 2026 Chair for Design Automation, TUM
+# Copyright (c) 2025 - 2026 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: Install APT packages
+description: Install the caller's additional Ubuntu packages.
+inputs:
+  packages:
+    description: Whitespace-separated APT packages
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        APT_PACKAGES: ${{ inputs.packages }}
+      run: |
+        read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
+        sudo apt-get update
+        sudo apt-get install -y -- "${packages[@]}"

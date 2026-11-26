@@ -63,12 +63,27 @@ also updates `stable`. See the [direct upload guide].
 Publishes a GitHub release with links to the project's changelog and optional
 upgrade guide, or with GitHub's full generated release notes. New-contributor
 notes are included when available. It attaches any `cpp-archives-*` artifacts
-with checksums.
+with checksums. Publishing creates the version tag at the caller's commit and
+fails if that tag already exists. Pass `previous-version` (for example, `3.2.0`)
+to set the starting point for both the release notes and the comparison link
+when releasing from a maintenance branch.
 
-Call it after the build and approval jobs. Publication uses the calling
-repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN` when GitHub requires
-workflow-write permission for the release target or release events must trigger
-other workflows. Published releases are left unchanged when a workflow is
-retried.
+Publication uses the calling repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN`
+when GitHub requires workflow-write permission for the release target or when
+release events must trigger other workflows. Published releases are left
+unchanged when a workflow is retried.
+
+### [`reusable-python-packaging-build.yml`](../.github/workflows/reusable-python-packaging-build.yml)
+
+Builds a source distribution with uv, then builds a pure Python wheel from that
+archive. It uploads them as `cibw-sdist` and `cibw-wheel`, with a `dev-` prefix
+on pull requests.
+
+### [`reusable-python-packaging-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-cibuildwheel.yml)
+
+Builds a source distribution alongside platform wheels for Linux, macOS, and
+Windows. To choose which runners build wheels, pass their labels as a JSON array
+in `runners`. It uploads `cibw-sdist` and `cibw-wheels-<runner>`, with a `dev-`
+prefix on pull requests.
 
 [direct upload guide]: https://docs.readthedocs.com/platform/stable/guides/build/direct-upload.html
