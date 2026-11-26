@@ -20,7 +20,7 @@ on:
         type: string
       clang-version:
         description: "Clang version to use"
-        default: 22
+        default: 23
         type: number
       files-changed-only:
         description: "Whether to only lint files that have changed"
