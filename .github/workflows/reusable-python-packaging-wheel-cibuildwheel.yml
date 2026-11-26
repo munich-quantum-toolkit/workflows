@@ -115,11 +115,7 @@ jobs:
       # Linux wheels are built in containers with their own sccache instance
       - name: Verify sccache use
         if: ${{ runner.os != 'Linux' && inputs.use-sccache-gha }}
-        shell: bash
-        run: |
-          sccache --show-stats
-          sccache --show-stats --stats-format json |
-            uv run --no-project python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
+        uses: $/.github/actions/verify-sccache
 
       - name: Verify clean directory
         run: git diff --exit-code
