@@ -2,28 +2,6 @@
 
 ## Reusable workflows
 
-### Python packaging
-
-Use
-[`reusable-python-packaging-build.yml`](../.github/workflows/reusable-python-packaging-build.yml)
-to build a source distribution and a wheel from that distribution with uv. It
-uploads the artifacts as `cibw-sdist` and `cibw-wheel`.
-
-Use
-[`reusable-python-packaging-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-cibuildwheel.yml)
-for platform wheels. It builds the source distribution once, in parallel with
-the cibuildwheel jobs. Wheels are uploaded as `cibw-wheels-<runner>`. The
-default runners are `ubuntu-26.04`, `ubuntu-26.04-arm`, `macos-26`,
-`windows-2025`, and `windows-11-arm`. The `runners` input accepts a JSON array
-of runner labels.
-
-```yaml
-with:
-  runners: '["ubuntu-26.04", "macos-26"]'
-```
-
-Both workflows prefix artifact names with `dev-` on pull requests.
-
 ### [`reusable-cpp-install-tests.yml`](../.github/workflows/reusable-cpp-install-tests.yml)
 
 Runs `cmake -P test/install.cmake` from the repository root. Provide a script
@@ -92,5 +70,18 @@ repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN` when GitHub requires
 workflow-write permission for the release target or release events must trigger
 other workflows. Published releases are left unchanged when a workflow is
 retried.
+
+### [`reusable-python-packaging-build.yml`](../.github/workflows/reusable-python-packaging-build.yml)
+
+Builds a source distribution with uv, then builds a pure Python wheel from that
+archive. It uploads them as `cibw-sdist` and `cibw-wheel`, with a `dev-` prefix
+on pull requests.
+
+### [`reusable-python-packaging-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-cibuildwheel.yml)
+
+Builds a source distribution alongside platform wheels for Linux, macOS, and
+Windows. To choose which runners build wheels, pass their labels as a JSON array
+in `runners`. It uploads `cibw-sdist` and `cibw-wheels-<runner>`, with a `dev-`
+prefix on pull requests.
 
 [direct upload guide]: https://docs.readthedocs.com/platform/stable/guides/build/direct-upload.html
