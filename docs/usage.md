@@ -46,6 +46,12 @@ The caller's `test/install.cmake` must also accept `-Dinstalled_prefix=<path>`
 to test an existing installation without rebuilding the package. Wheels must
 include headers, CMake package files, and license notices.
 
+### [`reusable-cpp-tests-macos.yml`](../.github/workflows/reusable-cpp-tests-macos.yml)
+
+CMake uses the runner's AppleClang by default. To use a Homebrew compiler, pass
+its formula in `brew-packages` and select its compiler executables in the CMake
+configure preset passed as `preset-name`.
+
 ### [`reusable-cpp-tests-windows.yml`](../.github/workflows/reusable-cpp-tests-windows.yml)
 
 The workflow initializes the Visual Studio developer shell before configuring
