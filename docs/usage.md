@@ -71,4 +71,17 @@ workflow-write permission for the release target or release events must trigger
 other workflows. Published releases are left unchanged when a workflow is
 retried.
 
+### [`reusable-python-packaging-build.yml`](../.github/workflows/reusable-python-packaging-build.yml)
+
+Builds a source distribution with uv, then builds a pure Python wheel from that
+archive. It uploads them as `cibw-sdist` and `cibw-wheel`, with a `dev-` prefix
+on pull requests.
+
+### [`reusable-python-packaging-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-cibuildwheel.yml)
+
+Builds a source distribution alongside platform wheels for Linux, macOS, and
+Windows. To choose which runners build wheels, pass their labels as a JSON array
+in `runners`. It uploads `cibw-sdist` and `cibw-wheels-<runner>`, with a `dev-`
+prefix on pull requests.
+
 [direct upload guide]: https://docs.readthedocs.com/platform/stable/guides/build/direct-upload.html
