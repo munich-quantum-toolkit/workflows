@@ -192,7 +192,6 @@ jobs:
         with:
           name: coverage-${{ inputs.runs-on }}
           path: coverage-*
-          archive: false
 
       - name: Verify sccache use
         if: ${{ inputs.use-sccache-gha }}
