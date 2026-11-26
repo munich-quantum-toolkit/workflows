@@ -28,15 +28,6 @@ on:
         description: "Whether to run the tests for draft pull requests"
         default: true
         type: boolean
-      compiler:
-        description: >
-          The compiler to use. Defaults to 'clang'.
-          This can be 'clang', `clang-XX`, or 'gcc-XX'.
-          If 'clang' is selected, the default Apple Clang compiler is used.
-          If 'gcc-XX' is selected, this will use `gcc-XX` from Homebrew, where XX is the version number (e.g., 'gcc-14').
-          A specific version of Clang can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
-        default: "clang"
-        type: string
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -63,7 +54,7 @@ on:
         type: boolean
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.preset-name }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.preset-name }}
   cancel-in-progress: true
 
 permissions:
@@ -72,7 +63,7 @@ permissions:
 jobs:
   cpp-tests-macos:
     if: ${{ !github.event.pull_request.draft || inputs.run-on-draft }}
-    name: 🍎 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.preset-name }}
+    name: 🍎 ${{ inputs.runs-on }} ${{ inputs.preset-name }}
     runs-on: ${{ inputs.runs-on }}
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
@@ -129,43 +120,6 @@ jobs:
         run: |
           uv pip install lit
           echo "LIT_BIN=$(which lit)" >> $GITHUB_ENV
-
-      - name: Set up GCC
-        if: ${{ startsWith(inputs.compiler, 'gcc-') }}
-        env:
-          COMPILER: ${{ inputs.compiler }}
-        run: |
-          COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g' | tr -d '\n')
-          if [[ "$COMPILER" =~ ^gcc-[0-9]+$ ]]; then
-            version=$(echo "$COMPILER" | sed 's/gcc-//')
-            brew install gcc@$version
-            echo "CC=gcc-$version" >> $GITHUB_ENV
-            echo "CXX=g++-$version" >> $GITHUB_ENV
-          else
-            echo "Invalid compiler specified: $COMPILER" >&2
-            exit 1
-          fi
-
-      - name: Set up Clang
-        if: ${{ startsWith(inputs.compiler, 'clang-') }}
-        env:
-          COMPILER: ${{ inputs.compiler }}
-        run: |
-          COMPILER=$(echo "$COMPILER" | sed 's/[^a-zA-Z0-9-]//g' | tr -d '\n')
-          if [[ "$COMPILER" =~ ^clang-[0-9]+$ ]]; then
-            version=$(echo "$COMPILER" | sed 's/clang-//')
-            brew install llvm@$version
-            SDK_PATH=$(xcrun --sdk macosx --show-sdk-path)
-            echo "SDKROOT=$SDK_PATH" >> $GITHUB_ENV
-            LLVM_PREFIX=$(brew --prefix llvm@$version)
-            echo "CC=$LLVM_PREFIX/bin/clang" >> $GITHUB_ENV
-            echo "CXX=$LLVM_PREFIX/bin/clang++" >> $GITHUB_ENV
-            # Link against Homebrew Clang's libc++ and unwind library to resolve symbol conflicts
-            echo "LDFLAGS=$LDFLAGS -L$LLVM_PREFIX/lib/c++ -L$LLVM_PREFIX/lib/unwind -lunwind" >> $GITHUB_ENV
-          else
-            echo "Invalid compiler specified: $COMPILER" >&2
-            exit 1
-          fi
 
       - name: Configure CMake
         env:

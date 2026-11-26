@@ -46,6 +46,23 @@ The caller's `test/install.cmake` must also accept `-Dinstalled_prefix=<path>`
 to test an existing installation without rebuilding the package. Wheels must
 include headers, CMake package files, and license notices.
 
+### [`reusable-cpp-tests-macos.yml`](../.github/workflows/reusable-cpp-tests-macos.yml)
+
+Runs C++ tests with AppleClang by default. To use a Homebrew compiler, add its
+formula to `brew-packages` and select its executables in the CMake preset.
+
+### [`reusable-cpp-tests-ubuntu.yml`](../.github/workflows/reusable-cpp-tests-ubuntu.yml)
+
+Runs C++ tests with the runner's default compiler unless the CMake preset
+selects another. To use a specific Clang release, pass its major version to
+`clang-version`.
+
+### [`reusable-cpp-tests-windows.yml`](../.github/workflows/reusable-cpp-tests-windows.yml)
+
+Runs C++ tests in the Visual Studio developer shell, using MSVC by default. To
+use `clang-cl` with Ninja, set `CC` and `CXX` to its executable in the CMake
+preset.
+
 ### [`reusable-docs.yml`](../.github/workflows/reusable-docs.yml)
 
 Builds documentation with `uvx nox --non-interactive -s docs`. The session must
