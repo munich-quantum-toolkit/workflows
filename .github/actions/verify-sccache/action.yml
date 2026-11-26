@@ -1,0 +1,18 @@
+# Copyright (c) 2023 - 2026 Chair for Design Automation, TUM
+# Copyright (c) 2025 - 2026 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: Verify sccache use
+description: Check that the build issued at least one compiler request through sccache.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        sccache --show-stats
+        sccache --show-stats --stats-format json |
+          uv run --no-project python -c 'import json, sys; sys.exit(0 if json.load(sys.stdin)["stats"]["compile_requests"] > 0 else "No sccache compile requests")'
