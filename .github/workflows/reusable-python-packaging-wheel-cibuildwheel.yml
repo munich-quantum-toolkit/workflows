@@ -28,11 +28,11 @@ on:
         default: "4.13.4"
         type: string
       setup-mlir:
-        description: "Install MLIR on macOS and Windows. Linux projects provision the SDK inside the wheel container."
+        description: "Install MLIR on macOS and Windows. Linux projects install MLIR inside the wheel container."
         default: false
         type: boolean
       mlir-assertions:
-        description: "Enable assertions in the SDK installed by setup-mlir"
+        description: "Enable assertions in the MLIR build installed by setup-mlir"
         default: false
         type: boolean
       llvm-version:
