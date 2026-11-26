@@ -140,6 +140,4 @@ jobs:
 
       - name: Verify sccache use
         if: ${{ inputs.use-sccache-gha }}
-        run: |
-          sccache --show-stats --stats-format json |
-            python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
+        uses: $/.github/actions/verify-sccache

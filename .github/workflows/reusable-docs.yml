@@ -63,12 +63,9 @@ jobs:
           save-cache: false
       - name: Install additional APT packages
         if: inputs.apt-packages != ''
-        env:
-          APT_PACKAGES: ${{ inputs.apt-packages }}
-        run: |
-          read -r -a packages <<< "${APT_PACKAGES//$'\n'/ }"
-          sudo apt-get update
-          sudo apt-get install -y -- "${packages[@]}"
+        uses: $/.github/actions/install-apt-packages
+        with:
+          packages: ${{ inputs.apt-packages }}
       - uses: rui314/setup-mold@339e96b4ff1f3bd865856ba4cbbe8818a7acb038 # v1
       # PR caches cannot be restored by main; only main writes shared compiler entries.
       - uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
