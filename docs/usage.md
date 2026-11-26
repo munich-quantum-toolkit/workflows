@@ -46,6 +46,13 @@ The caller's `test/install.cmake` must also accept `-Dinstalled_prefix=<path>`
 to test an existing installation without rebuilding the package. Wheels must
 include headers, CMake package files, and license notices.
 
+### [`reusable-cpp-tests-windows.yml`](../.github/workflows/reusable-cpp-tests-windows.yml)
+
+Select the compiler in the CMake preset passed as `preset-name`. When updating
+an existing caller, remove `with.compiler`. The workflow initializes the Visual
+Studio developer shell, so a Ninja preset can use MSVC or set `CC` and `CXX` to
+`clang-cl`.
+
 ### [`reusable-docs.yml`](../.github/workflows/reusable-docs.yml)
 
 Builds documentation with `uvx nox --non-interactive -s docs`. The session must

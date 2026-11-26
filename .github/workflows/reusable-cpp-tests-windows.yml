@@ -24,13 +24,6 @@ on:
         description: "Whether to run the tests for draft pull requests"
         default: true
         type: boolean
-      compiler:
-        description: >
-          The compiler to use. Defaults to 'msvc'.
-          This can be 'msvc' or 'clang'.
-          If 'clang' is selected, '-T ClangCL' is automatically added to the CMake arguments.
-        default: "msvc"
-        type: string
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -57,7 +50,7 @@ on:
         type: boolean
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.preset-name }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.preset-name }}
   cancel-in-progress: true
 
 permissions:
@@ -70,7 +63,7 @@ defaults:
 jobs:
   cpp-tests-windows:
     if: ${{ !github.event.pull_request.draft || inputs.run-on-draft }}
-    name: 🏁 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.preset-name }}
+    name: 🏁 ${{ inputs.runs-on }} ${{ inputs.preset-name }}
     runs-on: ${{ inputs.runs-on }}
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
