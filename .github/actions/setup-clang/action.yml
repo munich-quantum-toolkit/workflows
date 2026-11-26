@@ -9,8 +9,8 @@
 name: Set up Clang
 description: Select a versioned Ubuntu Clang toolchain and install any missing tools.
 inputs:
-  version:
-    description: Clang major version, optionally prefixed with clang-
+  clang-version:
+    description: Clang major version
     required: true
   install-lint-tools:
     description: Also install clang-format and clang-tidy
@@ -20,6 +20,6 @@ runs:
   steps:
     - shell: bash
       env:
-        CLANG_VERSION: ${{ inputs.version }}
+        CLANG_VERSION: ${{ inputs.clang-version }}
         INSTALL_LINT_TOOLS: ${{ inputs.install-lint-tools }}
       run: bash "$GITHUB_ACTION_PATH/setup.sh"

@@ -19,7 +19,7 @@ on:
         default: ""
         type: string
       clang-version:
-        description: "Clang version to use"
+        description: "Clang major version to use"
         default: 23
         type: number
       files-changed-only:
@@ -137,7 +137,7 @@ jobs:
       - name: Set up Clang ${{ inputs.clang-version }}
         uses: $/.github/actions/setup-clang
         with:
-          version: ${{ inputs.clang-version }}
+          clang-version: ${{ inputs.clang-version }}
           install-lint-tools: "true"
 
       - name: Validate package list and install given packages

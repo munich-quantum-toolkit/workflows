@@ -28,15 +28,9 @@ on:
         description: "Whether to run the tests for draft pull requests"
         default: true
         type: boolean
-      compiler:
-        description: >
-          The compiler to use. Defaults to 'gcc'.
-          This can be 'gcc', 'clang', or 'clang-XX'.
-          If 'gcc' is selected, this will use the default GCC compiler.
-          If 'clang' is selected, the default Clang compiler will be used.
-          A specific version of Clang can be requested via 'clang-XX', where XX is the version number (e.g., 'clang-20').
-        default: "gcc"
-        type: string
+      clang-version:
+        description: "Clang major version to use. Omit to use the compiler selected by CMake."
+        type: number
       setup-z3:
         description: "Whether to set up Z3"
         default: false
@@ -63,7 +57,7 @@ on:
         type: boolean
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.compiler }}-${{ inputs.preset-name }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-cpp-tests-${{ inputs.runs-on }}-${{ inputs.clang-version }}-${{ inputs.preset-name }}
   cancel-in-progress: true
 
 permissions:
@@ -72,7 +66,7 @@ permissions:
 jobs:
   cpp-tests-ubuntu:
     if: ${{ !github.event.pull_request.draft || inputs.run-on-draft }}
-    name: 🐧 ${{ inputs.runs-on }} ${{ inputs.compiler }} ${{ inputs.preset-name }}
+    name: 🐧 ${{ inputs.runs-on }} ${{ inputs.preset-name }}${{ inputs.clang-version && format(' (Clang {0})', inputs.clang-version) || '' }}
     runs-on: ${{ inputs.runs-on }}
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
@@ -131,17 +125,11 @@ jobs:
           uv pip install lit
           echo "LIT_BIN=$(which lit)" >> $GITHUB_ENV
 
-      - name: Set up default Clang
-        if: ${{ inputs.compiler == 'clang' }}
-        run: |
-          echo "CC=clang" >> $GITHUB_ENV
-          echo "CXX=clang++" >> $GITHUB_ENV
-
-      - name: Set up specified Clang
-        if: ${{ startsWith(inputs.compiler, 'clang-') }}
+      - name: Set up Clang ${{ inputs.clang-version }}
+        if: ${{ inputs.clang-version != 0 }}
         uses: $/.github/actions/setup-clang
         with:
-          version: ${{ inputs.compiler }}
+          clang-version: ${{ inputs.clang-version }}
 
       - name: Configure CMake
         env:
