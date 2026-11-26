@@ -1,0 +1,25 @@
+# Copyright (c) 2023 - 2026 Chair for Design Automation, TUM
+# Copyright (c) 2025 - 2026 Munich Quantum Software Company GmbH
+# All rights reserved.
+#
+# SPDX-License-Identifier: MIT
+#
+# Licensed under the MIT License
+
+name: Set up Clang
+description: Select a versioned Ubuntu Clang toolchain and install any missing tools.
+inputs:
+  version:
+    description: Clang major version, optionally prefixed with clang-
+    required: true
+  lint:
+    description: Also install clang-format and clang-tidy
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        CLANG_VERSION: ${{ inputs.version }}
+        INSTALL_LINT_TOOLS: ${{ inputs.lint }}
+      run: bash "$GITHUB_ACTION_PATH/setup.sh"

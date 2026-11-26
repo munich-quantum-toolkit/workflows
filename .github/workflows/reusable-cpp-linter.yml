@@ -20,7 +20,7 @@ on:
         type: string
       clang-version:
         description: "Clang version to use"
-        default: 18
+        default: 22
         type: number
       files-changed-only:
         description: "Whether to only lint files that have changed"
@@ -28,7 +28,7 @@ on:
         type: boolean
       cpp-linter-extra-args:
         description: "Extra arguments to pass to the cpp-linter"
-        default: "-std=c++17"
+        default: "-std=c++20"
         type: string
       build-project:
         description: "Whether to build the project"
@@ -86,7 +86,6 @@ jobs:
       contents: read # Needed to fetch code
       pull-requests: write # Needed to post PR comments
     env:
-      CLANG_VERSION: ${{ inputs.clang-version }}
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
       SCCACHE_IDLE_TIMEOUT: 0
       # Cache availability must not prevent the compiler from running.
@@ -139,30 +138,10 @@ jobs:
         run: uv tool install ninja
 
       - name: Set up Clang ${{ inputs.clang-version }}
-        env:
-          TEMP_DIR: ${{ runner.temp }}
-        run: |
-          # Sanitize CLANG_VERSION: Remove any newlines and ensure it is numeric
-          clang_version="$(echo "$CLANG_VERSION" | tr -d '\n')"
-          if [[ -z "$clang_version" || ! "$clang_version" =~ ^[0-9]+$ ]]; then
-            echo "Error: Invalid clang-version input. Must be a non-empty numeric value."
-            exit 1
-          fi
-          sudo apt-get update
-          wget https://apt.llvm.org/llvm.sh -O "$TEMP_DIR/llvm_install.sh"
-          chmod +x "$TEMP_DIR/llvm_install.sh"
-          if sudo "$TEMP_DIR/llvm_install.sh" "$clang_version"; then
-            sudo apt-get install -y clang-"$clang_version" \
-                                    clang-format-"$clang_version" \
-                                    clang-tidy-"$clang_version" \
-                                    clang-tools-"$clang_version" \
-            || exit 1
-          else
-            echo "Installation from script failed."
-            exit 1
-          fi
-          echo "CC=clang-$clang_version" >> $GITHUB_ENV
-          echo "CXX=clang++-$clang_version" >> $GITHUB_ENV
+        uses: $/.github/actions/setup-clang
+        with:
+          version: ${{ inputs.clang-version }}
+          lint: "true"
 
       - name: Validate package list and install given packages
         if: ${{ inputs.setup-python }}
