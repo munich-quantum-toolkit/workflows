@@ -23,6 +23,8 @@ releases may include breaking changes.
 
 ### Changed
 
+- ⚡ Default C++ checks to shallow checkouts with configurable history depth
+  ([#535]) ([**@denialhaag**])
 - ⚡ Reuse compiler outputs within macOS and Windows wheel jobs when the GitHub
   cache is read-only or cold ([#533]) ([**@burgholzer**])
 - ⚡ Determine all CI checks, including documentation, from one PR file list
@@ -745,6 +747,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links (sorted by PR number in descending order) -->
 
+[#535]: https://github.com/munich-quantum-toolkit/workflows/pull/535
 [#534]: https://github.com/munich-quantum-toolkit/workflows/pull/534
 [#533]: https://github.com/munich-quantum-toolkit/workflows/pull/533
 [#531]: https://github.com/munich-quantum-toolkit/workflows/pull/531

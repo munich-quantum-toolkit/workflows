@@ -51,6 +51,12 @@ The filters track caller workflow files. A change to a shared workflow pin in
 `.github/workflows/ci.yml` selects the test and lint jobs. PRs at GitHub's
 3,000-file limit run every check.
 
+### C++ checkout history
+
+C++ tests, installation checks, coverage, and linting fetch only the latest
+commit by default. Pass `fetch-depth: 0` to jobs whose CMake configuration needs
+full Git history and tags, for example for version detection.
+
 ## [2.5.10]
 
 Windows wheel jobs now build with native MSVC for the runner architecture and
