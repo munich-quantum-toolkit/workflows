@@ -29,7 +29,7 @@ on:
         default: true
         type: boolean
       clang-version:
-        description: "Clang major version to use. Omit to use the compiler selected by CMake."
+        description: "Clang major version to set up. Omit to skip Clang setup."
         type: number
       setup-z3:
         description: "Whether to set up Z3"
