@@ -28,11 +28,11 @@ on:
         default: "4.13.4"
         type: string
       setup-mlir:
-        description: "Install MLIR on macOS and Windows. Linux projects provision the SDK inside the wheel container."
+        description: "Install MLIR on macOS and Windows. Linux projects install MLIR inside the wheel container."
         default: false
         type: boolean
       mlir-assertions:
-        description: "Enable assertions in the SDK installed by setup-mlir"
+        description: "Enable assertions in the MLIR build installed by setup-mlir"
         default: false
         type: boolean
       llvm-version:
@@ -41,7 +41,7 @@ on:
         type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-python-packaging-cibw-${{ inputs.runs-on }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-python-packaging-cibw-${{ inputs.runs-on }}
   cancel-in-progress: true
 
 permissions:
@@ -115,11 +115,7 @@ jobs:
       # Linux wheels are built in containers with their own sccache instance
       - name: Verify sccache use
         if: ${{ runner.os != 'Linux' && inputs.use-sccache-gha }}
-        shell: bash
-        run: |
-          sccache --show-stats
-          sccache --show-stats --stats-format json |
-            uv run --no-project python -c 'import json, sys; assert json.load(sys.stdin)["stats"]["compile_requests"] > 0'
+        uses: $/.github/actions/verify-sccache
 
       - name: Verify clean directory
         run: git diff --exit-code

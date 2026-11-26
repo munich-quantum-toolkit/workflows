@@ -54,7 +54,7 @@ on:
         value: ${{ jobs.change-detection.outputs.run-cd }}
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-change-detection
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-change-detection
   cancel-in-progress: true
 
 permissions:
@@ -112,10 +112,11 @@ jobs:
                 - '**/{pyproject.toml,uv.lock}'
                 - '.github/workflows/ci.yml'
                 - ${{ inputs.additional-python-files }}
-              - '{bindings,cmake,include,src,test/python}/**'
+              - '{bindings,cmake,include,src,test/python,tests}/**'
               - *test-inputs
             python-linter:
               - *python-checks
+              - 'bindings/**'
               - '**/.pre-commit-config.yaml'
             cd:
               - '.github/workflows/cd.yml'
