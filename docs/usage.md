@@ -2,6 +2,13 @@
 
 ## Reusable workflows
 
+### [`reusable-python-packaging.yml`](../.github/workflows/reusable-python-packaging.yml)
+
+Builds the source distribution and a pure Python wheel from it, checks their
+metadata, and uploads them as `cibw-sdist` and `cibw-wheel`. Pull request
+artifacts have the `dev-` prefix. Pass `build-wheel: false` when a separate
+cibuildwheel job provides native wheels.
+
 ### [`reusable-cpp-install-tests.yml`](../.github/workflows/reusable-cpp-install-tests.yml)
 
 Runs `cmake -P test/install.cmake` from the repository root. Provide a script
