@@ -2,12 +2,27 @@
 
 ## Reusable workflows
 
-### [`reusable-python-packaging.yml`](../.github/workflows/reusable-python-packaging.yml)
+### Python packaging
 
-Builds the source distribution and a pure Python wheel from it, checks their
-metadata, and uploads them as `cibw-sdist` and `cibw-wheel`. Pull request
-artifacts have the `dev-` prefix. Pass `build-wheel: false` when a separate
-cibuildwheel job provides native wheels.
+Use
+[`reusable-python-packaging-build.yml`](../.github/workflows/reusable-python-packaging-build.yml)
+to build a source distribution and a wheel from that distribution with uv. It
+uploads the artifacts as `cibw-sdist` and `cibw-wheel`.
+
+Use
+[`reusable-python-packaging-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-cibuildwheel.yml)
+for platform wheels. It builds the source distribution once, in parallel with
+the cibuildwheel jobs. Wheels are uploaded as `cibw-wheels-<runner>`. The
+default runners are `ubuntu-26.04`, `ubuntu-26.04-arm`, `macos-26`,
+`windows-2025`, and `windows-11-arm`. The `runners` input accepts a JSON array
+of runner labels.
+
+```yaml
+with:
+  runners: '["ubuntu-26.04", "macos-26"]'
+```
+
+Both workflows prefix artifact names with `dev-` on pull requests.
 
 ### [`reusable-cpp-install-tests.yml`](../.github/workflows/reusable-cpp-install-tests.yml)
 

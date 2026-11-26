@@ -6,14 +6,14 @@
 #
 # Licensed under the MIT License
 
-name: 🐍 • Packaging
+name: 🐍 • Packaging • cibuildwheel
 
 on:
   workflow_call:
     inputs:
-      runs-on:
-        description: "The runner image to test on"
-        default: "ubuntu-26.04"
+      runners:
+        description: JSON array of runner images for building wheels
+        default: '["ubuntu-26.04", "ubuntu-26.04-arm", "macos-26", "windows-2025", "windows-11-arm"]'
         type: string
       use-sccache-gha:
         description: "Whether macOS and Windows builds use sccache with the GitHub Actions cache backend and must compile through sccache"
@@ -41,16 +41,26 @@ on:
         type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-python-packaging-cibw-${{ inputs.runs-on }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}-python-packaging-cibuildwheel
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
+  build-sdist:
+    name: 📦 Source distribution
+    runs-on: ubuntu-slim
+    steps:
+      - uses: $/.github/actions/build-sdist
+
   build-wheel:
-    name: 🎡 ${{ inputs.runs-on }}
-    runs-on: ${{ inputs.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: ${{ fromJSON(inputs.runners) }}
+    name: 🎡 ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
     env:
       SCCACHE_GHA_ENABLED: ${{ inputs.use-sccache-gha }}
       SCCACHE_IDLE_TIMEOUT: 0
@@ -125,5 +135,5 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ inputs.runs-on }}
+          name: ${{ github.event_name == 'pull_request' && 'dev-' || '' }}cibw-wheels-${{ matrix.runner }}
           path: wheelhouse/*.whl
