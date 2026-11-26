@@ -6,7 +6,7 @@
 #
 # Licensed under the MIT License
 
-name: 🐍 • Packaging • cibuildwheel
+name: 🐍 • Packaging
 
 on:
   workflow_call:

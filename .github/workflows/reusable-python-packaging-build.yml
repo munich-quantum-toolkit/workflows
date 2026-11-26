@@ -6,7 +6,7 @@
 #
 # Licensed under the MIT License
 
-name: 🐍 • Packaging • Build
+name: 🐍 • Packaging
 
 on:
   workflow_call:
