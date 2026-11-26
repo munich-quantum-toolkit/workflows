@@ -63,13 +63,15 @@ also updates `stable`. See the [direct upload guide].
 Publishes a GitHub release with links to the project's changelog and optional
 upgrade guide, or with GitHub's full generated release notes. New-contributor
 notes are included when available. It attaches any `cpp-archives-*` artifacts
-with checksums.
+with checksums. Publishing creates the version tag at the caller's commit and
+fails if that tag already exists. Pass `previous-version` (for example, `3.2.0`)
+to set the starting point for both the release notes and the comparison link
+when releasing from a maintenance branch.
 
-Call it after the build and approval jobs. Publication uses the calling
-repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN` when GitHub requires
-workflow-write permission for the release target or release events must trigger
-other workflows. Published releases are left unchanged when a workflow is
-retried.
+Publication uses the calling repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN`
+when GitHub requires workflow-write permission for the release target or when
+release events must trigger other workflows. Published releases are left
+unchanged when a workflow is retried.
 
 ### [`reusable-python-packaging-build.yml`](../.github/workflows/reusable-python-packaging-build.yml)
 

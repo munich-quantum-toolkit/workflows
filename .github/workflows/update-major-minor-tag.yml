@@ -34,10 +34,6 @@ jobs:
     permissions:
       contents: write # Needed to push tags to the repository
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
       - name: Update the ${{ env.TAG_NAME }} tag
         id: update-major-minor-tag
         uses: joerick/update-vX.Y-tag-action@c4cefb60c33b82e4aa73a469e4acf30ee48d5812 # v1.0
