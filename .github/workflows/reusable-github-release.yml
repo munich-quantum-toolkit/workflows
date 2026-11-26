@@ -60,13 +60,7 @@ jobs:
               ref: `tags/${tag}`,
             });
             if (refs.some(candidate => candidate.ref === ref)) {
-              const { data: commit } = await github.rest.repos.getCommit({
-                ...context.repo,
-                ref,
-              });
-              if (commit.sha !== context.sha) {
-                throw new Error('Release tag points to a different commit.');
-              }
+              throw new Error(`Release tag ${tag} already exists.`);
             }
             const releases = await github.paginate(github.rest.repos.listReleases, context.repo);
             const release = releases.find(release => release.tag_name === tag);
