@@ -1,23 +1,5 @@
 # Using the MQT workflows
 
-## General guidance
-
-### Project-specific secrets
-
-Some build, test, lint, and packaging workflows expose provider secrets as
-environment variables. Use `secrets: inherit` in the calling workflow and define
-the supported secrets in the calling repository or environment:
-
-- `IQM_TOKEN`
-- `IQM_QC_ALIAS`
-- `AWS_S3_BUCKET`
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-
-Secrets that are not defined have empty values. Inheritance is limited to
-callers in the same organization or enterprise. Cross-organization callers can
-pass individual secrets when the workflow declares them explicitly.
-
 ## Reusable workflows
 
 ### [`reusable-cpp-install-tests.yml`](../.github/workflows/reusable-cpp-install-tests.yml)
@@ -88,16 +70,5 @@ repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN` when GitHub requires
 workflow-write permission for the release target or release events must trigger
 other workflows. Published releases are left unchanged when a workflow is
 retried.
-
-### [`reusable-python-packaging-wheel-cibuildwheel.yml`](../.github/workflows/reusable-python-packaging-wheel-cibuildwheel.yml)
-
-Cross-organization callers can pass AWS secrets explicitly:
-
-```yaml
-secrets:
-  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-```
 
 [direct upload guide]: https://docs.readthedocs.com/platform/stable/guides/build/direct-upload.html
