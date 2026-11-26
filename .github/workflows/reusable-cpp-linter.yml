@@ -141,7 +141,7 @@ jobs:
         uses: $/.github/actions/setup-clang
         with:
           version: ${{ inputs.clang-version }}
-          lint: "true"
+          install-lint-tools: "true"
 
       - name: Validate package list and install given packages
         if: ${{ inputs.setup-python }}
