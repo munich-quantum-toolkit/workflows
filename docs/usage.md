@@ -48,10 +48,9 @@ include headers, CMake package files, and license notices.
 
 ### [`reusable-cpp-tests-windows.yml`](../.github/workflows/reusable-cpp-tests-windows.yml)
 
-Select the compiler in the CMake preset passed as `preset-name`. When updating
-an existing caller, remove `with.compiler`. The workflow initializes the Visual
-Studio developer shell, so a Ninja preset can use MSVC or set `CC` and `CXX` to
-`clang-cl`.
+The workflow initializes the Visual Studio developer shell before configuring
+CMake with `preset-name`. A Ninja preset can use MSVC or select `clang-cl`
+through `CC` and `CXX`.
 
 ### [`reusable-docs.yml`](../.github/workflows/reusable-docs.yml)
 
