@@ -19,10 +19,9 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#300)._
 - ✨ Add reusable GitHub releases with changelog links, contributor notes,
   optional archive uploads with checksums, and GitHub App authentication
   ([#531], [#537], [#548]) ([**@denialhaag**])
-- ✨ Package and test relocatable C++ archives from wheels, including
-  header-only packages ([#520], [#543]) ([**@denialhaag**])
-- ✨ Add reusable C++ installation tests with configurable APT dependencies and
-  compiler caching ([#516]) ([**@denialhaag**])
+- ✨ Add reusable C++ packaging that builds and tests relocatable archives from
+  wheels, including header-only packages ([#520], [#543]) ([**@denialhaag**])
+- ✨ Add reusable C++ installation tests ([#516]) ([**@denialhaag**])
 - 📚 Build executable documentation in GitHub Actions and publish the HTML and
   offline ZIP to Read the Docs ([#522], [#532]) ([**@burgholzer**])
 
@@ -43,8 +42,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#300)._
 
 - 🐛 Keep CI runs for PRs from different forks independent when their branches
   share a name ([#539]) ([**@denialhaag**])
-- 🐛 Report upstream test failures only on `main` and queue updates by upstream
-  project ([#539]) ([**@denialhaag**])
+- 🐛 Open or update one GitHub issue per upstream dependency, such as Qiskit,
+  when compatibility tests fail on `main` ([#539]) ([**@denialhaag**])
 - 🐛 Archive Python coverage reports to support multiple files per runner
   ([#525]) ([**@simon1hofmann**])
 - 🐛 Select wheel build tools correctly on Linux runners with custom labels
@@ -54,7 +53,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#300)._
 
 - 🔥 Remove the `compiler` input from C++ test workflows on Ubuntu, macOS, and
   Windows ([#542], [#541]) ([**@denialhaag**])
-- 🔥 Retire moving `vX.Y` tags for workflow releases ([#545])
+- 🔥 Remove automatic updates to `vX.Y` release tags ([#545])
   ([**@denialhaag**])
 - 🔥 Remove IQM and AWS provider-secret forwarding from shared workflows
   ([#534]) ([**@denialhaag**])

@@ -8,12 +8,6 @@ of changes, including minor and patch releases, please refer to the
 
 ## [3.0.0]
 
-### Workflow version pins
-
-Existing minor-version tags such as `v2.5` stay on their current commits. To
-upgrade a workflow pinned to a minor-version tag, replace the tag in `uses` with
-the full commit SHA of the release you want to use.
-
 ### Python packaging
 
 Replace the job calling `reusable-python-packaging-sdist.yml` and the wheel job
@@ -103,6 +97,12 @@ updates, use the CMake Renovate preset and annotate the MQT Core release pin in
 If you used `update-to-head` or maintain a separate `MQT_CORE_VERSION` minimum,
 manage those updates separately. Leave development commits unannotated to keep
 them pinned.
+
+### Workflow version pins
+
+Existing minor-version tags such as `v2.5` stay on their current commits. To
+upgrade a workflow pinned to a minor-version tag, replace the tag in `uses` with
+the full commit SHA of the release you want to use.
 
 ### C++ checkout history
 
