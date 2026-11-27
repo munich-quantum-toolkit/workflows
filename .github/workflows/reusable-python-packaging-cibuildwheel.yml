@@ -95,7 +95,7 @@ jobs:
 
       - name: Set up MLIR
         if: ${{ inputs.setup-mlir && runner.os != 'Linux' }}
-        uses: munich-quantum-software/setup-mlir@8d3eae73d0f0196fd30c787d91ebd2018cb6c709 # v1.5.0
+        uses: munich-quantum-software/setup-mlir@1f96f72c996c013f34264af39c131d2bf9487d19 # v1.6.0
         with:
           llvm-version: ${{ inputs.llvm-version }}
           assertions: ${{ inputs.mlir-assertions }}
