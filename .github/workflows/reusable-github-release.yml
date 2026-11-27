@@ -30,8 +30,11 @@ on:
         default: false
         type: boolean
     secrets:
-      RELEASE_TOKEN:
-        description: "Optional release token with additional permissions. Defaults to GITHUB_TOKEN."
+      APP_ID:
+        description: Client ID of the GitHub App used to publish releases
+        required: false
+      APP_PRIVATE_KEY:
+        description: Private key of the GitHub App used to publish releases
         required: false
 
 permissions: {}
@@ -43,6 +46,7 @@ jobs:
       contents: write # Needed to create releases and tags
     runs-on: ubuntu-slim
     env:
+      APP_CONFIGURED: ${{ secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' }}
       RELEASE_TAG: v${{ inputs.version }}
     steps:
       - name: Check release
@@ -160,6 +164,15 @@ jobs:
             (cd dist && sha256sum -- *.tar.gz > SHA256SUMS)
           fi
 
+      - name: Create release token
+        id: app-token
+        if: steps.existing.outputs.result != 'true' && env.APP_CONFIGURED == 'true'
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+
       - name: Publish release
         if: steps.existing.outputs.result != 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
@@ -168,7 +181,7 @@ jobs:
           RELEASE_NAME: ${{ inputs.release-name }}
           RELEASE_BODY: ${{ steps.body.outputs.result }}
         with:
-          github-token: ${{ secrets.RELEASE_TOKEN || github.token }}
+          github-token: ${{ steps.app-token.outputs.token || github.token }}
           retries: 3
           script: |
             const fs = require('node:fs');
