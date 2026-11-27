@@ -27,6 +27,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#300)._
 
 ### Changed
 
+- ⬆️ Update [munich-quantum-software/setup-mlir] to `v1.6.0`, which can reuse
+  installed LLVM SDKs ([#550])
 - ⬆️ Default C++ lint to Clang 23 and C++20 ([#541]) ([**@denialhaag**])
 - ♻️ Build the source distribution and wheels in one reusable workflow call,
   with separate workflows for uv and cibuildwheel ([#544]) ([**@denialhaag**])
@@ -766,6 +768,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links (sorted by PR number in descending order) -->
 
+[#550]: https://github.com/munich-quantum-toolkit/workflows/pull/550
 [#548]: https://github.com/munich-quantum-toolkit/workflows/pull/548
 [#545]: https://github.com/munich-quantum-toolkit/workflows/pull/545
 [#544]: https://github.com/munich-quantum-toolkit/workflows/pull/544
