@@ -6,56 +6,115 @@ of changes, including minor and patch releases, please refer to the
 
 ## [Unreleased]
 
+## [3.0.0]
+
+### Python packaging
+
+Replace the job calling `reusable-python-packaging-sdist.yml` and the wheel job
+with one packaging job. Choose the workflow that matches your wheel build.
+
+- For uv, replace `reusable-python-packaging-wheel-build.yml` with
+  `reusable-python-packaging-build.yml`.
+- For cibuildwheel, replace `reusable-python-packaging-wheel-cibuildwheel.yml`
+  with `reusable-python-packaging-cibuildwheel.yml`. Remove the caller's wheel
+  matrix and `runs-on` input. To customize the runners, pass their labels as a
+  JSON array in `runners`.
+
+Update downstream `needs` references and aggregate checks to use the new job.
+
+### GitHub releases
+
+In `cd.yml`, use the reusable release workflow to publish a GitHub release and
+create its tag at the commit you built.
+
+1. Start with a manual `workflow_dispatch` and check that the requested version
+   matches the package version at the release commit.
+2. Build the release artifacts and wait for any required release approval. If
+   the build derives its version from Git tags, supply the version at build
+   time.
+3. Call `reusable-github-release.yml` with `version` (without the `v` prefix)
+   and `release-name`. Grant the calling job `contents: write`.
+4. If you publish to PyPI, use a separate job in `cd.yml` with trusted
+   publishing after the GitHub release.
+
+The release workflow uses `GITHUB_TOKEN` by default. If the new tag or release
+should trigger another workflow, such as a documentation build, pass both
+`APP_ID` (the GitHub App client ID) and `APP_PRIVATE_KEY` for an app installed
+with write access to the repository's contents.
+
+See the full list of options in the
+[usage guide](docs/usage.md#reusable-github-releaseyml).
+
+### C++ compiler selection
+
+Remove the `compiler` input from Ubuntu, macOS, and Windows C++ test jobs.
+
+- On Ubuntu, omit `compiler: gcc` to use the runner default, or replace a
+  versioned selection such as `compiler: clang-23` with `clang-version: 23`. For
+  the runner's unversioned Clang, set `CC` to `clang` and `CXX` to `clang++` in
+  the CMake configure preset.
+- On macOS, AppleClang is the default. For Homebrew GCC or LLVM, add the formula
+  to `brew-packages` and select its executables in the CMake configure preset.
+  Set any sysroot or linker flags your build needs in the same preset.
+- On Windows, MSVC is the default. To use `clang-cl`, select it in the CMake
+  configure preset passed as `preset-name`.
+
+If your branch protection requires individual C++ test checks, update their
+names to match the new workflow jobs.
+
+C++ lint now defaults to Clang 23 and C++20. To retain the previous defaults,
+set `clang-version: 18` and `cpp-linter-extra-args: "-std=c++17"`. To use the
+C++ standard from the compilation database, set `cpp-linter-extra-args: ""`.
+
+### Change detection
+
+Grant `pull-requests: read` to jobs that call `reusable-change-detection.yml`.
+Pass `additional-cpp-files`, `additional-python-files` and `additional-cd-files`
+as strings containing JSON arrays, for example
+`additional-python-files: '["mlir/**"]'`.
+
+Use `additional-docs-files` and `additional-test-files` for documentation or
+test inputs outside the default paths. Use `additional-cpp-files` for extra
+native source trees, such as `["lib/**"]`. Globs match repository-relative
+paths. Use `**/name` to match at any depth. A leading `!` excludes matches even
+if another glob includes them.
+
 ### Provider credentials
 
-Shared build, test, lint, and packaging workflows no longer expose `IQM_TOKEN`,
-`IQM_QC_ALIAS`, `AWS_S3_BUCKET`, `AWS_ACCESS_KEY_ID`, or `AWS_SECRET_ACCESS_KEY`
-as environment variables. Remove explicit AWS secret arguments from calls to
+Shared workflows no longer forward IQM or AWS provider credentials. Remove
+explicit AWS secret arguments when migrating from
 `reusable-python-packaging-wheel-cibuildwheel.yml`. Run authenticated provider
 checks in repository-local workflows that configure their own credentials.
 
 ### MQT Core updates
 
-The `reusable-mqt-core-update.yml` workflow has been removed. Remove jobs that
-call it before upgrading and use the CMake Renovate preset introduced in
-https://github.com/munich-quantum-toolkit/templates/pull/508. <!-- rumdl-disable-line MD034 -->
-
-Use the synchronized Renovate template and annotate the MQT Core release pin in
+Remove jobs that call `reusable-mqt-core-update.yml`. To keep receiving release
+updates, use the CMake Renovate preset and annotate the MQT Core release pin in
 `cmake/ExternalDependencies.cmake` as described in the
 [Templates usage guide](https://github.com/munich-quantum-toolkit/templates/blob/main/docs/usage.md#configure-renovate).
 
-To skip an unwanted version update, close its Renovate PR without merging it.
+If you used `update-to-head` or maintain a separate `MQT_CORE_VERSION` minimum,
+manage those updates separately. Leave development commits unannotated to keep
+them pinned.
 
-The preset updates annotated release tags and commit SHAs; it does not update a
-separate `MQT_CORE_VERSION` minimum or replace `update-to-head`. Leave
-development commits unannotated to keep them pinned.
+### Workflow version pins
 
-### Change detection
-
-Grant `pull-requests: read` to jobs that call `reusable-change-detection.yml`.
-It reads changed paths from the GitHub API. Pass `additional-cpp-files`,
-`additional-python-files` and `additional-cd-files` as strings containing JSON
-arrays, for example `additional-python-files: '["mlir/**"]'`. Globs match
-repository-relative paths. Use `**/name` to match a basename at any depth. A
-leading `!` excludes matches even if a later glob includes the path.
-
-Docs detection is enabled by default for documentation, package sources, build
-configuration and CI entry points. Add imported guides, data files or scripts
-outside those paths with `additional-docs-files`. Use `additional-test-files`
-for shared fixtures or native test helpers outside the default source trees.
-Python tests and lint select `.py` and `.pyi` files anywhere in the repository.
-Use `additional-cpp-files` for native source trees in other locations, such as
-`["lib/**"]`.
-
-The filters track caller workflow files. A change to a shared workflow pin in
-`.github/workflows/ci.yml` selects the test and lint jobs. PRs at GitHub's
-3,000-file limit run every check.
+Existing minor-version tags such as `v2.5` stay on their current commits. To
+upgrade a workflow pinned to a minor-version tag, replace the tag in `uses` with
+the full commit SHA of the release you want to use.
 
 ### C++ checkout history
 
 C++ tests, installation checks, coverage, and linting fetch only the latest
 commit by default. Pass `fetch-depth: 0` to jobs whose CMake configuration needs
 full Git history and tags, for example for version detection.
+
+### CI concurrency
+
+If your calling workflow groups concurrent runs by `github.head_ref`, replace
+`${{ github.head_ref || github.run_id }}` with
+`${{ github.event.pull_request.number || github.run_id }}` so PRs from different
+forks can run independently.
 
 ## [2.5.10]
 
@@ -864,7 +923,8 @@ invocations under Windows.
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.10...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.10...v3.0.0
 [2.5.10]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.9...v2.5.10
 [2.5.3]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.2...v2.5.3
 [2.5.1]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.0...v2.5.1
