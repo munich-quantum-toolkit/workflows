@@ -40,8 +40,7 @@ create its tag at the commit you built.
 The release workflow uses `GITHUB_TOKEN` by default. If the new tag or release
 should trigger another workflow, such as a documentation build, pass both
 `APP_ID` (the GitHub App client ID) and `APP_PRIVATE_KEY` for an app installed
-with write access to the repository's contents. If you pinned an earlier
-revision that took `RELEASE_TOKEN`, remove that secret from the call.
+with write access to the repository's contents.
 
 See the full list of options in the
 [usage guide](docs/usage.md#reusable-github-releaseyml).
