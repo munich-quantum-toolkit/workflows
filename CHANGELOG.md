@@ -55,7 +55,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#300)._
 
 - 🔥 Remove the `compiler` input from C++ test workflows on Ubuntu, macOS, and
   Windows ([#542], [#541]) ([**@denialhaag**])
-- 🔥 Remove automatic updates to `vX.Y` release tags ([#545])
+- 🔥 Remove the workflow for updating `vX.Y` release tags ([#545])
   ([**@denialhaag**])
 - 🔥 Remove IQM and AWS provider-secret forwarding from shared workflows
   ([#534]) ([**@denialhaag**])
