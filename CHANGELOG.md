@@ -1,4 +1,4 @@
-<!-- Entries in each category are sorted by merge time, with the latest PRs appearing first. -->
+<!-- Entries are ordered by relevance within each category for 3.0.0 and by reverse merge time for earlier releases. -->
 
 # Changelog
 
@@ -10,33 +10,51 @@ releases may include breaking changes.
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-11-27
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#300)._
+
 ### Added
 
 - ✨ Add reusable GitHub releases with changelog links, contributor notes, and
-  optional archive uploads with checksums ([#531]) ([**@denialhaag**])
-- ✨ Add reusable C++ packaging from wheel artifacts with relocation tests
-  ([#520]) ([**@denialhaag**])
+  optional archive uploads with checksums ([#531], [#537]) ([**@denialhaag**])
+- 📚 Build executable documentation in GitHub Actions and publish the HTML and
+  offline ZIP to Read the Docs ([#522], [#532]) ([**@burgholzer**])
+- ✨ Package and test relocatable C++ archives from wheels, including
+  header-only packages ([#520], [#543]) ([**@denialhaag**])
 - ✨ Add reusable C++ installation tests with configurable APT dependencies and
   compiler caching ([#516]) ([**@denialhaag**])
-- 📚 Build executable documentation in GitHub Actions and publish the HTML and
-  offline ZIP to Read the Docs ([#522]) ([**@burgholzer**])
 
 ### Changed
 
+- ♻️ Build the source distribution and wheels in one reusable workflow call,
+  with separate workflows for uv and cibuildwheel ([#544]) ([**@denialhaag**])
+- ⚡ Select CI checks from one PR file list, including docs builds, Python lint
+  for binding changes, and Python tests for fixture changes ([#522], [#538])
+  ([**@burgholzer**], [**@denialhaag**])
+- ⬆️ Default C++ lint to Clang 23 and C++20 ([#541]) ([**@denialhaag**])
 - ⚡ Default C++ checks to shallow checkouts with configurable history depth
   ([#535]) ([**@denialhaag**])
 - ⚡ Reuse compiler outputs within macOS and Windows wheel jobs when the GitHub
   cache is read-only or cold ([#533]) ([**@burgholzer**])
-- ⚡ Determine all CI checks, including documentation, from one PR file list
-  ([#522]) ([**@burgholzer**])
 
 ### Fixed
 
+- 🐛 Keep CI runs for PRs from different forks independent when their branches
+  share a name ([#539]) ([**@denialhaag**])
 - 🐛 Archive Python coverage reports to support multiple files per runner
   ([#525]) ([**@simon1hofmann**])
+- 🐛 Report upstream test failures only on `main` and queue updates by upstream
+  project ([#539]) ([**@denialhaag**])
+- 🐛 Select wheel build tools correctly on Linux runners with custom labels
+  ([#526]) ([**@burgholzer**])
 
 ### Removed
 
+- 🔥 Retire moving `vX.Y` tags for workflow releases ([#545])
+  ([**@denialhaag**])
+- 🔥 Remove the `compiler` input from C++ test workflows on Ubuntu, macOS, and
+  Windows ([#541], [#542]) ([**@denialhaag**])
 - 🔥 Remove IQM and AWS provider-secret forwarding from shared workflows
   ([#534]) ([**@denialhaag**])
 - 🔥 Remove the MQT Core update workflow in favor of the CMake Renovate preset
@@ -687,7 +705,8 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- Version links -->
 
-[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v2.5.10...HEAD
+[unreleased]: https://github.com/munich-quantum-toolkit/workflows/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v3.0.0
 [2.5.10]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.10
 [2.5.9]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.9
 [2.5.8]: https://github.com/munich-quantum-toolkit/workflows/releases/tag/v2.5.8
@@ -747,11 +766,21 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links (sorted by PR number in descending order) -->
 
+[#545]: https://github.com/munich-quantum-toolkit/workflows/pull/545
+[#544]: https://github.com/munich-quantum-toolkit/workflows/pull/544
+[#543]: https://github.com/munich-quantum-toolkit/workflows/pull/543
+[#542]: https://github.com/munich-quantum-toolkit/workflows/pull/542
+[#541]: https://github.com/munich-quantum-toolkit/workflows/pull/541
+[#539]: https://github.com/munich-quantum-toolkit/workflows/pull/539
+[#538]: https://github.com/munich-quantum-toolkit/workflows/pull/538
+[#537]: https://github.com/munich-quantum-toolkit/workflows/pull/537
 [#535]: https://github.com/munich-quantum-toolkit/workflows/pull/535
 [#534]: https://github.com/munich-quantum-toolkit/workflows/pull/534
 [#533]: https://github.com/munich-quantum-toolkit/workflows/pull/533
+[#532]: https://github.com/munich-quantum-toolkit/workflows/pull/532
 [#531]: https://github.com/munich-quantum-toolkit/workflows/pull/531
 [#530]: https://github.com/munich-quantum-toolkit/workflows/pull/530
+[#526]: https://github.com/munich-quantum-toolkit/workflows/pull/526
 [#525]: https://github.com/munich-quantum-toolkit/workflows/pull/525
 [#522]: https://github.com/munich-quantum-toolkit/workflows/pull/522
 [#520]: https://github.com/munich-quantum-toolkit/workflows/pull/520
