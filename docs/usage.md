@@ -85,10 +85,10 @@ fails if that tag already exists. Pass `previous-version` (for example, `3.2.0`)
 to set the starting point for both the release notes and the comparison link
 when releasing from a maintenance branch.
 
-Publication uses the calling repository's `GITHUB_TOKEN`. Supply `RELEASE_TOKEN`
-when GitHub requires workflow-write permission for the release target or when
-release events must trigger other workflows. Published releases are left
-unchanged when a workflow is retried.
+Publication uses the calling repository's `GITHUB_TOKEN` by default. To trigger
+tag or release workflows, pass a GitHub App's client ID as `APP_ID` and its
+private key as `APP_PRIVATE_KEY`. The app needs permission to write repository
+contents. Retrying the workflow preserves a published release.
 
 ### [`reusable-python-packaging-build.yml`](../.github/workflows/reusable-python-packaging-build.yml)
 
