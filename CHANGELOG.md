@@ -16,8 +16,9 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md#300)._
 
 ### Added
 
-- ✨ Add reusable GitHub releases with changelog links, contributor notes, and
-  optional archive uploads with checksums ([#531], [#537]) ([**@denialhaag**])
+- ✨ Add reusable GitHub releases with changelog links, contributor notes,
+  optional archive uploads with checksums, and GitHub App authentication
+  ([#531], [#537], [#548]) ([**@denialhaag**])
 - ✨ Package and test relocatable C++ archives from wheels, including
   header-only packages ([#520], [#543]) ([**@denialhaag**])
 - ✨ Add reusable C++ installation tests with configurable APT dependencies and
@@ -766,6 +767,7 @@ _📚 Refer to the [GitHub Release Notes] for previous changelogs._
 
 <!-- PR links (sorted by PR number in descending order) -->
 
+[#548]: https://github.com/munich-quantum-toolkit/workflows/pull/548
 [#545]: https://github.com/munich-quantum-toolkit/workflows/pull/545
 [#544]: https://github.com/munich-quantum-toolkit/workflows/pull/544
 [#543]: https://github.com/munich-quantum-toolkit/workflows/pull/543

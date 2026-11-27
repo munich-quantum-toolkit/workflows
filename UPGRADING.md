@@ -28,6 +28,30 @@ with one packaging job. Choose the workflow that matches your wheel build.
 
 Update downstream `needs` references and aggregate checks to use the new job.
 
+### GitHub releases
+
+In `cd.yml`, use the reusable release workflow to publish a GitHub release and
+create its tag at the commit you built.
+
+1. Start with a manual `workflow_dispatch` and check that the requested version
+   matches the package version at the release commit.
+2. Build the release artifacts and wait for any required release approval. If
+   the build derives its version from Git tags, supply the version at build
+   time.
+3. Call `reusable-github-release.yml` with `version` (without the `v` prefix)
+   and `release-name`. Grant the calling job `contents: write`.
+4. If you publish to PyPI, use a separate job in `cd.yml` with trusted
+   publishing after the GitHub release.
+
+The release workflow uses `GITHUB_TOKEN` by default. If the new tag or release
+should trigger another workflow, such as a documentation build, pass both
+`APP_ID` (the GitHub App client ID) and `APP_PRIVATE_KEY` for an app installed
+with write access to the repository's contents. If you pinned an earlier
+revision that took `RELEASE_TOKEN`, remove that secret from the call.
+
+See the full list of options in the
+[usage guide](docs/usage.md#reusable-github-releaseyml).
+
 ### C++ compiler selection
 
 Remove the `compiler` input from Ubuntu, macOS, and Windows C++ test jobs.
